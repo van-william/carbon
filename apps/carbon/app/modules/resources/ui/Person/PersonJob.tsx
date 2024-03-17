@@ -8,7 +8,9 @@ import {
 } from "@carbon/react";
 import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useState } from "react";
+import type { z } from "zod";
 import {
+  CustomFormFields,
   DatePicker,
   Employee,
   Hidden,
@@ -17,26 +19,21 @@ import {
   Shift,
   Submit,
 } from "~/components/Form";
-import type { EmployeeJob } from "~/modules/resources";
 import { employeeJobValidator } from "~/modules/resources";
 
 type PersonJobProps = {
-  job: EmployeeJob;
+  initialValues: z.infer<typeof employeeJobValidator>;
 };
 
-const PersonJob = ({ job }: PersonJobProps) => {
-  const [location, setLocation] = useState<string | null>(job.locationId);
+const PersonJob = ({ initialValues }: PersonJobProps) => {
+  const [location, setLocation] = useState<string | null>(
+    initialValues.locationId ?? null
+  );
   return (
     <ValidatedForm
       validator={employeeJobValidator}
       method="post"
-      defaultValues={{
-        locationId: job.locationId ?? undefined,
-        title: job.title ?? undefined,
-        startDate: job.startDate ?? undefined,
-        managerId: job.managerId ?? undefined,
-        shiftId: job.shiftId ?? undefined,
-      }}
+      defaultValues={initialValues}
     >
       <Card>
         <CardHeader>
@@ -58,7 +55,7 @@ const PersonJob = ({ job }: PersonJobProps) => {
             />
             <Employee name="managerId" label="Manager" />
             <Hidden name="intent" value="job" />
-            {/* <CustomFormFields table="employeeJob" />*/}
+            <CustomFormFields table="employeeJob" />
           </VStack>
         </CardContent>
         <CardFooter>

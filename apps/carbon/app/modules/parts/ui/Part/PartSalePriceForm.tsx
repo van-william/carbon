@@ -11,6 +11,7 @@ import type { z } from "zod";
 import {
   Boolean,
   Currency,
+  CustomFormFields,
   Hidden,
   Number,
   Submit,
@@ -39,7 +40,7 @@ const PartSalePriceForm = ({ initialValues }: PartSalePriceFormProps) => {
         </CardHeader>
         <CardContent>
           <Hidden name="partId" />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-4 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-2 w-full">
             <Number
               name="unitSalePrice"
               label="Unit Sale Price"
@@ -68,7 +69,7 @@ const PartSalePriceForm = ({ initialValues }: PartSalePriceFormProps) => {
               name="allowInvoiceDiscount"
               label="Allow Invoice Discount"
             />
-            {/* <CustomFormFields table="partUnitSalePrice" />*/}
+            <CustomFormFields table="partUnitSalePrice" />
           </div>
         </CardContent>
         <CardFooter>

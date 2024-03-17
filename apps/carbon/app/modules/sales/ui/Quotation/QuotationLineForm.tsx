@@ -24,6 +24,7 @@ import { BsDownload, BsThreeDotsVertical, BsUpload } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import type { z } from "zod";
 import {
+  CustomFormFields,
   Hidden,
   Input,
   InputControlled,
@@ -154,7 +155,7 @@ const QuotationLineForm = ({ initialValues }: QuotationLineFormProps) => {
           <Hidden name="quoteId" />
           <Hidden name="unitOfMeasureCode" value={partData?.uom} />
           <VStack>
-            <div className="grid w-full gap-x-8 gap-y-4 grid-cols-1 lg:grid-cols-3">
+            <div className="grid w-full gap-x-8 gap-y-2 grid-cols-1 lg:grid-cols-3">
               <Part
                 name="partId"
                 label="Part"
@@ -216,7 +217,7 @@ const QuotationLineForm = ({ initialValues }: QuotationLineFormProps) => {
                 }))}
                 className={cn(!isEditing && "sr-only")}
               />
-              {/* <CustomFormFields table="quoteLine" />*/}
+              <CustomFormFields table="quoteLine" />
             </div>
           </VStack>
         </CardContent>

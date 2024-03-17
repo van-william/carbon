@@ -1,4 +1,4 @@
-import type { Database } from "@carbon/database";
+import type { Database, Json } from "@carbon/database";
 import { getDateNYearsAgo } from "@carbon/utils";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { z } from "zod";
@@ -186,6 +186,8 @@ export async function getAccountCategories(
   }
 
   query = setGenericQueryFilters(query, args, [
+    { column: "incomeBalance", ascending: true },
+    { column: "class", ascending: true },
     { column: "category", ascending: true },
   ]);
   return query;
@@ -346,6 +348,7 @@ export async function getChartOfAccounts(
     return acc;
   }, {});
 
+  // @ts-ignore
   const accounts: Account[] = accountsResponse.data as Account[];
 
   return {
@@ -676,10 +679,12 @@ export async function upsertAccount(
   account:
     | (Omit<z.infer<typeof accountValidator>, "id"> & {
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof accountValidator>, "id"> & {
         id: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("createdBy" in account) {
@@ -698,10 +703,12 @@ export async function upsertAccountCategory(
   accountCategory:
     | (Omit<z.infer<typeof accountCategoryValidator>, "id"> & {
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof accountCategoryValidator>, "id"> & {
         id: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("createdBy" in accountCategory) {
@@ -724,10 +731,12 @@ export async function upsertAccountSubcategory(
   accountSubcategory:
     | (Omit<z.infer<typeof accountSubcategoryValidator>, "id"> & {
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof accountSubcategoryValidator>, "id"> & {
         id: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("createdBy" in accountSubcategory) {
@@ -750,10 +759,12 @@ export async function upsertCurrency(
   currency:
     | (Omit<z.infer<typeof currencyValidator>, "id"> & {
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof currencyValidator>, "id"> & {
         id: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if (currency.isBaseCurrency) {
@@ -779,10 +790,12 @@ export async function upsertPaymentTerm(
   paymentTerm:
     | (Omit<z.infer<typeof paymentTermValidator>, "id"> & {
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof paymentTermValidator>, "id"> & {
         id: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("createdBy" in paymentTerm) {

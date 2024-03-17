@@ -63,9 +63,15 @@ CREATE TABLE "shift" (
   "friday" BOOLEAN NOT NULL DEFAULT false,
   "saturday" BOOLEAN NOT NULL DEFAULT false,
   "active" BOOLEAN NOT NULL DEFAULT true,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
+  "updatedBy" TEXT,
+  "updatedAt" TIMESTAMP,
   
   CONSTRAINT "shifts_pkey" PRIMARY KEY ("id"),
-  CONSTRAINT "shifts_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "shifts_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "shifts_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT "shifts_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 ALTER TABLE "shift" ENABLE ROW LEVEL SECURITY;
@@ -149,13 +155,18 @@ CREATE TABLE "employeeJob" (
   "managerId" TEXT,
   "title" TEXT,
   "startDate" DATE,
+  "updatedAt" TIMESTAMP,
+  "updatedBy" TEXT,
 
   CONSTRAINT "employeeJob_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "employeeJob_id_fkey" FOREIGN KEY ("id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "employeeJob_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "location"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "employeeJob_shiftId_fkey" FOREIGN KEY ("shiftId") REFERENCES "shift"("id") ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT "employeeJob_managerId_fkey" FOREIGN KEY ("managerId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT "employeeJob_managerId_fkey" FOREIGN KEY ("managerId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "employeeJob_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+ALTER TABLE "employeeJob" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Employees can view employee jobs" ON "employeeJob"
   FOR SELECT

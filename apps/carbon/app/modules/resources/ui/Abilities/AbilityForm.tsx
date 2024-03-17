@@ -100,7 +100,6 @@ const AbilityForm = ({ initialValues }: AbilityFormProps) => {
                 label="Employees"
                 helperText="Employees who already have this ability"
               />
-              {/* <CustomFormFields table="ability" />*/}
             </VStack>
           </DrawerBody>
           <DrawerFooter>

@@ -11,6 +11,7 @@ import { useState } from "react";
 import type { z } from "zod";
 import {
   Currency,
+  CustomFormFields,
   Customer,
   CustomerContact,
   CustomerLocation,
@@ -57,7 +58,7 @@ const CustomerPaymentForm = ({ initialValues }: CustomerPaymentFormProps) => {
         </CardHeader>
         <CardContent>
           <Hidden name="customerId" />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-4 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-2 w-full">
             <Customer
               name="invoiceCustomerId"
               label="Invoice Customer"
@@ -80,7 +81,7 @@ const CustomerPaymentForm = ({ initialValues }: CustomerPaymentFormProps) => {
               options={paymentTermOptions}
             />
             <Currency name="currencyCode" label="Currency" />
-            {/* <CustomFormFields table="customerPayment" />*/}
+            <CustomFormFields table="customerPayment" />
           </div>
         </CardContent>
         <CardFooter>

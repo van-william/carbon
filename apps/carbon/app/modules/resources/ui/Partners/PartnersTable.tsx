@@ -1,4 +1,11 @@
-import { Avatar, HStack, Hyperlink, MenuIcon, MenuItem } from "@carbon/react";
+import {
+  Avatar,
+  Enumerable,
+  HStack,
+  Hyperlink,
+  MenuIcon,
+  MenuItem,
+} from "@carbon/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
@@ -34,7 +41,12 @@ const PartnersTable = memo(({ data, count }: PartnersTableProps) => {
 
             <Hyperlink
               onClick={() => {
-                navigate(path.to.supplier(row?.original.supplierId!));
+                navigate(
+                  `${path.to.partner(
+                    row.original.supplierLocationId!,
+                    row.original.abilityId!
+                  )}?${params.toString()}`
+                );
               }}
             >
               {row.original.supplierName}
@@ -44,16 +56,12 @@ const PartnersTable = memo(({ data, count }: PartnersTableProps) => {
       },
       {
         header: "Location",
-        cell: ({ row }) => (
-          <>
-            {row.original.city}, {row.original.state}
-          </>
-        ),
+        cell: ({ row }) => `${row.original.city}, ${row.original.state}`,
       },
       {
         accessorKey: "abilityName",
         header: "Ability",
-        cell: (item) => item.getValue(),
+        cell: (item) => <Enumerable value={item.getValue<string>()} />,
       },
       {
         accessorKey: "hoursPerWeek",
@@ -61,7 +69,7 @@ const PartnersTable = memo(({ data, count }: PartnersTableProps) => {
         cell: (item) => item.getValue(),
       },
     ];
-  }, [navigate]);
+  }, [navigate, params]);
 
   const renderContextMenu = useCallback(
     (row: (typeof rows)[number]) => {

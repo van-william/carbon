@@ -17,6 +17,7 @@ import { Outlet } from "@remix-run/react";
 import type { z } from "zod";
 import {
   ComboboxControlled,
+  CustomFormFields,
   Hidden,
   Input,
   Select,
@@ -120,7 +121,7 @@ const ReceiptForm = ({
                   />
                   <Hidden name="supplierId" value={supplierId ?? ""} />
                   <VStack spacing={4} className="min-h-full">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 w-full">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 w-full">
                       <Input name="receiptId" label="Receipt ID" isReadOnly />
                       <ComboboxControlled
                         name="locationId"
@@ -173,8 +174,8 @@ const ReceiptForm = ({
                         name="externalDocumentId"
                         label="External Reference"
                       />
+                      <CustomFormFields table="receipt" />
                     </div>
-                    {/* <CustomFormFields table="receipt" />*/}
                   </VStack>
                 </ValidatedForm>
               </div>

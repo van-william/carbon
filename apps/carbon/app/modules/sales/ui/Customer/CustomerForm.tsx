@@ -14,6 +14,7 @@ import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useFetcher } from "@remix-run/react";
 import type { z } from "zod";
 import {
+  CustomFormFields,
   CustomerStatus,
   CustomerType,
   Employee,
@@ -72,7 +73,7 @@ const CustomerForm = ({
               <Hidden name="type" value={type} />
               <div
                 className={cn(
-                  "grid w-full gap-x-8 gap-y-4",
+                  "grid w-full gap-x-8 gap-y-2",
                   isEditing ? "grid-cols-1 lg:grid-cols-3" : "grid-cols-1"
                 )}
               >
@@ -91,7 +92,7 @@ const CustomerForm = ({
                 />
 
                 <Employee name="accountManagerId" label="Account Manager" />
-                {/* <CustomFormFields table="customer" />*/}
+                <CustomFormFields table="customer" />
               </div>
             </ModalCardBody>
             <ModalCardFooter>

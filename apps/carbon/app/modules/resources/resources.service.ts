@@ -1,4 +1,4 @@
-import type { Database } from "@carbon/database";
+import type { Database, Json } from "@carbon/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { z } from "zod";
 import type { DataType } from "~/modules/shared";
@@ -8,12 +8,16 @@ import type { GenericQueryFilters } from "~/utils/query";
 import { setGenericQueryFilters } from "~/utils/query";
 import { sanitize } from "~/utils/supabase";
 import type {
+  departmentValidator,
   employeeJobValidator,
   equipmentTypeValidator,
   equipmentValidator,
+  holidayValidator,
   locationValidator,
   partnerValidator,
+  shiftValidator,
   workCellTypeValidator,
+  workCellValidator,
 } from "./resources.models";
 
 export async function deleteAbility(
@@ -142,12 +146,9 @@ export async function getAbilities(
 ) {
   let query = client
     .from("ability")
-    .select(
-      `id, name, curve, shadowWeeks, employeeAbility(user(id, fullName, avatarUrl))`,
-      {
-        count: "exact",
-      }
-    )
+    .select(`*, employeeAbility(user(id, fullName, avatarUrl))`, {
+      count: "exact",
+    })
     .eq("active", true)
     .eq("employeeAbility.active", true)
     .eq("employeeAbility.user.active", true);
@@ -173,7 +174,7 @@ export async function getAbility(
   return client
     .from("ability")
     .select(
-      `id, name, curve, shadowWeeks, employeeAbility(id, user(id, fullName, avatarUrl, active), lastTrainingDate, trainingDays, trainingCompleted)`,
+      `*, employeeAbility(id, user(id, fullName, avatarUrl, active), lastTrainingDate, trainingDays, trainingCompleted)`,
       {
         count: "exact",
       }
@@ -191,9 +192,7 @@ export async function getAttribute(
 ) {
   return client
     .from("userAttribute")
-    .select(
-      "id, name, sortOrder, listOptions, attributeDataTypeId, userAttributeCategoryId, canSelfManage, userAttributeCategory(name)"
-    )
+    .select("*, userAttributeCategory(name)")
     .eq("id", attributeId)
     .eq("active", true)
     .single();
@@ -206,7 +205,7 @@ async function getAttributes(
   return client
     .from("userAttributeCategory")
     .select(
-      `id, name,
+      `*,
       userAttribute(id, name, listOptions, canSelfManage,
         attributeDataType(id, isBoolean, isDate, isNumeric, isText, isUser),
         userAttributeValue(
@@ -225,12 +224,9 @@ export async function getAttributeCategories(
 ) {
   let query = client
     .from("userAttributeCategory")
-    .select(
-      "id, name, protected, public, userAttribute(id, name, attributeDataType(id))",
-      {
-        count: "exact",
-      }
-    )
+    .select("*, userAttribute(id, name, attributeDataType(id))", {
+      count: "exact",
+    })
     .eq("active", true)
     .eq("userAttribute.active", true);
 
@@ -254,7 +250,7 @@ export async function getAttributeCategory(
   return client
     .from("userAttributeCategory")
     .select(
-      `id, name, public, protected, 
+      `*, 
       userAttribute(
         id, name, sortOrder, 
         attributeDataType(id, label,  isBoolean, isDate, isList, isNumeric, isText, isUser ))
@@ -346,9 +342,7 @@ export async function getEmployeeAbility(
 ) {
   return client
     .from("employeeAbility")
-    .select(
-      `id, lastTrainingDate, trainingDays, trainingCompleted, user(id, fullName, avatarUrl)`
-    )
+    .select(`*, user(id, fullName, avatarUrl)`)
     .eq("abilityId", abilityId)
     .eq("id", employeeAbilityId)
     .eq("active", true)
@@ -361,9 +355,7 @@ export async function getEmployeeAbilities(
 ) {
   return client
     .from("employeeAbility")
-    .select(
-      `id, lastTrainingDate, trainingDays, trainingCompleted, ability(id, name, curve, shadowWeeks)`
-    )
+    .select(`*, ability(id, name, curve, shadowWeeks)`)
     .eq("employeeId", employeeId)
     .eq("active", true);
 }
@@ -372,11 +364,7 @@ export async function getEmployeeJob(
   client: SupabaseClient<Database>,
   employeeId: string
 ) {
-  return client
-    .from("employeeJob")
-    .select("title, locationId, shiftId, managerId, startDate")
-    .eq("id", employeeId)
-    .single();
+  return client.from("employeeJob").select("*").eq("id", employeeId).single();
 }
 
 export async function getEmployeeSummary(
@@ -397,7 +385,7 @@ export async function getEquipment(
   return client
     .from("equipment")
     .select(
-      "id, name, description, operatorsRequired, setupHours, equipmentType(id, name), workCell(id, name), location(id, name)"
+      "*, equipmentType(id, name), workCell(id, name), location(id, name)"
     )
     .eq("id", equipmentId)
     .eq("active", true)
@@ -449,18 +437,14 @@ export async function getHoliday(
   client: SupabaseClient<Database>,
   holidayId: string
 ) {
-  return client
-    .from("holiday")
-    .select(`id, name, date, year`)
-    .eq("id", holidayId)
-    .single();
+  return client.from("holiday").select("*").eq("id", holidayId).single();
 }
 
 export async function getHolidays(
   client: SupabaseClient<Database>,
   args?: GenericQueryFilters & { name: string | null; year: number | null }
 ) {
-  let query = client.from("holiday").select(`id, name, date, year`, {
+  let query = client.from("holiday").select("*", {
     count: "exact",
   });
 
@@ -668,9 +652,7 @@ export async function getShift(
   return client
     .from("shift")
     .select(
-      `id, name, startTime, endTime, locationId,
-      monday, tuesday, wednesday, thursday, friday, saturday, sunday, 
-      employeeShift(user(id, fullName, avatarUrl)), location(name, timezone)`
+      `*, employeeShift(user(id, fullName, avatarUrl)), location(name, timezone)`
     )
     .eq("id", shiftId)
     .eq("active", true)
@@ -684,9 +666,7 @@ export async function getShifts(
   let query = client
     .from("shift")
     .select(
-      `id, name, startTime, endTime, locationId, 
-      monday, tuesday, wednesday, thursday, friday, saturday, sunday,
-      employeeShift(user(id, fullName, avatarUrl)), location(name, timezone)`,
+      `*, employeeShift(user(id, fullName, avatarUrl)), location(name, timezone)`,
       {
         count: "exact",
       }
@@ -728,7 +708,7 @@ export async function getWorkCell(
   return client
     .from("workCell")
     .select(
-      "id, name, description, activeDate, workCellType(id, name), location(id, name), department(id, name)"
+      "*, workCellType(id, name), location(id, name), department(id, name)"
     )
     .eq("id", workCellId)
     .eq("active", true)
@@ -962,12 +942,14 @@ export async function upsertContractor(
         hoursPerWeek?: number;
         abilities: string[];
         createdBy: string;
+        customFields?: Json;
       }
     | {
         id: string;
         hoursPerWeek?: number;
         abilities: string[];
         updatedBy: string;
+        customFields?: Json;
       }
 ) {
   const { abilities, ...contractor } = contractorWithAbilities;
@@ -1010,19 +992,15 @@ export async function upsertContractor(
 export async function upsertDepartment(
   client: SupabaseClient<Database>,
   department:
-    | {
-        name: string;
-        color?: string;
-        parentDepartmentId?: string;
+    | (Omit<z.infer<typeof departmentValidator>, "id"> & {
         createdBy: string;
-      }
-    | {
+        customFields?: Json;
+      })
+    | (Omit<z.infer<typeof departmentValidator>, "id"> & {
         id: string;
-        name: string;
-        color?: string;
-        parentDepartmentId?: string;
         updatedBy: string;
-      }
+        customFields?: Json;
+      })
 ) {
   if ("id" in department) {
     return client
@@ -1073,7 +1051,10 @@ export async function upsertEmployeeAbility(
 export async function upsertEmployeeJob(
   client: SupabaseClient<Database>,
   employeeId: string,
-  employeeJob: z.infer<typeof employeeJobValidator>
+  employeeJob: z.infer<typeof employeeJobValidator> & {
+    updatedBy: string;
+    customFields?: Json;
+  }
 ) {
   return client
     .from("employeeJob")
@@ -1085,10 +1066,12 @@ export async function upsertEquipment(
   equipment:
     | (Omit<z.infer<typeof equipmentValidator>, "id"> & {
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof equipmentValidator>, "id"> & {
         id: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("id" in equipment) {
@@ -1104,10 +1087,12 @@ export async function upsertEquipmentType(
   equipmentType:
     | (Omit<z.infer<typeof equipmentTypeValidator>, "id"> & {
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof equipmentTypeValidator>, "id"> & {
         id: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("id" in equipmentType) {
@@ -1124,25 +1109,20 @@ export async function upsertEquipmentType(
 export async function upsertHoliday(
   client: SupabaseClient<Database>,
   holiday:
-    | {
-        name: string;
-        date: string;
+    | (Omit<z.infer<typeof holidayValidator>, "id"> & {
         createdBy: string;
-      }
-    | {
+        customFields?: Json;
+      })
+    | (Omit<z.infer<typeof holidayValidator>, "id"> & {
         id: string;
-        name: string;
-        date: string;
         updatedBy: string;
-      }
+        customFields?: Json;
+      })
 ) {
-  if ("id" in holiday) {
-    return client
-      .from("holiday")
-      .update(sanitize(holiday))
-      .eq("id", holiday.id);
+  if ("createdBy" in holiday) {
+    return client.from("holiday").insert(holiday).select("*").single();
   }
-  return client.from("holiday").insert(holiday).select("*").single();
+  return client.from("holiday").update(sanitize(holiday)).eq("id", holiday.id);
 }
 
 export async function upsertLocation(
@@ -1150,10 +1130,12 @@ export async function upsertLocation(
   location:
     | (Omit<z.infer<typeof locationValidator>, "id"> & {
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof locationValidator>, "id"> & {
         id: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("id" in location) {
@@ -1170,9 +1152,11 @@ export async function upsertPartner(
   partner:
     | (Omit<z.infer<typeof partnerValidator>, "supplierId"> & {
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof partnerValidator>, "supplierId"> & {
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("updatedBy" in partner) {
@@ -1188,57 +1172,43 @@ export async function upsertPartner(
 
 export async function upsertShift(
   client: SupabaseClient<Database>,
-  shift: {
-    id?: string;
-    name: string;
-    startTime: string;
-    endTime: string;
-    locationId: string;
-    monday: boolean;
-    tuesday: boolean;
-    wednesday: boolean;
-    thursday: boolean;
-    friday: boolean;
-    saturday: boolean;
-    sunday: boolean;
-  }
+  shift:
+    | (Omit<z.infer<typeof shiftValidator>, "id"> & {
+        createdBy: string;
+        customFields?: Json;
+      })
+    | (Omit<z.infer<typeof shiftValidator>, "id"> & {
+        id: string;
+        updatedBy: string;
+        customFields?: Json;
+      })
 ) {
-  const { id, ...update } = shift;
-  if (id) {
-    return client.from("shift").update(sanitize(update)).eq("id", id);
+  if ("createdBy" in shift) {
+    return client.from("shift").insert([shift]).select("*").single();
   }
-
-  return client.from("shift").insert([update]).select("*").single();
+  return client.from("shift").update(sanitize(shift)).eq("id", shift.id);
 }
 
 export async function upsertWorkCell(
   client: SupabaseClient<Database>,
   workCell:
-    | {
-        name: string;
-        description: string;
-        workCellTypeId: string;
-        locationId: string;
-        departmentId: string;
-        activeDate?: string;
+    | (Omit<z.infer<typeof workCellValidator>, "id"> & {
         createdBy: string;
-      }
-    | {
+        customFields?: Json;
+      })
+    | (Omit<z.infer<typeof workCellValidator>, "id"> & {
         id: string;
-        name: string;
-        description: string;
-        workCellTypeId: string;
-        locationId: string;
-        departmentId: string;
-        activeDate?: string;
         updatedBy: string;
-      }
+        customFields?: Json;
+      })
 ) {
-  if ("id" in workCell) {
-    const { id, ...update } = workCell;
-    return client.from("workCell").update(sanitize(update)).eq("id", id);
+  if ("createdBy" in workCell) {
+    return client.from("workCell").insert([workCell]).select("*").single();
   }
-  return client.from("workCell").insert([workCell]).select("*").single();
+  return client
+    .from("workCell")
+    .update(sanitize(workCell))
+    .eq("id", workCell.id);
 }
 
 export async function upsertWorkCellType(
@@ -1246,19 +1216,23 @@ export async function upsertWorkCellType(
   workCellType:
     | (Omit<z.infer<typeof workCellTypeValidator>, "id"> & {
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof workCellTypeValidator>, "id"> & {
         id: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
-  if ("id" in workCellType) {
-    const { id, ...update } = workCellType;
-    return client.from("workCellType").update(sanitize(update)).eq("id", id);
+  if ("createdBy" in workCellType) {
+    return client
+      .from("workCellType")
+      .insert([workCellType])
+      .select("id")
+      .single();
   }
   return client
     .from("workCellType")
-    .insert([workCellType])
-    .select("id")
-    .single();
+    .update(sanitize(workCellType))
+    .eq("id", workCellType.id);
 }

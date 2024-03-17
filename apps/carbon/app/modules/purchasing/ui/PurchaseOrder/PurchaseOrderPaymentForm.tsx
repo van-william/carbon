@@ -11,6 +11,7 @@ import type { z } from "zod";
 import {
   Boolean,
   Currency,
+  CustomFormFields,
   Hidden,
   Select,
   Submit,
@@ -54,7 +55,7 @@ const PurchaseOrderPaymentForm = ({
         </CardHeader>
         <CardContent>
           <Hidden name="id" />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-4 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-2 w-full">
             <Supplier
               name="invoiceSupplierId"
               label="Invoice Supplier"
@@ -79,7 +80,7 @@ const PurchaseOrderPaymentForm = ({
             <Currency name="currencyCode" label="Currency" />
 
             <Boolean name="paymentComplete" label="Payment Complete" />
-            {/* <CustomFormFields table="purchaseOrderPayment" />*/}
+            <CustomFormFields table="purchaseOrderPayment" />
           </div>
         </CardContent>
         <CardFooter>

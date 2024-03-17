@@ -7,6 +7,8 @@ CREATE TABLE "currency" (
   "decimalPlaces" INTEGER NOT NULL DEFAULT 2,
   "isBaseCurrency" BOOLEAN NOT NULL DEFAULT false,
   "active" BOOLEAN NOT NULL DEFAULT true,
+  "createdBy" TEXT NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   "updatedBy" TEXT,
   "updatedAt" TIMESTAMP WITH TIME ZONE,
 
@@ -277,22 +279,8 @@ CREATE OR REPLACE VIEW "accountCategories" AS
 
 CREATE OR REPLACE VIEW "accounts" AS
   SELECT 
-    "id",
-    "number",
-    "name",
-    "type",
-    "accountCategoryId",
+    "account".*,
     (SELECT "category" FROM "accountCategory" WHERE "accountCategory"."id" = "account"."accountCategoryId") AS "accountCategory",
-    "accountSubcategoryId",
-    (SELECT "name" FROM "accountSubcategory" WHERE "accountSubcategory"."id" = "account"."accountSubcategoryId") AS "accountSubCategory",
-    "class",
-    "incomeBalance",
-    "consolidatedRate",
-    "directPosting",
-    "active",
-    "createdBy",
-    "createdAt",
-    "updatedBy",
-    "updatedAt"
+    (SELECT "name" FROM "accountSubcategory" WHERE "accountSubcategory"."id" = "account"."accountSubcategoryId") AS "accountSubCategory"  
   FROM "account"
 ;

@@ -25,6 +25,7 @@ import { IoMdTrash } from "react-icons/io";
 import { MdOutlineDragIndicator } from "react-icons/md";
 import { New } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
+import { useUrlParams } from "~/hooks";
 import type { AttributeDataType } from "~/modules/resources";
 import type { CustomField, CustomFieldsTableType } from "~/modules/settings";
 import { path } from "~/utils/path";
@@ -47,6 +48,7 @@ const CustomFieldCategoryDetail = ({
   const sortOrderFetcher = useFetcher();
   const { tableId } = useParams();
   if (!tableId) throw new Error("tableId is not found");
+  const [params] = useUrlParams();
 
   const getAttributeDataType = useCallback(
     (id: number) => {
@@ -136,7 +138,7 @@ const CustomFieldCategoryDetail = ({
     return (
       <>
         <MenuItem asChild>
-          <Link to={fieldId}>
+          <Link to={`${fieldId}?${params.toString()}`}>
             <MenuIcon icon={<BsFillPenFill />} />
             Edit Custom Field
           </Link>
@@ -205,7 +207,7 @@ const CustomFieldCategoryDetail = ({
           </DrawerBody>
           <DrawerFooter>
             <Button asChild size="md">
-              <New label="Custom Field" to="new" />
+              <New label="Custom Field" to={`new?${params?.toString()}`} />
             </Button>
           </DrawerFooter>
         </DrawerContent>

@@ -10,6 +10,7 @@ import {
 } from "~/modules/sales";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session.server";
+import { getCustomFields, setCustomFields } from "~/utils/form";
 import { assertIsPost, badRequest, notFound } from "~/utils/http";
 import { path } from "~/utils/path";
 import { error, success } from "~/utils/result";
@@ -49,8 +50,9 @@ export async function action({ request, params }: ActionFunctionArgs) {
   if (!customerId) throw notFound("customerId not found");
   if (!customerContactId) throw notFound("customerContactId not found");
 
+  const formData = await request.formData();
   const validation = await validator(customerContactValidator).validate(
-    await request.formData()
+    formData
   );
 
   if (validation.error) {
@@ -68,6 +70,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const update = await updateCustomerContact(client, {
     contactId,
     contact,
+    customFields: setCustomFields(formData),
   });
 
   if (update.error) {
@@ -110,6 +113,7 @@ export default function EditCustomerContactRoute() {
     state: contact?.contact?.state ?? "",
     postalCode: contact?.contact?.postalCode ?? "",
     birthday: contact?.contact?.birthday ?? undefined,
+    ...getCustomFields(contact?.customFields),
   };
 
   return (

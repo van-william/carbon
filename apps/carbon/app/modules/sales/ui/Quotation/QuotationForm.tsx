@@ -12,6 +12,7 @@ import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useState } from "react";
 import type { z } from "zod";
 import {
+  CustomFormFields,
   Customer,
   CustomerContact,
   CustomerLocation,
@@ -62,7 +63,7 @@ const QuotationForm = ({ initialValues }: QuotationFormProps) => {
           <VStack>
             <div
               className={cn(
-                "grid w-full gap-x-8 gap-y-4",
+                "grid w-full gap-x-8 gap-y-2",
                 isEditing ? "grid-cols-1 lg:grid-cols-3" : "grid-cols-1"
               )}
             >
@@ -72,7 +73,15 @@ const QuotationForm = ({ initialValues }: QuotationFormProps) => {
                 label="Customer"
                 onChange={(value) => setCustomer(value?.value as string)}
               />
-              <Input name="name" label="Name" />
+              <Input
+                name="name"
+                label="Name"
+                helperText={
+                  isEditing
+                    ? undefined
+                    : "The name of the RFQ or a reference number"
+                }
+              />
               <Employee name="ownerId" label="Quoter" />
 
               <Location name="locationId" label="Location" />
@@ -93,7 +102,7 @@ const QuotationForm = ({ initialValues }: QuotationFormProps) => {
                   <TextArea name="notes" label="Notes" />
                 </>
               )}
-              {/* <CustomFormFields table="quote" />*/}
+              <CustomFormFields table="quote" />
             </div>
           </VStack>
         </CardContent>

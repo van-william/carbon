@@ -13,7 +13,7 @@ import {
   getCustomField,
 } from "~/modules/settings";
 import { DataType } from "~/modules/shared";
-import { path } from "~/utils/path";
+import { getParams, path } from "~/utils/path";
 
 import { validationError, validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
@@ -79,7 +79,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     );
   }
 
-  return redirect(path.to.customFieldList(tableId));
+  return redirect(`${path.to.customFieldList(tableId)}?${getParams(request)}`);
 }
 
 export default function UpdateCustomFieldRoute() {
@@ -98,9 +98,10 @@ export default function UpdateCustomFieldRoute() {
       initialValues={{
         id: customField.id,
         name: customField.name,
-        // @ts-ignore
+        // @ts-expect-error
         dataTypeId: (customField.dataTypeId || DataType.Text).toString(),
         customFieldTableId: tableId,
+        listOptions: customField.listOptions ?? [],
       }}
       dataTypes={routeData?.dataTypes ?? []}
       onClose={onClose}

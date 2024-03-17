@@ -1,4 +1,5 @@
-import type { Database } from "@carbon/database";
+import type { Database, Json } from "@carbon/database";
+import { getLocalTimeZone, today } from "@internationalized/date";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { z } from "zod";
 import type { GenericQueryFilters } from "~/utils/query";
@@ -17,7 +18,6 @@ import type {
   quotationOperationValidator,
   quotationValidator,
 } from "./sales.models";
-import { getLocalTimeZone, today } from "@internationalized/date";
 
 export async function deleteCustomerContact(
   client: SupabaseClient<Database>,
@@ -113,7 +113,7 @@ export async function getCustomerContact(
   return client
     .from("customerContact")
     .select(
-      "id, contact(id, firstName, lastName, email, mobilePhone, homePhone, workPhone, fax, title, addressLine1, addressLine2, city, state, postalCode, country(id, name), birthday, notes)"
+      "*, contact(id, firstName, lastName, email, mobilePhone, homePhone, workPhone, fax, title, addressLine1, addressLine2, city, state, postalCode, country(id, name), birthday, notes)"
     )
     .eq("id", customerContactId)
     .single();
@@ -126,7 +126,7 @@ export async function getCustomerContacts(
   return client
     .from("customerContact")
     .select(
-      "id, contact(id, firstName, lastName, email, mobilePhone, homePhone, workPhone, fax, title, addressLine1, addressLine2, city, state, postalCode, country(id, name), birthday, notes), user(id, active)"
+      "*, contact(id, firstName, lastName, email, mobilePhone, homePhone, workPhone, fax, title, addressLine1, addressLine2, city, state, postalCode, country(id, name), birthday, notes), user(id, active)"
     )
     .eq("customerId", customerId);
 }
@@ -138,7 +138,7 @@ export async function getCustomerLocation(
   return client
     .from("customerLocation")
     .select(
-      "id, address(id, addressLine1, addressLine2, city, state, country(id, name), postalCode)"
+      "*, address(id, addressLine1, addressLine2, city, state, country(id, name), postalCode)"
     )
     .eq("id", customerContactId)
     .single();
@@ -151,7 +151,7 @@ export async function getCustomerLocations(
   return client
     .from("customerLocation")
     .select(
-      "id, address(id, addressLine1, addressLine2, city, state, country(id, name), postalCode)"
+      "*, address(id, addressLine1, addressLine2, city, state, country(id, name), postalCode)"
     )
     .eq("customerId", customerId);
 }
@@ -218,7 +218,7 @@ export async function getCustomerStatus(
 ) {
   return client
     .from("customerStatus")
-    .select("id, name")
+    .select("*")
     .eq("id", customerStatusId)
     .single();
 }
@@ -449,25 +449,12 @@ export async function getQuoteOperations(
   return client.from("quoteOperation").select("*").eq("quoteId", quoteId);
 }
 
-export async function insertCustomer(
-  client: SupabaseClient<Database>,
-  customer:
-    | (Omit<z.infer<typeof customerValidator>, "id"> & {
-        createdBy: string;
-      })
-    | (Omit<z.infer<typeof customerValidator>, "id"> & {
-        id: string;
-        updatedBy: string;
-      })
-) {
-  return client.from("customer").insert([customer]).select("*").single();
-}
-
 export async function insertCustomerContact(
   client: SupabaseClient<Database>,
   customerContact: {
     customerId: string;
     contact: z.infer<typeof customerContactValidator>;
+    customFields?: Json;
   }
 ) {
   const insertContact = await client
@@ -490,6 +477,7 @@ export async function insertCustomerContact(
       {
         customerId: customerContact.customerId,
         contactId,
+        customFields: customerContact.customFields,
       },
     ])
     .select("id")
@@ -508,6 +496,7 @@ export async function insertCustomerLocation(
       // countryId: string;
       postalCode?: string;
     };
+    customFields?: Json;
   }
 ) {
   const insertAddress = await client
@@ -530,6 +519,7 @@ export async function insertCustomerLocation(
       {
         customerId: customerLocation.customerId,
         addressId,
+        customFields: customerLocation.customFields,
       },
     ])
     .select("id")
@@ -588,13 +578,22 @@ export async function releaseQuote(
     .eq("id", quoteId);
 }
 
-export async function updateCustomer(
+export async function upsertCustomer(
   client: SupabaseClient<Database>,
-  customer: Omit<z.infer<typeof customerValidator>, "id"> & {
-    id: string;
-    updatedBy: string;
-  }
+  customer:
+    | (Omit<z.infer<typeof customerValidator>, "id"> & {
+        createdBy: string;
+        customFields?: Json;
+      })
+    | (Omit<z.infer<typeof customerValidator>, "id"> & {
+        id: string;
+        updatedBy: string;
+        customFields?: Json;
+      })
 ) {
+  if ("createdBy" in customer) {
+    return client.from("customer").insert([customer]).select("*").single();
+  }
   return client
     .from("customer")
     .update(sanitize(customer))
@@ -607,26 +606,20 @@ export async function updateCustomerContact(
   client: SupabaseClient<Database>,
   customerContact: {
     contactId: string;
-    contact: {
-      firstName?: string;
-      lastName?: string;
-      email: string;
-      mobilePhone?: string;
-      homePhone?: string;
-      workPhone?: string;
-      fax?: string;
-      title?: string;
-      addressLine1?: string;
-      addressLine2?: string;
-      city?: string;
-      state?: string;
-      // countryId: string;
-      postalCode?: string;
-      birthday?: string;
-      notes?: string;
-    };
+    contact: z.infer<typeof customerContactValidator>;
+    customFields?: Json;
   }
 ) {
+  if (customerContact.customFields) {
+    const customFieldUpdate = await client
+      .from("customerContact")
+      .update({ customFields: customerContact.customFields })
+      .eq("contactId", customerContact.contactId);
+
+    if (customFieldUpdate.error) {
+      return customFieldUpdate;
+    }
+  }
   return client
     .from("contact")
     .update(sanitize(customerContact.contact))
@@ -647,8 +640,19 @@ export async function updateCustomerLocation(
       // countryId: string;
       postalCode?: string;
     };
+    customFields?: Json;
   }
 ) {
+  if (customerLocation.customFields) {
+    const customFieldUpdate = await client
+      .from("customerLocation")
+      .update({ customFields: customerLocation.customFields })
+      .eq("addressId", customerLocation.addressId);
+
+    if (customFieldUpdate.error) {
+      return customFieldUpdate;
+    }
+  }
   return client
     .from("address")
     .update(sanitize(customerLocation.address))
@@ -685,10 +689,12 @@ export async function upsertCustomerStatus(
   customerStatus:
     | (Omit<z.infer<typeof customerStatusValidator>, "id"> & {
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof customerStatusValidator>, "id"> & {
         id: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("createdBy" in customerStatus) {
@@ -706,10 +712,12 @@ export async function upsertCustomerType(
   customerType:
     | (Omit<z.infer<typeof customerTypeValidator>, "id"> & {
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof customerTypeValidator>, "id"> & {
         id: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("createdBy" in customerType) {
@@ -748,11 +756,13 @@ export async function upsertQuote(
     | (Omit<z.infer<typeof quotationValidator>, "id" | "quoteId"> & {
         quoteId: string;
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof quotationValidator>, "id" | "quoteId"> & {
         id: string;
         quoteId: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("createdBy" in quote) {
@@ -769,12 +779,14 @@ export async function upsertQuoteAssembly(
         quoteId: string;
         quoteLineId: string;
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof quotationAssemblyValidator>, "id"> & {
         id: string;
         quoteId: string;
         quoteLineId: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("id" in quotationAssembly) {
@@ -797,10 +809,12 @@ export async function upsertQuoteLine(
   quotationLine:
     | (Omit<z.infer<typeof quotationLineValidator>, "id"> & {
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof quotationLineValidator>, "id"> & {
         id: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("id" in quotationLine) {
@@ -822,6 +836,7 @@ export async function upsertQuoteMaterial(
         quoteLineId: string;
         quoteOperationId: string;
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof quotationMaterialValidator>, "id"> & {
         id: string;
@@ -829,6 +844,7 @@ export async function upsertQuoteMaterial(
         quoteLineId: string;
         quoteOperationId: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("id" in quotationMaterial) {
@@ -853,12 +869,14 @@ export async function upsertQuoteOperation(
         quoteId: string;
         quoteLineId: string;
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof quotationOperationValidator>, "id"> & {
         id: string;
         quoteId: string;
         quoteLineId: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("id" in quotationOperation) {

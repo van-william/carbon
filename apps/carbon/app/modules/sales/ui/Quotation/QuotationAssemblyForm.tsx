@@ -22,6 +22,7 @@ import { BsDownload, BsThreeDotsVertical, BsUpload } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import type { z } from "zod";
 import {
+  CustomFormFields,
   Hidden,
   InputControlled,
   Number,
@@ -146,7 +147,7 @@ const QuotationAssemblyForm = ({
           />
           <Hidden name="unitOfMeasureCode" value={partData?.uom} />
           <VStack>
-            <div className="grid w-full gap-x-8 gap-y-4 grid-cols-1 lg:grid-cols-3">
+            <div className="grid w-full gap-x-8 gap-y-2 grid-cols-1 lg:grid-cols-3">
               <Part
                 name="partId"
                 label="Manufactured Part"
@@ -170,7 +171,7 @@ const QuotationAssemblyForm = ({
                 label="Quantity per Parent"
                 minValue={0}
               />
-              {/* <CustomFormFields table="quoteAssembly" />*/}
+              <CustomFormFields table="quoteAssembly" />
             </div>
           </VStack>
         </CardContent>

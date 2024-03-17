@@ -1,4 +1,4 @@
-import type { Database } from "@carbon/database";
+import type { Database, Json } from "@carbon/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { z } from "zod";
 import type { GenericQueryFilters } from "~/utils/query";
@@ -16,6 +16,7 @@ import type {
   partValidator,
   serviceSupplierValidator,
   serviceValidator,
+  unitOfMeasureValidator,
 } from "./parts.models";
 import type { PartReplenishmentSystem, ServiceType } from "./types";
 
@@ -199,13 +200,7 @@ export async function getPartSummary(
   client: SupabaseClient<Database>,
   id: string
 ) {
-  return client
-    .from("part")
-    .select(
-      "id, name, description, partType, replenishmentSystem, partType, unitOfMeasureCode, partGroupId, blocked, active"
-    )
-    .eq("id", id)
-    .single();
+  return client.from("part").select("*").eq("id", id).single();
 }
 
 export async function getPartSuppliers(
@@ -318,18 +313,14 @@ export async function getUnitOfMeasure(
   client: SupabaseClient<Database>,
   id: string
 ) {
-  return client
-    .from("unitOfMeasure")
-    .select("id, name, code")
-    .eq("id", id)
-    .single();
+  return client.from("unitOfMeasure").select("*").eq("id", id).single();
 }
 
 export async function getUnitOfMeasures(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & { name: string | null }
 ) {
-  let query = client.from("unitOfMeasure").select("id, name, code", {
+  let query = client.from("unitOfMeasure").select("*", {
     count: "exact",
   });
 
@@ -383,8 +374,14 @@ export async function insertShelf(
 export async function upsertPart(
   client: SupabaseClient<Database>,
   part:
-    | (z.infer<typeof partValidator> & { createdBy: string })
-    | (z.infer<typeof partValidator> & { updatedBy: string })
+    | (z.infer<typeof partValidator> & {
+        createdBy: string;
+        customFields?: Json;
+      })
+    | (z.infer<typeof partValidator> & {
+        updatedBy: string;
+        customFields?: Json;
+      })
 ) {
   if ("createdBy" in part) {
     return client.from("part").insert(part).select("*").single();
@@ -394,7 +391,10 @@ export async function upsertPart(
 
 export async function upsertPartCost(
   client: SupabaseClient<Database>,
-  partCost: z.infer<typeof partCostValidator> & { updatedBy: string }
+  partCost: z.infer<typeof partCostValidator> & {
+    updatedBy: string;
+    customFields?: Json;
+  }
 ) {
   return client
     .from("partCost")
@@ -405,13 +405,13 @@ export async function upsertPartCost(
 export async function upsertPartInventory(
   client: SupabaseClient<Database>,
   partInventory:
-    | {
-        partId: string;
-        locationId: string;
+    | (z.infer<typeof partInventoryValidator> & {
         createdBy: string;
-      }
+        customFields?: Json;
+      })
     | (z.infer<typeof partInventoryValidator> & {
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("createdBy" in partInventory) {
@@ -429,6 +429,7 @@ export async function upsertPartManufacturing(
   client: SupabaseClient<Database>,
   partManufacturing: z.infer<typeof partManufacturingValidator> & {
     updatedBy: string;
+    customFields?: Json;
   }
 ) {
   return client
@@ -447,6 +448,7 @@ export async function upsertPartPlanning(
       }
     | (z.infer<typeof partPlanningValidator> & {
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("createdBy" in partPlanning) {
@@ -476,10 +478,12 @@ export async function upsertPartGroup(
   partGroup:
     | (Omit<z.infer<typeof partGroupValidator>, "id"> & {
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof partGroupValidator>, "id"> & {
         id: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("createdBy" in partGroup) {
@@ -501,10 +505,12 @@ export async function upsertPartSupplier(
   partSupplier:
     | (Omit<z.infer<typeof partSupplierValidator>, "id"> & {
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof partSupplierValidator>, "id"> & {
         id: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("createdBy" in partSupplier) {
@@ -526,6 +532,7 @@ export async function upsertPartUnitSalePrice(
   client: SupabaseClient<Database>,
   partUnitSalePrice: z.infer<typeof partUnitSalePriceValidator> & {
     updatedBy: string;
+    customFields?: Json;
   }
 ) {
   return client
@@ -537,10 +544,14 @@ export async function upsertPartUnitSalePrice(
 export async function upsertService(
   client: SupabaseClient<Database>,
   service:
-    | (z.infer<typeof serviceValidator> & { createdBy: string })
+    | (z.infer<typeof serviceValidator> & {
+        createdBy: string;
+        customFields?: Json;
+      })
     | (Omit<z.infer<typeof serviceValidator>, "id"> & {
         id: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("createdBy" in service) {
@@ -554,10 +565,12 @@ export async function upsertServiceSupplier(
   serviceSupplier:
     | (Omit<z.infer<typeof serviceSupplierValidator>, "id"> & {
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof serviceSupplierValidator>, "id"> & {
         id: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("createdBy" in serviceSupplier) {
@@ -578,8 +591,15 @@ export async function upsertServiceSupplier(
 export async function upsertUnitOfMeasure(
   client: SupabaseClient<Database>,
   unitOfMeasure:
-    | { name: string; code: string; createdBy: string }
-    | { id: string; name: string; code: string; updatedBy: string }
+    | (Omit<z.infer<typeof unitOfMeasureValidator>, "id"> & {
+        createdBy: string;
+        customFields?: Json;
+      })
+    | (Omit<z.infer<typeof unitOfMeasureValidator>, "id"> & {
+        id: string;
+        updatedBy: string;
+        customFields?: Json;
+      })
 ) {
   if ("id" in unitOfMeasure) {
     return client

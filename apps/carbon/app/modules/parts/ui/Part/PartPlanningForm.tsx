@@ -12,6 +12,7 @@ import type { z } from "zod";
 import { Combobox } from "~/components";
 import {
   Boolean,
+  CustomFormFields,
   Hidden,
   Number,
   Select as SelectForm,
@@ -66,7 +67,7 @@ const PartPlanningForm = ({
         <CardContent>
           <Hidden name="partId" />
           <Hidden name="locationId" />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-4 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-2 w-full">
             <SelectForm
               name="reorderingPolicy"
               label="Reordering Policy"
@@ -118,7 +119,7 @@ const PartPlanningForm = ({
               label="Demand Includes Inventory"
             />
             <Boolean name="critical" label="Critical" />
-            {/* <CustomFormFields table="partPlanning" />*/}
+            <CustomFormFields table="partPlanning" />
           </div>
         </CardContent>
         <CardFooter>

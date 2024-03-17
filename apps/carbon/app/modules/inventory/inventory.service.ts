@@ -1,4 +1,4 @@
-import type { Database } from "@carbon/database";
+import type { Database, Json } from "@carbon/database";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { z } from "zod";
 import type { GenericQueryFilters } from "~/utils/query";
@@ -131,11 +131,13 @@ export async function upsertReceipt(
     | (Omit<z.infer<typeof receiptValidator>, "id" | "receiptId"> & {
         receiptId: string;
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof receiptValidator>, "id" | "receiptId"> & {
         id: string;
         receiptId: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("createdBy" in receipt) {
@@ -154,10 +156,12 @@ export async function upsertShippingMethod(
   shippingMethod:
     | (Omit<z.infer<typeof shippingMethodValidator>, "id"> & {
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof shippingMethodValidator>, "id"> & {
         id: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("createdBy" in shippingMethod) {

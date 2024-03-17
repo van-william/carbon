@@ -11,6 +11,7 @@ import { useState } from "react";
 import type { z } from "zod";
 import {
   Currency,
+  CustomFormFields,
   Hidden,
   Select,
   Submit,
@@ -57,7 +58,7 @@ const SupplierPaymentForm = ({ initialValues }: SupplierPaymentFormProps) => {
         </CardHeader>
         <CardContent>
           <Hidden name="supplierId" />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-4 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-2 w-full">
             <Supplier
               name="invoiceSupplierId"
               label="Invoice Supplier"
@@ -80,7 +81,7 @@ const SupplierPaymentForm = ({ initialValues }: SupplierPaymentFormProps) => {
               options={paymentTermOptions}
             />
             <Currency name="currencyCode" label="Currency" />
-            {/* <CustomFormFields table="supplierPayment" />*/}
+            <CustomFormFields table="supplierPayment" />
           </div>
         </CardContent>
         <CardFooter>

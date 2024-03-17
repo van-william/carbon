@@ -40,7 +40,6 @@ export type Database = {
           createdAt: string
           createdBy: string
           curve: Json
-          customFields: Json | null
           id: string
           name: string
           shadowWeeks: number
@@ -52,7 +51,6 @@ export type Database = {
           createdAt?: string
           createdBy: string
           curve?: Json
-          customFields?: Json | null
           id?: string
           name: string
           shadowWeeks?: number
@@ -64,7 +62,6 @@ export type Database = {
           createdAt?: string
           createdBy?: string
           curve?: Json
-          customFields?: Json | null
           id?: string
           name?: string
           shadowWeeks?: number
@@ -1746,6 +1743,8 @@ export type Database = {
         Row: {
           active: boolean
           code: string
+          createdAt: string
+          createdBy: string
           customFields: Json | null
           decimalPlaces: number
           exchangeRate: number
@@ -1759,6 +1758,8 @@ export type Database = {
         Insert: {
           active?: boolean
           code: string
+          createdAt?: string
+          createdBy: string
           customFields?: Json | null
           decimalPlaces?: number
           exchangeRate?: number
@@ -1772,6 +1773,8 @@ export type Database = {
         Update: {
           active?: boolean
           code?: string
+          createdAt?: string
+          createdBy?: string
           customFields?: Json | null
           decimalPlaces?: number
           exchangeRate?: number
@@ -2908,17 +2911,14 @@ export type Database = {
       }
       employee: {
         Row: {
-          customFields: Json | null
           employeeTypeId: string
           id: string
         }
         Insert: {
-          customFields?: Json | null
           employeeTypeId: string
           id: string
         }
         Update: {
-          customFields?: Json | null
           employeeTypeId?: string
           id?: string
         }
@@ -2957,7 +2957,6 @@ export type Database = {
         Row: {
           abilityId: string
           active: boolean
-          customFields: Json | null
           employeeId: string
           id: string
           lastTrainingDate: string | null
@@ -2967,7 +2966,6 @@ export type Database = {
         Insert: {
           abilityId: string
           active?: boolean
-          customFields?: Json | null
           employeeId: string
           id?: string
           lastTrainingDate?: string | null
@@ -2977,7 +2975,6 @@ export type Database = {
         Update: {
           abilityId?: string
           active?: boolean
-          customFields?: Json | null
           employeeId?: string
           id?: string
           lastTrainingDate?: string | null
@@ -3025,6 +3022,8 @@ export type Database = {
           shiftId: string | null
           startDate: string | null
           title: string | null
+          updatedAt: string | null
+          updatedBy: string | null
           workCellId: string | null
         }
         Insert: {
@@ -3036,6 +3035,8 @@ export type Database = {
           shiftId?: string | null
           startDate?: string | null
           title?: string | null
+          updatedAt?: string | null
+          updatedBy?: string | null
           workCellId?: string | null
         }
         Update: {
@@ -3047,6 +3048,8 @@ export type Database = {
           shiftId?: string | null
           startDate?: string | null
           title?: string | null
+          updatedAt?: string | null
+          updatedBy?: string | null
           workCellId?: string | null
         }
         Relationships: [
@@ -3128,6 +3131,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "employeeJob_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "employeeJob_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "employeeJob_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
+          },
+          {
             foreignKeyName: "employeeJob_workCellId_fkey"
             columns: ["workCellId"]
             isOneToOne: false
@@ -3138,19 +3162,16 @@ export type Database = {
       }
       employeeShift: {
         Row: {
-          customFields: Json | null
           employeeId: string
           id: string
           shiftId: string
         }
         Insert: {
-          customFields?: Json | null
           employeeId: string
           id?: string
           shiftId: string
         }
         Update: {
-          customFields?: Json | null
           employeeId?: string
           id?: string
           shiftId?: string
@@ -4114,13 +4135,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "partGroup"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "part_partGroupId_fkey"
-            columns: ["partGroupId"]
-            isOneToOne: false
-            referencedRelation: "services"
-            referencedColumns: ["partGroupId"]
           },
           {
             foreignKeyName: "part_unitOfMeasureCode_fkey"
@@ -5590,13 +5604,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "postingGroupInventory_partGroupId_fkey"
-            columns: ["partGroupId"]
-            isOneToOne: false
-            referencedRelation: "services"
-            referencedColumns: ["partGroupId"]
-          },
-          {
             foreignKeyName: "postingGroupInventory_purchaseVarianceAccount_fkey"
             columns: ["purchaseVarianceAccount"]
             isOneToOne: false
@@ -5691,13 +5698,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "partGroup"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "postingGroupPurchasing_partGroupId_fkey"
-            columns: ["partGroupId"]
-            isOneToOne: false
-            referencedRelation: "services"
-            referencedColumns: ["partGroupId"]
           },
           {
             foreignKeyName: "postingGroupPurchasing_payablesAccount_fkey"
@@ -5864,13 +5864,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "partGroup"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "postingGroupSales_partGroupId_fkey"
-            columns: ["partGroupId"]
-            isOneToOne: false
-            referencedRelation: "services"
-            referencedColumns: ["partGroupId"]
           },
           {
             foreignKeyName: "postingGroupSales_receivablesAccount_fkey"
@@ -9604,13 +9597,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "service_partGroupId_fkey"
-            columns: ["partGroupId"]
-            isOneToOne: false
-            referencedRelation: "services"
-            referencedColumns: ["partGroupId"]
-          },
-          {
             foreignKeyName: "service_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
@@ -9874,6 +9860,8 @@ export type Database = {
       shift: {
         Row: {
           active: boolean
+          createdAt: string
+          createdBy: string
           customFields: Json | null
           endTime: string
           friday: boolean
@@ -9886,10 +9874,14 @@ export type Database = {
           sunday: boolean
           thursday: boolean
           tuesday: boolean
+          updatedAt: string | null
+          updatedBy: string | null
           wednesday: boolean
         }
         Insert: {
           active?: boolean
+          createdAt?: string
+          createdBy: string
           customFields?: Json | null
           endTime: string
           friday?: boolean
@@ -9902,10 +9894,14 @@ export type Database = {
           sunday?: boolean
           thursday?: boolean
           tuesday?: boolean
+          updatedAt?: string | null
+          updatedBy?: string | null
           wednesday?: boolean
         }
         Update: {
           active?: boolean
+          createdAt?: string
+          createdBy?: string
           customFields?: Json | null
           endTime?: string
           friday?: boolean
@@ -9918,9 +9914,32 @@ export type Database = {
           sunday?: boolean
           thursday?: boolean
           tuesday?: boolean
+          updatedAt?: string | null
+          updatedBy?: string | null
           wednesday?: boolean
         }
         Relationships: [
+          {
+            foreignKeyName: "shifts_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shifts_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shifts_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
+          },
           {
             foreignKeyName: "shifts_locationId_fkey"
             columns: ["locationId"]
@@ -9941,6 +9960,27 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "purchaseOrders"
             referencedColumns: ["locationId"]
+          },
+          {
+            foreignKeyName: "shifts_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shifts_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shifts_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
           },
         ]
       }
@@ -11995,6 +12035,7 @@ export type Database = {
         Row: {
           abilityIds: string[] | null
           active: boolean | null
+          customFields: Json | null
           email: string | null
           firstName: string | null
           hoursPerWeek: number | null
@@ -12253,11 +12294,17 @@ export type Database = {
           abilityName: string | null
           active: boolean | null
           city: string | null
+          createdAt: string | null
+          createdBy: string | null
+          customFields: Json | null
           hoursPerWeek: number | null
+          id: string | null
           state: string | null
           supplierId: string | null
           supplierLocationId: string | null
           supplierName: string | null
+          updatedAt: string | null
+          updatedBy: string | null
         }
         Relationships: [
           {
@@ -12268,11 +12315,60 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "partner_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "partner_id_fkey"
+            columns: ["id"]
+            isOneToOne: false
+            referencedRelation: "supplierLocation"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "partner_id_fkey"
             columns: ["supplierLocationId"]
             isOneToOne: false
             referencedRelation: "supplierLocation"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
           },
         ]
       }
@@ -12310,13 +12406,6 @@ export type Database = {
             referencedRelation: "partGroup"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "part_partGroupId_fkey"
-            columns: ["partGroupId"]
-            isOneToOne: false
-            referencedRelation: "services"
-            referencedColumns: ["partGroupId"]
-          },
         ]
       }
       purchaseInvoices: {
@@ -12328,6 +12417,7 @@ export type Database = {
           createdByAvatar: string | null
           createdByFullName: string | null
           currencyCode: string | null
+          customFields: Json | null
           dateDue: string | null
           dateIssued: string | null
           datePaid: string | null
@@ -12725,14 +12815,14 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "address_countryCode_fkey"
-            columns: ["customerCountryCode"]
+            columns: ["supplierCountryCode"]
             isOneToOne: false
             referencedRelation: "country"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "address_countryCode_fkey"
-            columns: ["supplierCountryCode"]
+            columns: ["customerCountryCode"]
             isOneToOne: false
             referencedRelation: "country"
             referencedColumns: ["id"]
@@ -12749,6 +12839,7 @@ export type Database = {
           createdBy: string | null
           createdByAvatar: string | null
           createdByFullName: string | null
+          customFields: Json | null
           dropShipment: boolean | null
           favorite: boolean | null
           id: string | null
@@ -12908,6 +12999,7 @@ export type Database = {
           customerLocationId: string | null
           customerName: string | null
           customerReference: string | null
+          customFields: Json | null
           expirationDate: string | null
           favorite: boolean | null
           id: string | null
@@ -13077,6 +13169,7 @@ export type Database = {
           createdBy: string | null
           createdByAvatar: string | null
           createdByFullName: string | null
+          customFields: Json | null
           expirationDate: string | null
           favorite: boolean | null
           id: string | null
@@ -13140,16 +13233,50 @@ export type Database = {
       services: {
         Row: {
           active: boolean | null
+          approved: boolean | null
+          approvedBy: string | null
           blocked: boolean | null
+          customFields: Json | null
           description: string | null
+          fromDate: string | null
           id: string | null
           name: string | null
           partGroup: string | null
           partGroupId: string | null
           serviceType: Database["public"]["Enums"]["serviceType"] | null
           supplierIds: string[] | null
+          toDate: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "service_approvedBy_fkey"
+            columns: ["approvedBy"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_approvedBy_fkey"
+            columns: ["approvedBy"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_approvedBy_fkey"
+            columns: ["approvedBy"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "service_partGroupId_fkey"
+            columns: ["partGroupId"]
+            isOneToOne: false
+            referencedRelation: "partGroup"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       suppliers: {
         Row: {

@@ -10,6 +10,7 @@ import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useState } from "react";
 import type { z } from "zod";
 import {
+  CustomFormFields,
   Hidden,
   Select,
   Submit,
@@ -63,7 +64,7 @@ const SupplierShippingForm = ({ initialValues }: SupplierShippingFormProps) => {
         </CardHeader>
         <CardContent>
           <Hidden name="supplierId" />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-4 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-8 gap-y-2 w-full">
             <Supplier
               name="shippingSupplierId"
               label="Shipping Supplier"
@@ -90,7 +91,7 @@ const SupplierShippingForm = ({ initialValues }: SupplierShippingFormProps) => {
               label="Shipping Term"
               options={shippingTermOptions}
             />
-            {/* <CustomFormFields table="supplierShipping" />*/}
+            <CustomFormFields table="supplierShipping" />
           </div>
         </CardContent>
         <CardFooter>

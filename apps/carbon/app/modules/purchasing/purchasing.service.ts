@@ -1,4 +1,4 @@
-import type { Database } from "@carbon/database";
+import type { Database, Json } from "@carbon/database";
 import { getLocalTimeZone, today } from "@internationalized/date";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { z } from "zod";
@@ -279,7 +279,7 @@ export async function getSupplierContact(
   return client
     .from("supplierContact")
     .select(
-      "id, contact(id, firstName, lastName, email, mobilePhone, homePhone, workPhone, fax, title, addressLine1, addressLine2, city, state, postalCode, country(id, name), birthday, notes)"
+      "*, contact(id, firstName, lastName, email, mobilePhone, homePhone, workPhone, fax, title, addressLine1, addressLine2, city, state, postalCode, country(id, name), birthday, notes)"
     )
     .eq("id", supplierContactId)
     .single();
@@ -292,7 +292,7 @@ export async function getSupplierContacts(
   return client
     .from("supplierContact")
     .select(
-      "id, contact(id, firstName, lastName, email, mobilePhone, homePhone, workPhone, fax, title, addressLine1, addressLine2, city, state, postalCode, country(id, name), birthday, notes), user(id, active)"
+      "*, contact(id, firstName, lastName, email, mobilePhone, homePhone, workPhone, fax, title, addressLine1, addressLine2, city, state, postalCode, country(id, name), birthday, notes), user(id, active)"
     )
     .eq("supplierId", supplierId);
 }
@@ -304,7 +304,7 @@ export async function getSupplierLocations(
   return client
     .from("supplierLocation")
     .select(
-      "id, address(id, addressLine1, addressLine2, city, state, country(id, name), postalCode)"
+      "*, address(id, addressLine1, addressLine2, city, state, country(id, name), postalCode)"
     )
     .eq("supplierId", supplierId);
 }
@@ -316,7 +316,7 @@ export async function getSupplierLocation(
   return client
     .from("supplierLocation")
     .select(
-      "id, address(id, addressLine1, addressLine2, city, state, country(id, name), postalCode)"
+      "*, address(id, addressLine1, addressLine2, city, state, country(id, name), postalCode)"
     )
     .eq("id", supplierContactId)
     .single();
@@ -384,7 +384,7 @@ export async function getSupplierStatus(
 ) {
   return client
     .from("supplierStatus")
-    .select("id, name")
+    .select("*")
     .eq("id", supplierStatusId)
     .single();
 }
@@ -393,9 +393,7 @@ export async function getSupplierStatuses(
   client: SupabaseClient<Database>,
   args?: GenericQueryFilters & { name: string | null }
 ) {
-  let query = client
-    .from("supplierStatus")
-    .select("id, name", { count: "exact" });
+  let query = client.from("supplierStatus").select("*", { count: "exact" });
 
   if (args?.name) {
     query = query.ilike("name", `%${args.name}%`);
@@ -422,7 +420,7 @@ export async function getSupplierType(
 ) {
   return client
     .from("supplierType")
-    .select("id, name, protected")
+    .select("*")
     .eq("id", supplierTypeId)
     .single();
 }
@@ -452,14 +450,10 @@ export async function getSupplierTypesList(client: SupabaseClient<Database>) {
 
 export async function insertSupplier(
   client: SupabaseClient<Database>,
-  supplier:
-    | (Omit<z.infer<typeof supplierValidator>, "id"> & {
-        createdBy: string;
-      })
-    | (Omit<z.infer<typeof supplierValidator>, "id"> & {
-        id: string;
-        updatedBy: string;
-      })
+  supplier: Omit<z.infer<typeof supplierValidator>, "id"> & {
+    createdBy: string;
+    customFields?: Json;
+  }
 ) {
   return client.from("supplier").insert([supplier]).select("*").single();
 }
@@ -469,6 +463,7 @@ export async function insertSupplierContact(
   supplierContact: {
     supplierId: string;
     contact: z.infer<typeof supplierContactValidator>;
+    customFields?: Json;
   }
 ) {
   const insertContact = await client
@@ -492,6 +487,7 @@ export async function insertSupplierContact(
       {
         supplierId: supplierContact.supplierId,
         contactId,
+        customFields: supplierContact.customFields,
       },
     ])
     .select("id")
@@ -532,6 +528,7 @@ export async function insertSupplierLocation(
       // countryId: string;
       postalCode?: string;
     };
+    customFields?: Json;
   }
 ) {
   const insertAddress = await client
@@ -554,6 +551,7 @@ export async function insertSupplierLocation(
       {
         supplierId: supplierLocation.supplierId,
         addressId,
+        customFields: supplierLocation.customFields,
       },
     ])
     .select("id")
@@ -619,13 +617,22 @@ export async function updateRequestForQuoteFavorite(
   }
 }
 
-export async function updateSupplier(
+export async function upsertSupplier(
   client: SupabaseClient<Database>,
-  supplier: Omit<z.infer<typeof supplierValidator>, "id"> & {
-    id: string;
-    updatedBy: string;
-  }
+  supplier:
+    | (Omit<z.infer<typeof supplierValidator>, "id"> & {
+        createdBy: string;
+        customFields?: Json;
+      })
+    | (Omit<z.infer<typeof supplierValidator>, "id"> & {
+        id: string;
+        updatedBy: string;
+        customFields?: Json;
+      })
 ) {
+  if ("createdBy" in supplier) {
+    return client.from("supplier").insert([supplier]).select("*").single();
+  }
   return client
     .from("supplier")
     .update(sanitize(supplier))
@@ -638,26 +645,20 @@ export async function updateSupplierContact(
   client: SupabaseClient<Database>,
   supplierContact: {
     contactId: string;
-    contact: {
-      firstName?: string;
-      lastName?: string;
-      email: string;
-      mobilePhone?: string;
-      homePhone?: string;
-      workPhone?: string;
-      fax?: string;
-      title?: string;
-      addressLine1?: string;
-      addressLine2?: string;
-      city?: string;
-      state?: string;
-      // countryId: string;
-      postalCode?: string;
-      birthday?: string;
-      notes?: string;
-    };
+    contact: z.infer<typeof supplierContactValidator>;
+    customFields?: Json;
   }
 ) {
+  if (supplierContact.customFields) {
+    const customFieldUpdate = await client
+      .from("supplierContact")
+      .update({ customFields: supplierContact.customFields })
+      .eq("contactId", supplierContact.contactId);
+
+    if (customFieldUpdate.error) {
+      return customFieldUpdate;
+    }
+  }
   return client
     .from("contact")
     .update(sanitize(supplierContact.contact))
@@ -678,8 +679,19 @@ export async function updateSupplierLocation(
       // countryId: string;
       postalCode?: string;
     };
+    customFields?: Json;
   }
 ) {
+  if (supplierLocation.customFields) {
+    const customFieldUpdate = await client
+      .from("supplierLocation")
+      .update({ customFields: supplierLocation.customFields })
+      .eq("addressId", supplierLocation.addressId);
+
+    if (customFieldUpdate.error) {
+      return customFieldUpdate;
+    }
+  }
   return client
     .from("address")
     .update(sanitize(supplierLocation.address))
@@ -692,6 +704,7 @@ export async function updateSupplierPayment(
   client: SupabaseClient<Database>,
   supplierPayment: z.infer<typeof supplierPaymentValidator> & {
     updatedBy: string;
+    customFields?: Json;
   }
 ) {
   return client
@@ -704,6 +717,7 @@ export async function updateSupplierShipping(
   client: SupabaseClient<Database>,
   supplierShipping: z.infer<typeof supplierShippingValidator> & {
     updatedBy: string;
+    customFields?: Json;
   }
 ) {
   return client
@@ -721,6 +735,7 @@ export async function upsertPurchaseOrder(
       > & {
         purchaseOrderId: string;
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<
         z.infer<typeof purchaseOrderValidator>,
@@ -729,6 +744,7 @@ export async function upsertPurchaseOrder(
         id: string;
         purchaseOrderId: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("id" in purchaseOrder) {
@@ -807,10 +823,12 @@ export async function upsertPurchaseOrderDelivery(
   purchaseOrderDelivery:
     | (z.infer<typeof purchaseOrderDeliveryValidator> & {
         createdBy: string;
+        customFields?: Json;
       })
     | (z.infer<typeof purchaseOrderDeliveryValidator> & {
         id: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("id" in purchaseOrderDelivery) {
@@ -833,10 +851,12 @@ export async function upsertPurchaseOrderLine(
   purchaseOrderLine:
     | (Omit<z.infer<typeof purchaseOrderLineValidator>, "id"> & {
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof purchaseOrderLineValidator>, "id"> & {
         id: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("id" in purchaseOrderLine) {
@@ -859,10 +879,12 @@ export async function upsertPurchaseOrderPayment(
   purchaseOrderPayment:
     | (z.infer<typeof purchaseOrderPaymentValidator> & {
         createdBy: string;
+        customFields?: Json;
       })
     | (z.infer<typeof purchaseOrderPaymentValidator> & {
         id: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("id" in purchaseOrderPayment) {
@@ -889,6 +911,7 @@ export async function upsertRequestForQuote(
       > & {
         requestForQuoteId: string;
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<
         z.infer<typeof requestForQuoteValidator>,
@@ -897,6 +920,7 @@ export async function upsertRequestForQuote(
         id: string;
         requestForQuoteId: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("createdBy" in requestForQuote) {
@@ -917,10 +941,12 @@ export async function upsertSupplierStatus(
   supplierStatus:
     | (Omit<z.infer<typeof supplierStatusValidator>, "id"> & {
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof supplierStatusValidator>, "id"> & {
         id: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("createdBy" in supplierStatus) {
@@ -938,10 +964,12 @@ export async function upsertSupplierType(
   supplierType:
     | (Omit<z.infer<typeof supplierTypeValidator>, "id"> & {
         createdBy: string;
+        customFields?: Json;
       })
     | (Omit<z.infer<typeof supplierTypeValidator>, "id"> & {
         id: string;
         updatedBy: string;
+        customFields?: Json;
       })
 ) {
   if ("createdBy" in supplierType) {
