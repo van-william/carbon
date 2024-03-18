@@ -1,7 +1,8 @@
-name: Dispatcher
+name: Run Migrations
 on:
   push:
     branches: [main]
+    paths: ["packages/database/supabase/migrations/**"]
 
 jobs:
   dispatch:
@@ -20,4 +21,4 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.DISPATCH_TOKEN }}" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
           https://api.github.com/repos/${{ matrix.repo }}/dispatches \
-          -d '{"event_type":"release","client_payload":{"key": "${{ secrets.DISPATCH_KEY_PROD }}"}}'
+          -d '{"event_type":"migrations","client_payload":{"key": "${{ secrets.DISPATCH_KEY_PROD }}"}}'
