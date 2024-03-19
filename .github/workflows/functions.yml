@@ -1,8 +1,9 @@
-name: Update Supabase
+name: Deploy Edge Functions
 on:
   push:
     branches: [main]
-    paths: ["packages/database/supabase/**"]
+    paths: ["packages/database/supabase/functions/**"]
+    paths-ignore: ["packages/database/supabase/functions/lib/types.ts"]
 
 jobs:
   dispatch:
@@ -13,7 +14,7 @@ jobs:
         repo: ["barbinbrad/fiber"]
     timeout-minutes: 5
     steps:
-      - name: Dispatch to fiber
+      - name: Dispatch functions to fiber
         run: |
           curl -L \
           -X POST \
@@ -21,4 +22,4 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.DISPATCH_TOKEN }}" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
           https://api.github.com/repos/${{ matrix.repo }}/dispatches \
-          -d '{"event_type":"supabase","client_payload":{"key": "${{ secrets.DISPATCH_KEY_PROD }}"}}'
+          -d '{"event_type":"functions","client_payload":{"key": "${{ secrets.DISPATCH_KEY_PROD }}"}}'
