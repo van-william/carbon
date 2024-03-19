@@ -3,7 +3,6 @@ on:
   push:
     branches: [main]
     paths: ["packages/database/supabase/functions/**"]
-    paths-ignore: ["packages/database/supabase/functions/lib/types.ts"]
 
 jobs:
   dispatch:
