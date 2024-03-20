@@ -156,8 +156,8 @@ const ActiveFilter = ({ filter, operator, value }: ActiveFilterProps) => {
                     value={option.value}
                     key={option.value}
                     onSelect={() => {
-                      setOpen(false);
                       toggleFilter(filter.accessorKey, option.value);
+                      setOpen(false);
                     }}
                   >
                     <HStack spacing={2}>

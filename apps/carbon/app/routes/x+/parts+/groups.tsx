@@ -3,11 +3,7 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { getAccountsList } from "~/modules/accounting";
-import {
-  PartGroupsTable,
-  PartGroupsTableFilters,
-  getPartGroups,
-} from "~/modules/parts";
+import { PartGroupsTable, getPartGroups } from "~/modules/parts";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session.server";
 import type { Handle } from "~/utils/handle";
@@ -67,7 +63,6 @@ export default function PartGroupsRoute() {
 
   return (
     <VStack spacing={0} className="h-full">
-      <PartGroupsTableFilters />
       <PartGroupsTable data={partGroups} count={count ?? 0} />
       <Outlet />
     </VStack>

@@ -181,8 +181,12 @@ const Filter = forwardRef<HTMLButtonElement, FilterProps>(
                       value={option.value}
                       key={option.value}
                       onSelect={() => {
-                        setInput("");
                         toggleFilter(activeFilter.accessorKey, option.value);
+                        if (trigger === "icon") {
+                          setOpen(false);
+                        } else {
+                          setInput("");
+                        }
                       }}
                     >
                       <HStack spacing={2}>
