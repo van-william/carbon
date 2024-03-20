@@ -98,7 +98,9 @@ const TableHeader = <T extends object>({
             (pagination.canNextPage || pagination.canPreviousPage) && (
               <PaginationButtons {...pagination} condensed />
             )}
-          {!!newPath && !!newPermission && <New to={newPath} label={label} />}
+          {!!newPath && !!newPermission && (
+            <New to={`${newPath}?${params.toString()}`} label={label} />
+          )}
         </HStack>
       </HStack>
       {currentFilters.length > 0 && (
