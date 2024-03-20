@@ -50,14 +50,14 @@ export async function getPartGroup(
 
 export async function getPartGroups(
   client: SupabaseClient<Database>,
-  args?: GenericQueryFilters & { name: string | null }
+  args?: GenericQueryFilters & { search: string | null }
 ) {
   let query = client.from("partGroup").select("*", {
     count: "exact",
   });
 
-  if (args?.name) {
-    query = query.ilike("name", `%${args.name}%`);
+  if (args?.search) {
+    query = query.ilike("name", `%${args.search}%`);
   }
 
   if (args) {
@@ -308,14 +308,14 @@ export async function getUnitOfMeasure(
 
 export async function getUnitOfMeasures(
   client: SupabaseClient<Database>,
-  args: GenericQueryFilters & { name: string | null }
+  args: GenericQueryFilters & { search: string | null }
 ) {
   let query = client.from("unitOfMeasure").select("*", {
     count: "exact",
   });
 
-  if (args.name) {
-    query = query.ilike("name", `%${args.name}%`);
+  if (args.search) {
+    query = query.or(`name.ilike.%${args.search}%,code.ilike.%${args.search}%`);
   }
 
   query = setGenericQueryFilters(query, args, [

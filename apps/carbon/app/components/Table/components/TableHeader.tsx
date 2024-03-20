@@ -58,7 +58,7 @@ const TableHeader = <T extends object>({
 
   return (
     <>
-      <HStack className="px-2 py-1.5 justify-between bg-background border-b border-border w-full">
+      <HStack className="px-4 py-2 justify-between bg-background border-b border-border w-full">
         <HStack>
           <DebouncedInput param="search" size="sm" placeholder="Search" />
           {!!filters?.length && <Filter filters={filters} />}
@@ -102,8 +102,8 @@ const TableHeader = <T extends object>({
         </HStack>
       </HStack>
       {currentFilters.length > 0 && (
-        <HStack className="flex-wrap px-2 py-1.5 justify-between bg-background border-b border-border w-full">
-          <HStack className="flex-wrap">
+        <HStack className="px-4 py-1.5 justify-between bg-background border-b border-border w-full">
+          <HStack>
             <ActiveFilters filters={filters} />
           </HStack>
         </HStack>
