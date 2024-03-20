@@ -464,14 +464,14 @@ const Table = <T extends object>({
       />
 
       <div
-        className="w-full h-full bg-card overflow-scroll"
+        className="w-full h-full bg-card"
         style={{ contain: "strict" }}
         ref={tableContainerRef}
         onKeyDown={editMode ? onKeyDown : undefined}
       >
         <div
           className={cn(
-            "grid w-full",
+            "grid w-full h-full",
             withColumnOrdering ? "grid-cols-[auto_1fr]" : "grid-cols-1"
           )}
         >
