@@ -79,7 +79,7 @@ export async function getShippingMethod(
 export async function getShippingMethods(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
-    name: string | null;
+    search: string | null;
   }
 ) {
   let query = client
@@ -89,8 +89,10 @@ export async function getShippingMethods(
     })
     .eq("active", true);
 
-  if (args.name) {
-    query = query.ilike("name", `%${args.name}%`);
+  if (args.search) {
+    query = query.or(
+      `name.ilike.%${args.search}%,carrier.ilike.%${args.search}%`
+    );
   }
 
   query = setGenericQueryFilters(query, args, [

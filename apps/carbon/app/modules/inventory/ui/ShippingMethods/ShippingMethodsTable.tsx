@@ -4,9 +4,9 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Table } from "~/components";
+import { TableNew } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
-import type { ShippingMethod } from "~/modules/inventory";
+import { shippingCarrierType, type ShippingMethod } from "~/modules/inventory";
 import { path } from "~/utils/path";
 
 type ShippingMethodsTableProps = {
@@ -39,6 +39,15 @@ const ShippingMethodsTable = memo(
           accessorKey: "carrier",
           header: "Carrier",
           cell: (item) => <Enumerable value={item.getValue<string>()} />,
+          meta: {
+            filter: {
+              type: "static",
+              options: shippingCarrierType.map((v) => ({
+                label: v,
+                value: v,
+              })),
+            },
+          },
         },
         {
           accessorKey: "trackingUrl",
@@ -92,10 +101,13 @@ const ShippingMethodsTable = memo(
     );
 
     return (
-      <Table<(typeof data)[number]>
+      <TableNew<(typeof data)[number]>
         data={data}
         columns={columns}
         count={count}
+        label="Shipping Method"
+        newPath={path.to.newShippingMethod}
+        newPermission={permissions.can("create", "inventory")}
         renderContextMenu={renderContextMenu}
       />
     );

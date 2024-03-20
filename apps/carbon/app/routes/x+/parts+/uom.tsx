@@ -22,10 +22,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
   const search = searchParams.get("search");
-  const { limit, offset, sorts } = getGenericQueryFilters(searchParams);
+  const { limit, offset, sorts, filters } =
+    getGenericQueryFilters(searchParams);
 
   return json(
-    await getUnitOfMeasures(client, { search, limit, offset, sorts })
+    await getUnitOfMeasures(client, { search, limit, offset, sorts, filters })
   );
 }
 

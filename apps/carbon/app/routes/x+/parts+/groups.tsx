@@ -25,7 +25,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
   const search = searchParams.get("search");
-  const { limit, offset, sorts } = getGenericQueryFilters(searchParams);
+  const { limit, offset, sorts, filters } =
+    getGenericQueryFilters(searchParams);
 
   const [partGroups, accounts] = await Promise.all([
     getPartGroups(client, {
@@ -33,6 +34,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       offset,
       sorts,
       search,
+      filters,
     }),
     getAccountsList(client),
   ]);
