@@ -15,7 +15,7 @@ import {
   Switch,
 } from "@carbon/react";
 import { Reorder } from "framer-motion";
-import { BsChevronDown, BsSortUp } from "react-icons/bs";
+import { BsChevronDown, BsListUl } from "react-icons/bs";
 import { IoMdClose } from "react-icons/io";
 import { MdOutlineDragIndicator } from "react-icons/md";
 import { useSort } from "./useSort";
@@ -37,11 +37,12 @@ const Sort = ({ columnAccessors }: SortProps) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <IconButton
-          aria-label="Sort"
+        <Button
           variant={hasNoSorts ? "ghost" : "primary"}
-          icon={<BsSortUp />}
-        />
+          leftIcon={<BsListUl />}
+        >
+          {hasNoSorts ? "Sort" : "Sorted"}
+        </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[420px]">
         {hasNoSorts && (
@@ -113,7 +114,7 @@ const Sort = ({ columnAccessors }: SortProps) => {
                       key={columnAccessor}
                       onClick={() => toggleSortBy(columnAccessor)}
                     >
-                      <DropdownMenuIcon icon={<BsSortUp />} />
+                      <DropdownMenuIcon icon={<BsListUl />} />
                       {columnAccessors[columnAccessor]}
                     </DropdownMenuItem>
                   );

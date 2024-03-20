@@ -40,7 +40,6 @@ import {
   usePagination,
   useSort,
 } from "./components";
-import type { ColumnFilter } from "./components/Filter/types";
 import type { TableAction } from "./types";
 import { getAccessorKey, updateNestedProperty } from "./utils";
 
@@ -53,11 +52,9 @@ interface TableProps<T extends object> {
   defaultColumnPinning?: ColumnPinningState;
   defaultColumnVisibility?: Record<string, boolean>;
   editableComponents?: Record<string, EditableTableCellComponent<T>>;
-  label?: string;
-  newPath?: string;
-  newPermission?: boolean;
   withColumnOrdering?: boolean;
   withInlineEditing?: boolean;
+  withFilters?: boolean;
   withPagination?: boolean;
   withSelectableRows?: boolean;
   withSimpleSorting?: boolean;
@@ -70,15 +67,13 @@ const Table = <T extends object>({
   columns,
   actions = [],
   count = 0,
+  editableComponents,
   defaultColumnOrder,
   defaultColumnPinning = {
     left: ["Select"],
   },
   defaultColumnVisibility,
-  editableComponents,
-  label,
-  newPath,
-  newPermission,
+  withFilters = false,
   withInlineEditing = false,
   withColumnOrdering = false,
   withPagination = true,
@@ -418,51 +413,31 @@ const Table = <T extends object>({
     setColumnOrder(table.getAllLeafColumns().map((column) => column.id));
   });
 
-  const filters = useMemo(
-    () =>
-      columns.reduce<ColumnFilter[]>((acc, column) => {
-        if (
-          column.meta?.filter &&
-          column.header &&
-          typeof column.header === "string"
-        ) {
-          const filter: ColumnFilter = {
-            accessorKey: getAccessorKey(column) ?? "",
-            header: column.header,
-            pluralHeader: column.meta.pluralHeader,
-            filter: column.meta.filter,
-          };
-          return [...acc, filter];
-        }
-        return acc;
-      }, []),
-    [columns]
-  );
-
   const rows = table.getRowModel().rows;
 
   return (
     <VStack spacing={0} className="h-full">
-      <TableHeader
-        actions={actions}
-        columnAccessors={columnAccessors}
-        columnOrder={columnOrder}
-        columns={table.getAllLeafColumns()}
-        editMode={editMode}
-        filters={filters}
-        label={label}
-        newPath={newPath}
-        newPermission={newPermission}
-        selectedRows={selectedRows}
-        setColumnOrder={setColumnOrder}
-        setEditMode={setEditMode}
-        pagination={pagination}
-        withInlineEditing={withInlineEditing}
-        withColumnOrdering={withColumnOrdering}
-        withPagination={withPagination}
-        withSelectableRows={withSelectableRows}
-      />
-
+      {(withColumnOrdering ||
+        withFilters ||
+        withSelectableRows ||
+        withInlineEditing) && (
+        <TableHeader
+          actions={actions}
+          columnAccessors={columnAccessors}
+          columnOrder={columnOrder}
+          columns={table.getAllLeafColumns()}
+          editMode={editMode}
+          selectedRows={selectedRows}
+          setColumnOrder={setColumnOrder}
+          setEditMode={setEditMode}
+          pagination={pagination}
+          withInlineEditing={withInlineEditing}
+          withColumnOrdering={withColumnOrdering}
+          withFilters={withFilters}
+          withPagination={withPagination}
+          withSelectableRows={withSelectableRows}
+        />
+      )}
       <div
         className="w-full h-full bg-card overflow-scroll"
         style={{ contain: "strict" }}

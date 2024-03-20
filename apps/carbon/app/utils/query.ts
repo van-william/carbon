@@ -85,6 +85,9 @@ export function getGenericFilter<
       return query.ilike(column, `%${value}%`);
     case "startsWith":
       return query.ilike(column, `${value}%`);
+    case "in":
+      const values = value.split(",");
+      return query.in(column, values);
     default:
       throw badRequest(`Invalid filter operator: ${operator}`);
   }

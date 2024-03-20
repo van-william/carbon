@@ -7,7 +7,8 @@ import CreatableCombobox from "./CreateableCombobox";
 import MultiSelect from "./MultiSelect";
 import New from "./New";
 import Select from "./Select";
-import Table from "./Table";
+import TableNew from "./Table";
+import Table from "./TableOld";
 
 export {
   Address,
@@ -22,4 +23,5 @@ export {
   New,
   Select,
   Table,
+  TableNew,
 };

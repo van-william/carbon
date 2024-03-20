@@ -132,8 +132,6 @@ export async function getParts(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
     search: string | null;
-    type: string | null;
-    group: string | null;
     supplierId: string | null;
   }
 ) {
@@ -145,14 +143,6 @@ export async function getParts(
     query = query.or(
       `id.ilike.%${args.search}%,name.ilike.%${args.search}%,description.ilike.%${args.search}%`
     );
-  }
-
-  if (args.type) {
-    query = query.eq("partType", args.type);
-  }
-
-  if (args.group) {
-    query = query.eq("partGroupId", args.group);
   }
 
   if (args.supplierId) {
