@@ -29,7 +29,11 @@ const PartGroupsTable = memo(({ data, count }: PartGroupsTableProps) => {
         cell: ({ row }) => (
           <Enumerable
             value={row.original.name}
-            onClick={() => navigate(row.original.id)}
+            onClick={() =>
+              navigate(
+                `${path.to.partGroup(row.original.id)}?${params.toString()}`
+              )
+            }
             className="cursor-pointer"
           />
         ),
@@ -40,7 +44,7 @@ const PartGroupsTable = memo(({ data, count }: PartGroupsTableProps) => {
         cell: (item) => item.getValue(),
       },
     ],
-    [navigate]
+    [navigate, params]
   );
 
   const renderContextMenu = useCallback(
@@ -79,7 +83,7 @@ const PartGroupsTable = memo(({ data, count }: PartGroupsTableProps) => {
       columns={columns}
       count={count}
       label="Part Group"
-      newPath={path.to.newPartGroup}
+      newPath={`${path.to.newPartGroup}?${params.toString()}`}
       newPermission={permissions.can("create", "parts")}
       renderContextMenu={renderContextMenu}
     />
