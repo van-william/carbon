@@ -1,5 +1,4 @@
 import {
-  Button,
   HStack,
   IconButton,
   Popover,
@@ -34,9 +33,12 @@ const Columns = <T extends object>({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="ghost" leftIcon={<BsLayoutThreeColumns />}>
-          Columns
-        </Button>
+        <IconButton
+          aria-label="Columns"
+          title="Columns"
+          variant="ghost"
+          icon={<BsLayoutThreeColumns />}
+        />
       </PopoverTrigger>
       <PopoverContent className="w-96">
         <PopoverHeader>

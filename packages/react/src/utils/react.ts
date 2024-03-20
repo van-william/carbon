@@ -33,6 +33,9 @@ export const reactNodeToString = function (reactNode: ReactNode): string {
     if (reactNode.props.value) {
       // for Enumerable component
       string += reactNode.props.value;
+    } else if (reactNode.props.status) {
+      // for Status components
+      string += reactNode.props.status;
     } else {
       string += reactNodeToString(reactNode.props.children);
     }

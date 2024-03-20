@@ -39,6 +39,7 @@ const Sort = ({ columnAccessors }: SortProps) => {
       <PopoverTrigger asChild>
         <IconButton
           aria-label="Sort"
+          title="Sort"
           variant={hasNoSorts ? "ghost" : "primary"}
           icon={<BsSortUp />}
         />

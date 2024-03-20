@@ -514,12 +514,18 @@ const Table = <T extends object>({
                                 header.column.columnDef.header,
                                 header.getContext()
                               )}
-                              <span className="pl-4">
+                              <span className="pl-2">
                                 {sorted ? (
                                   sorted === -1 ? (
-                                    <FaSortDown aria-label="sorted descending" />
+                                    <FaSortDown
+                                      aria-label="sorted descending"
+                                      className="text-primary"
+                                    />
                                   ) : (
-                                    <FaSortUp aria-label="sorted ascending" />
+                                    <FaSortUp
+                                      aria-label="sorted ascending"
+                                      className="text-primary"
+                                    />
                                   )
                                 ) : sortable ? (
                                   <FaSort aria-label="sort" />
@@ -624,12 +630,18 @@ const Table = <T extends object>({
                               header.column.columnDef.header,
                               header.getContext()
                             )}
-                            <span className="pl-4">
+                            <span className="pl-2">
                               {sorted ? (
                                 sorted === -1 ? (
-                                  <FaSortDown aria-label="sorted descending" />
+                                  <FaSortDown
+                                    aria-label="sorted descending"
+                                    className="text-primary"
+                                  />
                                 ) : (
-                                  <FaSortUp aria-label="sorted ascending" />
+                                  <FaSortUp
+                                    aria-label="sorted ascending"
+                                    className="text-primary"
+                                  />
                                 )
                               ) : sortable ? (
                                 <FaSort

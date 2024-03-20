@@ -18,6 +18,8 @@ CREATE TABLE "location" (
   CONSTRAINT "location_pkey" PRIMARY KEY ("id")
 );
 
+CREATE INDEX "location_name_idx" ON "location" ("name");
+
 ALTER TABLE "location" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Employees can view locations" ON "location"

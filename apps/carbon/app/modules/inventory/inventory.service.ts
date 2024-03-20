@@ -30,13 +30,11 @@ export async function getReceipts(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
     search: string | null;
-    document: string | null;
-    location: string | null;
   }
 ) {
   let query = client
-    .from("receipt")
-    .select("*, location(name), supplier(name)", {
+    .from("receipts")
+    .select("*", {
       count: "exact",
     })
     .neq("sourceDocumentId", "");
@@ -45,14 +43,6 @@ export async function getReceipts(
     query = query.or(
       `receiptId.ilike.%${args.search}%,sourceDocumentReadableId.ilike.%${args.search}%`
     );
-  }
-
-  if (args.document) {
-    query = query.eq("sourceDocument", args.document);
-  }
-
-  if (args.location) {
-    query = query.eq("locationId", args.location);
   }
 
   query = setGenericQueryFilters(query, args, [
