@@ -20,7 +20,6 @@ import { useCustomers } from "~/stores";
 import { favoriteSchema } from "~/types/validators";
 import { path } from "~/utils/path";
 import { QuotationStatus } from "../Quotation";
-// import { QuotationStatus } from "~/modules/purchasing";
 
 type QuotationsTableProps = {
   data: Quotation[];
@@ -165,10 +164,10 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
             type: "fetcher",
             endpoint: path.to.api.locations,
             transform: (data: { id: string; name: string }[] | null) =>
-              data?.map(({ id, name }) => ({
+              data?.map(({ name }) => ({
                 value: name,
                 label: <Enumerable value={name} />,
-              })),
+              })) ?? [],
           },
         },
       },

@@ -61,8 +61,7 @@ const Filter = forwardRef<HTMLButtonElement, FilterProps>(
       ) {
         setActiveOptions(
           activeFilter.filter.transform
-            ? // @ts-expect-error
-              activeFilter.filter.transform(fetcher.data.data)
+            ? activeFilter.filter.transform(fetcher.data.data)
             : fetcher.data.data?.map((d) => ({ label: d.name, value: d.id })) ??
                 []
         );

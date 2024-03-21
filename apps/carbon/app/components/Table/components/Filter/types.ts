@@ -1,4 +1,3 @@
-import type { PostgrestResponse } from "@supabase/supabase-js";
 import type { ReactNode } from "react";
 
 export type ColumnFilter = {
@@ -22,5 +21,5 @@ export type ColumnFilterData =
   | {
       type: "fetcher";
       endpoint: string;
-      transform?: (result: PostgrestResponse<unknown>) => Option[];
+      transform?: (result: any) => Option[];
     };
