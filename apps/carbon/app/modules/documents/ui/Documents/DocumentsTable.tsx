@@ -64,8 +64,6 @@ const DocumentsTable = memo(
       download,
       edit,
       favorite,
-      isImage,
-      isPdf,
       label,
       setLabel,
     } = useDocument();
@@ -170,10 +168,10 @@ const DocumentsTable = memo(
               <DocumentIcon type={row.original.type!} />
               <Hyperlink onClick={() => download(row.original)}>
                 {row.original.type &&
-                (isImage(row.original.type) || isPdf(row.original.type)) ? (
+                ["Image", "PDF"].includes(row.original.type) ? (
                   <HoverCard>
                     <HoverCardTrigger>{row.original.name}</HoverCardTrigger>
-                    {isPdf(row.original.type) ? (
+                    {row.original.type === "PDF" ? (
                       <HoverCardContent className="w-[425px] h-[550px] overflow-hidden p-0">
                         <iframe
                           seamless
@@ -343,8 +341,6 @@ const DocumentsTable = memo(
     }, [
       download,
       extensions,
-      isImage,
-      isPdf,
       labelOptions,
       onDeleteLabel,
       onFavorite,

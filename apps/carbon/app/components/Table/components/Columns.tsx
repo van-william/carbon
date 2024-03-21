@@ -1,10 +1,13 @@
 import {
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
   HStack,
   IconButton,
-  Popover,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger,
 } from "@carbon/react";
 import type { Column, ColumnOrderState } from "@tanstack/react-table";
 import { Reorder } from "framer-motion";
@@ -31,24 +34,21 @@ const Columns = <T extends object>({
   setColumnOrder,
 }: ColumnsProps<T>) => {
   return (
-    <Popover>
-      <PopoverTrigger asChild>
+    <Drawer>
+      <DrawerTrigger asChild>
         <IconButton
           aria-label="Columns"
           title="Columns"
           variant="ghost"
           icon={<BsLayoutThreeColumns />}
         />
-      </PopoverTrigger>
-      <PopoverContent className="w-96">
-        <PopoverHeader>
-          <p className="text-sm">Edit column view</p>
-          <p className="text-xs text-muted-foreground">
-            Manage and reorder columns
-          </p>
-        </PopoverHeader>
-
-        <div className="max-h-48 overflow-y-auto">
+      </DrawerTrigger>
+      <DrawerContent>
+        <DrawerHeader>
+          <DrawerTitle>Edit column view</DrawerTitle>
+          <DrawerDescription>Manage and reorder columns</DrawerDescription>
+        </DrawerHeader>
+        <DrawerBody>
           <Reorder.Group
             axis="y"
             values={columnOrder}
@@ -56,7 +56,7 @@ const Columns = <T extends object>({
               if (withSelectableRows) newOrder.unshift("select");
               setColumnOrder(newOrder);
             }}
-            className="space-y-2"
+            className="w-full space-y-2"
           >
             {columns.reduce<JSX.Element[]>((acc, column) => {
               if (isColumnToggable(column))
@@ -64,9 +64,9 @@ const Columns = <T extends object>({
                   <Reorder.Item
                     key={column.id}
                     value={column.id}
-                    className="rounded-lg"
+                    className="w-full rounded-lg"
                   >
-                    <HStack>
+                    <HStack className="w-full">
                       <IconButton
                         aria-label="Drag handle"
                         icon={<MdOutlineDragIndicator />}
@@ -105,9 +105,9 @@ const Columns = <T extends object>({
               return acc;
             }, [])}
           </Reorder.Group>
-        </div>
-      </PopoverContent>
-    </Popover>
+        </DrawerBody>
+      </DrawerContent>
+    </Drawer>
   );
 };
 

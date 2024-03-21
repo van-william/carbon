@@ -143,7 +143,7 @@ export function getDocumentType(
     return "Text";
   }
 
-  if (["png", "jpg", "jpeg", "gif"].includes(extension)) {
+  if (["png", "jpg", "jpeg", "gif", "avif"].includes(extension)) {
     return "Image";
   }
 
@@ -211,11 +211,13 @@ export async function upsertDocument(
       .select("*")
       .single();
   }
+
+  const { extension, ...data } = document;
   return client
     .from("document")
     .update(
       sanitize({
-        ...document,
+        ...data,
         type,
         updatedAt: new Date().toISOString(),
       })
