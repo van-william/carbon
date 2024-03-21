@@ -383,6 +383,17 @@ export async function getQuoteLines(
   return client.from("quoteLine").select("*").eq("quoteId", quoteId);
 }
 
+export async function getQuoteCustomerDetails(
+  client: SupabaseClient<Database>,
+  quoteId: string
+) {
+  return client
+    .from("quoteCustomerDetails")
+    .select("*")
+    .eq("quoteId", quoteId)
+    .single();
+}
+
 export async function getQuoteLineQuantities(
   client: SupabaseClient<Database>,
   quoteLineId: string
@@ -391,6 +402,17 @@ export async function getQuoteLineQuantities(
     .from("quoteLineQuantity")
     .select("*")
     .eq("quoteLineId", quoteLineId)
+    .order("createdAt");
+}
+
+export async function getQuoteLineQuantitiesByQuoteId(
+  client: SupabaseClient<Database>,
+  quoteId: string
+) {
+  return client
+    .from("quoteLineQuantity")
+    .select("*")
+    .eq("quoteId", quoteId)
     .order("createdAt");
 }
 

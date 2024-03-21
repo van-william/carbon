@@ -1,3 +1,4 @@
+// --no-ignore
 export type Json =
   | string
   | number
@@ -120,8 +121,8 @@ export type Database = {
           active: boolean
           class: Database["public"]["Enums"]["glAccountClass"] | null
           consolidatedRate:
-            | Database["public"]["Enums"]["glConsolidatedRate"]
-            | null
+          | Database["public"]["Enums"]["glConsolidatedRate"]
+          | null
           createdAt: string
           createdBy: string
           customFields: Json | null
@@ -140,8 +141,8 @@ export type Database = {
           active?: boolean
           class?: Database["public"]["Enums"]["glAccountClass"] | null
           consolidatedRate?:
-            | Database["public"]["Enums"]["glConsolidatedRate"]
-            | null
+          | Database["public"]["Enums"]["glConsolidatedRate"]
+          | null
           createdAt?: string
           createdBy: string
           customFields?: Json | null
@@ -160,8 +161,8 @@ export type Database = {
           active?: boolean
           class?: Database["public"]["Enums"]["glAccountClass"] | null
           consolidatedRate?:
-            | Database["public"]["Enums"]["glConsolidatedRate"]
-            | null
+          | Database["public"]["Enums"]["glConsolidatedRate"]
+          | null
           createdAt?: string
           createdBy?: string
           customFields?: Json | null
@@ -1574,8 +1575,8 @@ export type Database = {
           createdAt: string
           documentId: string | null
           documentType:
-            | Database["public"]["Enums"]["partLedgerDocumentType"]
-            | null
+          | Database["public"]["Enums"]["partLedgerDocumentType"]
+          | null
           entryNumber: number
           externalDocumentId: string | null
           id: string
@@ -1592,8 +1593,8 @@ export type Database = {
           createdAt?: string
           documentId?: string | null
           documentType?:
-            | Database["public"]["Enums"]["partLedgerDocumentType"]
-            | null
+          | Database["public"]["Enums"]["partLedgerDocumentType"]
+          | null
           entryNumber?: number
           externalDocumentId?: string | null
           id?: string
@@ -1610,8 +1611,8 @@ export type Database = {
           createdAt?: string
           documentId?: string | null
           documentType?:
-            | Database["public"]["Enums"]["partLedgerDocumentType"]
-            | null
+          | Database["public"]["Enums"]["partLedgerDocumentType"]
+          | null
           entryNumber?: number
           externalDocumentId?: string | null
           id?: string
@@ -3792,8 +3793,8 @@ export type Database = {
           documentId: string | null
           documentLineReference: string | null
           documentType:
-            | Database["public"]["Enums"]["journalLineDocumentType"]
-            | null
+          | Database["public"]["Enums"]["journalLineDocumentType"]
+          | null
           externalDocumentId: string | null
           id: string
           journalId: number
@@ -3810,8 +3811,8 @@ export type Database = {
           documentId?: string | null
           documentLineReference?: string | null
           documentType?:
-            | Database["public"]["Enums"]["journalLineDocumentType"]
-            | null
+          | Database["public"]["Enums"]["journalLineDocumentType"]
+          | null
           externalDocumentId?: string | null
           id?: string
           journalId: number
@@ -3828,8 +3829,8 @@ export type Database = {
           documentId?: string | null
           documentLineReference?: string | null
           documentType?:
-            | Database["public"]["Enums"]["journalLineDocumentType"]
-            | null
+          | Database["public"]["Enums"]["journalLineDocumentType"]
+          | null
           externalDocumentId?: string | null
           id?: string
           journalId?: number
@@ -4478,8 +4479,8 @@ export type Database = {
           createdAt: string
           documentId: string | null
           documentType:
-            | Database["public"]["Enums"]["partLedgerDocumentType"]
-            | null
+          | Database["public"]["Enums"]["partLedgerDocumentType"]
+          | null
           entryNumber: number
           entryType: Database["public"]["Enums"]["partLedgerType"]
           externalDocumentId: string | null
@@ -4494,8 +4495,8 @@ export type Database = {
           createdAt?: string
           documentId?: string | null
           documentType?:
-            | Database["public"]["Enums"]["partLedgerDocumentType"]
-            | null
+          | Database["public"]["Enums"]["partLedgerDocumentType"]
+          | null
           entryNumber?: number
           entryType: Database["public"]["Enums"]["partLedgerType"]
           externalDocumentId?: string | null
@@ -4510,8 +4511,8 @@ export type Database = {
           createdAt?: string
           documentId?: string | null
           documentType?:
-            | Database["public"]["Enums"]["partLedgerDocumentType"]
-            | null
+          | Database["public"]["Enums"]["partLedgerDocumentType"]
+          | null
           entryNumber?: number
           entryType?: Database["public"]["Enums"]["partLedgerType"]
           externalDocumentId?: string | null
@@ -7864,6 +7865,13 @@ export type Database = {
             foreignKeyName: "quoteAssembly_quoteId_fkey"
             columns: ["quoteId"]
             isOneToOne: false
+            referencedRelation: "quoteCustomerDetails"
+            referencedColumns: ["quoteId"]
+          },
+          {
+            foreignKeyName: "quoteAssembly_quoteId_fkey"
+            columns: ["quoteId"]
+            isOneToOne: false
             referencedRelation: "quotes"
             referencedColumns: ["id"]
           },
@@ -7917,6 +7925,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "quote"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteFavorites_quoteId_fkey"
+            columns: ["quoteId"]
+            isOneToOne: false
+            referencedRelation: "quoteCustomerDetails"
+            referencedColumns: ["quoteId"]
           },
           {
             foreignKeyName: "quoteFavorites_quoteId_fkey"
@@ -8046,6 +8061,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "quote"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteLine_quoteId_fkey"
+            columns: ["quoteId"]
+            isOneToOne: false
+            referencedRelation: "quoteCustomerDetails"
+            referencedColumns: ["quoteId"]
           },
           {
             foreignKeyName: "quoteLine_quoteId_fkey"
@@ -8302,6 +8324,13 @@ export type Database = {
             foreignKeyName: "quoteMaterial_quoteId_fkey"
             columns: ["quoteId"]
             isOneToOne: false
+            referencedRelation: "quoteCustomerDetails"
+            referencedColumns: ["quoteId"]
+          },
+          {
+            foreignKeyName: "quoteMaterial_quoteId_fkey"
+            columns: ["quoteId"]
+            isOneToOne: false
             referencedRelation: "quotes"
             referencedColumns: ["id"]
           },
@@ -8450,6 +8479,13 @@ export type Database = {
             foreignKeyName: "quoteOperation_quoteId_fkey"
             columns: ["quoteId"]
             isOneToOne: false
+            referencedRelation: "quoteCustomerDetails"
+            referencedColumns: ["quoteId"]
+          },
+          {
+            foreignKeyName: "quoteOperation_quoteId_fkey"
+            columns: ["quoteId"]
+            isOneToOne: false
             referencedRelation: "quotes"
             referencedColumns: ["id"]
           },
@@ -8502,8 +8538,8 @@ export type Database = {
           postingDate: string | null
           receiptId: string
           sourceDocument:
-            | Database["public"]["Enums"]["receiptSourceDocument"]
-            | null
+          | Database["public"]["Enums"]["receiptSourceDocument"]
+          | null
           sourceDocumentId: string | null
           sourceDocumentReadableId: string | null
           status: Database["public"]["Enums"]["receiptStatus"]
@@ -8522,8 +8558,8 @@ export type Database = {
           postingDate?: string | null
           receiptId: string
           sourceDocument?:
-            | Database["public"]["Enums"]["receiptSourceDocument"]
-            | null
+          | Database["public"]["Enums"]["receiptSourceDocument"]
+          | null
           sourceDocumentId?: string | null
           sourceDocumentReadableId?: string | null
           status?: Database["public"]["Enums"]["receiptStatus"]
@@ -8542,8 +8578,8 @@ export type Database = {
           postingDate?: string | null
           receiptId?: string
           sourceDocument?:
-            | Database["public"]["Enums"]["receiptSourceDocument"]
-            | null
+          | Database["public"]["Enums"]["receiptSourceDocument"]
+          | null
           sourceDocumentId?: string | null
           sourceDocumentReadableId?: string | null
           status?: Database["public"]["Enums"]["receiptStatus"]
@@ -10455,8 +10491,8 @@ export type Database = {
           createdAt: string
           documentId: string | null
           documentType:
-            | Database["public"]["Enums"]["supplierLedgerDocumentType"]
-            | null
+          | Database["public"]["Enums"]["supplierLedgerDocumentType"]
+          | null
           entryNumber: number
           externalDocumentId: string | null
           id: string
@@ -10468,8 +10504,8 @@ export type Database = {
           createdAt?: string
           documentId?: string | null
           documentType?:
-            | Database["public"]["Enums"]["supplierLedgerDocumentType"]
-            | null
+          | Database["public"]["Enums"]["supplierLedgerDocumentType"]
+          | null
           entryNumber?: number
           externalDocumentId?: string | null
           id?: string
@@ -10481,8 +10517,8 @@ export type Database = {
           createdAt?: string
           documentId?: string | null
           documentType?:
-            | Database["public"]["Enums"]["supplierLedgerDocumentType"]
-            | null
+          | Database["public"]["Enums"]["supplierLedgerDocumentType"]
+          | null
           entryNumber?: number
           externalDocumentId?: string | null
           id?: string
@@ -11917,8 +11953,8 @@ export type Database = {
           active: boolean | null
           class: Database["public"]["Enums"]["glAccountClass"] | null
           consolidatedRate:
-            | Database["public"]["Enums"]["glConsolidatedRate"]
-            | null
+          | Database["public"]["Enums"]["glConsolidatedRate"]
+          | null
           createdAt: string | null
           createdBy: string | null
           directPosting: boolean | null
@@ -11938,8 +11974,8 @@ export type Database = {
           active?: boolean | null
           class?: Database["public"]["Enums"]["glAccountClass"] | null
           consolidatedRate?:
-            | Database["public"]["Enums"]["glConsolidatedRate"]
-            | null
+          | Database["public"]["Enums"]["glConsolidatedRate"]
+          | null
           createdAt?: string | null
           createdBy?: string | null
           directPosting?: boolean | null
@@ -11959,8 +11995,8 @@ export type Database = {
           active?: boolean | null
           class?: Database["public"]["Enums"]["glAccountClass"] | null
           consolidatedRate?:
-            | Database["public"]["Enums"]["glConsolidatedRate"]
-            | null
+          | Database["public"]["Enums"]["glConsolidatedRate"]
+          | null
           createdAt?: string | null
           createdBy?: string | null
           directPosting?: boolean | null
@@ -12394,8 +12430,8 @@ export type Database = {
           partGroupId: string | null
           partType: Database["public"]["Enums"]["partType"] | null
           replenishmentSystem:
-            | Database["public"]["Enums"]["partReplenishmentSystem"]
-            | null
+          | Database["public"]["Enums"]["partReplenishmentSystem"]
+          | null
           supplierIds: string[] | null
         }
         Relationships: [
@@ -12600,8 +12636,8 @@ export type Database = {
           partName: string | null
           purchaseOrderId: string | null
           purchaseOrderLineType:
-            | Database["public"]["Enums"]["purchaseOrderLineType"]
-            | null
+          | Database["public"]["Enums"]["purchaseOrderLineType"]
+          | null
           purchaseQuantity: number | null
           quantityInvoiced: number | null
           quantityReceived: number | null
@@ -12988,6 +13024,27 @@ export type Database = {
         }
         Relationships: []
       }
+      quoteCustomerDetails: {
+        Row: {
+          customerAddressLine1: string | null
+          customerAddressLine2: string | null
+          customerCity: string | null
+          customerCountryCode: number | null
+          customerName: string | null
+          customerPostalCode: string | null
+          customerState: string | null
+          quoteId: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "address_countryCode_fkey"
+            columns: ["customerCountryCode"]
+            isOneToOne: false
+            referencedRelation: "country"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       quotes: {
         Row: {
           createdAt: string | null
@@ -13118,8 +13175,8 @@ export type Database = {
           postingDate: string | null
           receiptId: string | null
           sourceDocument:
-            | Database["public"]["Enums"]["receiptSourceDocument"]
-            | null
+          | Database["public"]["Enums"]["receiptSourceDocument"]
+          | null
           sourceDocumentId: string | null
           sourceDocumentReadableId: string | null
           supplierId: string | null
@@ -13476,212 +13533,212 @@ export type Database = {
     Enums: {
       accountingPeriodStatus: "Inactive" | "Active"
       costLedgerType:
-        | "Direct Cost"
-        | "Revaluation"
-        | "Rounding"
-        | "Indirect Cost"
-        | "Variance"
-        | "Total"
+      | "Direct Cost"
+      | "Revaluation"
+      | "Rounding"
+      | "Indirect Cost"
+      | "Variance"
+      | "Total"
       documentTransactionType:
-        | "Download"
-        | "Edit"
-        | "Favorite"
-        | "Label"
-        | "Unfavorite"
-        | "Upload"
+      | "Download"
+      | "Edit"
+      | "Favorite"
+      | "Label"
+      | "Unfavorite"
+      | "Upload"
       factor:
-        | "Hours/Piece"
-        | "Hours/100 Pieces"
-        | "Hours/1000 Pieces"
-        | "Minutes/Piece"
-        | "Minutes/100 Pieces"
-        | "Minutes/1000 Pieces"
-        | "Pieces/Hour"
-        | "Pieces/Minute"
-        | "Seconds/Piece"
-        | "Total Hours"
-        | "Total Minutes"
+      | "Hours/Piece"
+      | "Hours/100 Pieces"
+      | "Hours/1000 Pieces"
+      | "Minutes/Piece"
+      | "Minutes/100 Pieces"
+      | "Minutes/1000 Pieces"
+      | "Pieces/Hour"
+      | "Pieces/Minute"
+      | "Seconds/Piece"
+      | "Total Hours"
+      | "Total Minutes"
       glAccountCategory:
-        | "Bank"
-        | "Accounts Receivable"
-        | "Inventory"
-        | "Other Current Asset"
-        | "Fixed Asset"
-        | "Accumulated Depreciation"
-        | "Other Asset"
-        | "Accounts Payable"
-        | "Other Current Liability"
-        | "Long Term Liability"
-        | "Equity - No Close"
-        | "Equity - Close"
-        | "Retained Earnings"
-        | "Income"
-        | "Cost of Goods Sold"
-        | "Expense"
-        | "Other Income"
-        | "Other Expense"
+      | "Bank"
+      | "Accounts Receivable"
+      | "Inventory"
+      | "Other Current Asset"
+      | "Fixed Asset"
+      | "Accumulated Depreciation"
+      | "Other Asset"
+      | "Accounts Payable"
+      | "Other Current Liability"
+      | "Long Term Liability"
+      | "Equity - No Close"
+      | "Equity - Close"
+      | "Retained Earnings"
+      | "Income"
+      | "Cost of Goods Sold"
+      | "Expense"
+      | "Other Income"
+      | "Other Expense"
       glAccountClass: "Asset" | "Liability" | "Equity" | "Revenue" | "Expense"
       glAccountType: "Posting" | "Total" | "Begin Total" | "End Total"
       glConsolidatedRate: "Average" | "Current" | "Historical"
       glIncomeBalance: "Balance Sheet" | "Income Statement"
       journalLineDocumentType:
-        | "Receipt"
-        | "Invoice"
-        | "Credit Memo"
-        | "Blanket Order"
-        | "Return Order"
+      | "Receipt"
+      | "Invoice"
+      | "Credit Memo"
+      | "Blanket Order"
+      | "Return Order"
       module:
-        | "Accounting"
-        | "Documents"
-        | "Invoicing"
-        | "Inventory"
-        | "Jobs"
-        | "Messaging"
-        | "Parts"
-        | "Purchasing"
-        | "Resources"
-        | "Sales"
-        | "Scheduling"
-        | "Timecards"
-        | "Users"
+      | "Accounting"
+      | "Documents"
+      | "Invoicing"
+      | "Inventory"
+      | "Jobs"
+      | "Messaging"
+      | "Parts"
+      | "Purchasing"
+      | "Resources"
+      | "Sales"
+      | "Scheduling"
+      | "Timecards"
+      | "Users"
       month:
-        | "January"
-        | "February"
-        | "March"
-        | "April"
-        | "May"
-        | "June"
-        | "July"
-        | "August"
-        | "September"
-        | "October"
-        | "November"
-        | "December"
+      | "January"
+      | "February"
+      | "March"
+      | "April"
+      | "May"
+      | "June"
+      | "July"
+      | "August"
+      | "September"
+      | "October"
+      | "November"
+      | "December"
       partCostingMethod: "Standard" | "Average" | "LIFO" | "FIFO"
       partLedgerDocumentType:
-        | "Sales Shipment"
-        | "Sales Invoice"
-        | "Sales Return Receipt"
-        | "Sales Credit Memo"
-        | "Purchase Receipt"
-        | "Purchase Invoice"
-        | "Purchase Return Shipment"
-        | "Purchase Credit Memo"
-        | "Transfer Shipment"
-        | "Transfer Receipt"
-        | "Service Shipment"
-        | "Service Invoice"
-        | "Service Credit Memo"
-        | "Posted Assembly"
-        | "Inventory Receipt"
-        | "Inventory Shipment"
-        | "Direct Transfer"
+      | "Sales Shipment"
+      | "Sales Invoice"
+      | "Sales Return Receipt"
+      | "Sales Credit Memo"
+      | "Purchase Receipt"
+      | "Purchase Invoice"
+      | "Purchase Return Shipment"
+      | "Purchase Credit Memo"
+      | "Transfer Shipment"
+      | "Transfer Receipt"
+      | "Service Shipment"
+      | "Service Invoice"
+      | "Service Credit Memo"
+      | "Posted Assembly"
+      | "Inventory Receipt"
+      | "Inventory Shipment"
+      | "Direct Transfer"
       partLedgerType:
-        | "Purchase"
-        | "Sale"
-        | "Positive Adjmt."
-        | "Negative Adjmt."
-        | "Transfer"
-        | "Consumption"
-        | "Output"
-        | "Assembly Consumption"
-        | "Assembly Output"
+      | "Purchase"
+      | "Sale"
+      | "Positive Adjmt."
+      | "Negative Adjmt."
+      | "Transfer"
+      | "Consumption"
+      | "Output"
+      | "Assembly Consumption"
+      | "Assembly Output"
       partManufacturingPolicy: "Make to Order" | "Make to Stock"
       partReorderingPolicy:
-        | "Manual Reorder"
-        | "Demand-Based Reorder"
-        | "Fixed Reorder Quantity"
-        | "Maximum Quantity"
+      | "Manual Reorder"
+      | "Demand-Based Reorder"
+      | "Fixed Reorder Quantity"
+      | "Maximum Quantity"
       partReplenishmentSystem: "Buy" | "Make" | "Buy and Make"
       partType: "Inventory" | "Non-Inventory"
       payableLineType:
-        | "G/L Account"
-        | "Part"
-        | "Service"
-        | "Fixed Asset"
-        | "Comment"
+      | "G/L Account"
+      | "Part"
+      | "Service"
+      | "Fixed Asset"
+      | "Comment"
       paymentTermCalculationMethod: "Net" | "End of Month" | "Day of Month"
       purchaseInvoiceStatus:
-        | "Draft"
-        | "Pending"
-        | "Submitted"
-        | "Return"
-        | "Debit Note Issued"
-        | "Paid"
-        | "Partially Paid"
-        | "Overdue"
-        | "Voided"
+      | "Draft"
+      | "Pending"
+      | "Submitted"
+      | "Return"
+      | "Debit Note Issued"
+      | "Paid"
+      | "Partially Paid"
+      | "Overdue"
+      | "Voided"
       purchaseOrderLineType:
-        | "Comment"
-        | "G/L Account"
-        | "Part"
-        | "Service"
-        | "Fixed Asset"
+      | "Comment"
+      | "G/L Account"
+      | "Part"
+      | "Service"
+      | "Fixed Asset"
       purchaseOrderStatus:
-        | "Draft"
-        | "To Review"
-        | "Rejected"
-        | "To Receive"
-        | "To Receive and Invoice"
-        | "To Invoice"
-        | "Completed"
-        | "Closed"
+      | "Draft"
+      | "To Review"
+      | "Rejected"
+      | "To Receive"
+      | "To Receive and Invoice"
+      | "To Invoice"
+      | "Completed"
+      | "Closed"
       purchaseOrderTransactionType:
-        | "Edit"
-        | "Favorite"
-        | "Unfavorite"
-        | "Approved"
-        | "Reject"
-        | "Request Approval"
+      | "Edit"
+      | "Favorite"
+      | "Unfavorite"
+      | "Approved"
+      | "Reject"
+      | "Request Approval"
       purchaseOrderType: "Purchase" | "Return"
       quoteLineStatus: "Draft" | "In Progress" | "Complete"
       quoteStatus:
-        | "Draft"
-        | "Open"
-        | "Replied"
-        | "Ordered"
-        | "Partially Ordered"
-        | "Lost"
-        | "Cancelled"
-        | "Expired"
+      | "Draft"
+      | "Open"
+      | "Replied"
+      | "Ordered"
+      | "Partially Ordered"
+      | "Lost"
+      | "Cancelled"
+      | "Expired"
       receiptSourceDocument:
-        | "Sales Order"
-        | "Sales Invoice"
-        | "Sales Return Order"
-        | "Purchase Order"
-        | "Purchase Invoice"
-        | "Purchase Return Order"
-        | "Inbound Transfer"
-        | "Outbound Transfer"
-        | "Manufacturing Consumption"
-        | "Manufacturing Output"
+      | "Sales Order"
+      | "Sales Invoice"
+      | "Sales Return Order"
+      | "Purchase Order"
+      | "Purchase Invoice"
+      | "Purchase Return Order"
+      | "Inbound Transfer"
+      | "Outbound Transfer"
+      | "Manufacturing Consumption"
+      | "Manufacturing Output"
       receiptStatus: "Draft" | "Pending" | "Posted"
       requestForQuoteStatus: "Draft" | "Sent" | "Expired" | "Closed"
       searchEntity:
-        | "Resource"
-        | "Person"
-        | "Customer"
-        | "Supplier"
-        | "Job"
-        | "Part"
-        | "Purchase Order"
-        | "Lead"
-        | "Opportunity"
-        | "Quotation"
-        | "Sales Order"
-        | "Request for Quotation"
-        | "Sales Invoice"
-        | "Purchase Invoice"
-        | "Document"
+      | "Resource"
+      | "Person"
+      | "Customer"
+      | "Supplier"
+      | "Job"
+      | "Part"
+      | "Purchase Order"
+      | "Lead"
+      | "Opportunity"
+      | "Quotation"
+      | "Sales Order"
+      | "Request for Quotation"
+      | "Sales Invoice"
+      | "Purchase Invoice"
+      | "Document"
       serviceType: "Internal" | "External"
       shippingCarrier: "UPS" | "FedEx" | "USPS" | "DHL" | "Other"
       supplierLedgerDocumentType:
-        | "Payment"
-        | "Invoice"
-        | "Credit Memo"
-        | "Finance Charge Memo"
-        | "Reminder"
-        | "Refund"
+      | "Payment"
+      | "Invoice"
+      | "Credit Memo"
+      | "Finance Charge Memo"
+      | "Reminder"
+      | "Refund"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -13870,81 +13927,81 @@ export type Database = {
 
 export type Tables<
   PublicTableNameOrOptions extends
-    | keyof (Database["public"]["Tables"] & Database["public"]["Views"])
-    | { schema: keyof Database },
+  | keyof (Database["public"]["Tables"] & Database["public"]["Views"])
+  | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-        Database[PublicTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+  ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+    Database[PublicTableNameOrOptions["schema"]]["Views"])
+  : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+    Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
-    ? R
-    : never
+  ? R
+  : never
   : PublicTableNameOrOptions extends keyof (Database["public"]["Tables"] &
-        Database["public"]["Views"])
-    ? (Database["public"]["Tables"] &
-        Database["public"]["Views"])[PublicTableNameOrOptions] extends {
-        Row: infer R
-      }
-      ? R
-      : never
-    : never
+    Database["public"]["Views"])
+  ? (Database["public"]["Tables"] &
+    Database["public"]["Views"])[PublicTableNameOrOptions] extends {
+      Row: infer R
+    }
+  ? R
+  : never
+  : never
 
 export type TablesInsert<
   PublicTableNameOrOptions extends
-    | keyof Database["public"]["Tables"]
-    | { schema: keyof Database },
+  | keyof Database["public"]["Tables"]
+  | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+  ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+  : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
-    }
-    ? I
-    : never
+    Insert: infer I
+  }
+  ? I
+  : never
   : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
-    ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
-        Insert: infer I
-      }
-      ? I
-      : never
-    : never
+  ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
+    Insert: infer I
+  }
+  ? I
+  : never
+  : never
 
 export type TablesUpdate<
   PublicTableNameOrOptions extends
-    | keyof Database["public"]["Tables"]
-    | { schema: keyof Database },
+  | keyof Database["public"]["Tables"]
+  | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+  ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+  : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
-    }
-    ? U
-    : never
+    Update: infer U
+  }
+  ? U
+  : never
   : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
-    ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
-        Update: infer U
-      }
-      ? U
-      : never
-    : never
+  ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
+    Update: infer U
+  }
+  ? U
+  : never
+  : never
 
 export type Enums<
   PublicEnumNameOrOptions extends
-    | keyof Database["public"]["Enums"]
-    | { schema: keyof Database },
+  | keyof Database["public"]["Enums"]
+  | { schema: keyof Database },
   EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+  ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
+  : never = never,
 > = PublicEnumNameOrOptions extends { schema: keyof Database }
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof Database["public"]["Enums"]
-    ? Database["public"]["Enums"][PublicEnumNameOrOptions]
-    : never
+  ? Database["public"]["Enums"][PublicEnumNameOrOptions]
+  : never
 

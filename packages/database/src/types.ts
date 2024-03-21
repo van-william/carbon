@@ -7864,6 +7864,13 @@ export type Database = {
             foreignKeyName: "quoteAssembly_quoteId_fkey"
             columns: ["quoteId"]
             isOneToOne: false
+            referencedRelation: "quoteCustomerDetails"
+            referencedColumns: ["quoteId"]
+          },
+          {
+            foreignKeyName: "quoteAssembly_quoteId_fkey"
+            columns: ["quoteId"]
+            isOneToOne: false
             referencedRelation: "quotes"
             referencedColumns: ["id"]
           },
@@ -7917,6 +7924,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "quote"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteFavorites_quoteId_fkey"
+            columns: ["quoteId"]
+            isOneToOne: false
+            referencedRelation: "quoteCustomerDetails"
+            referencedColumns: ["quoteId"]
           },
           {
             foreignKeyName: "quoteFavorites_quoteId_fkey"
@@ -8046,6 +8060,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "quote"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteLine_quoteId_fkey"
+            columns: ["quoteId"]
+            isOneToOne: false
+            referencedRelation: "quoteCustomerDetails"
+            referencedColumns: ["quoteId"]
           },
           {
             foreignKeyName: "quoteLine_quoteId_fkey"
@@ -8302,6 +8323,13 @@ export type Database = {
             foreignKeyName: "quoteMaterial_quoteId_fkey"
             columns: ["quoteId"]
             isOneToOne: false
+            referencedRelation: "quoteCustomerDetails"
+            referencedColumns: ["quoteId"]
+          },
+          {
+            foreignKeyName: "quoteMaterial_quoteId_fkey"
+            columns: ["quoteId"]
+            isOneToOne: false
             referencedRelation: "quotes"
             referencedColumns: ["id"]
           },
@@ -8445,6 +8473,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "quote"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteOperation_quoteId_fkey"
+            columns: ["quoteId"]
+            isOneToOne: false
+            referencedRelation: "quoteCustomerDetails"
+            referencedColumns: ["quoteId"]
           },
           {
             foreignKeyName: "quoteOperation_quoteId_fkey"
@@ -12987,6 +13022,27 @@ export type Database = {
           name: string | null
         }
         Relationships: []
+      }
+      quoteCustomerDetails: {
+        Row: {
+          customerAddressLine1: string | null
+          customerAddressLine2: string | null
+          customerCity: string | null
+          customerCountryCode: number | null
+          customerName: string | null
+          customerPostalCode: string | null
+          customerState: string | null
+          quoteId: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "address_countryCode_fkey"
+            columns: ["customerCountryCode"]
+            isOneToOne: false
+            referencedRelation: "country"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       quotes: {
         Row: {
