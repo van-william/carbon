@@ -149,7 +149,6 @@ const PurchaseOrdersTable = memo(
             pluralHeader: "Statuses",
           },
         },
-
         {
           accessorKey: "receiptPromisedDate",
           header: "Promised Date",
