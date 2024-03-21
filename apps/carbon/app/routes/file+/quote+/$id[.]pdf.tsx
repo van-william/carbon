@@ -6,7 +6,7 @@ import {
   getQuote,
   getQuoteLineQuantitiesByQuoteId,
   getQuoteLines,
-  getCustomer,
+  getQuoteCustomerDetails,
 } from "~/modules/sales";
 import { getCompany } from "~/modules/settings";
 import { requirePermissions } from "~/services/auth";
@@ -19,13 +19,19 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const { id } = params;
   if (!id) throw new Error("Could not find id");
 
-  const [company, quote, quoteLines, quoteLineQuantitiesByQuoteId] =
-    await Promise.all([
-      getCompany(client),
-      getQuote(client, id),
-      getQuoteLines(client, id),
-      getQuoteLineQuantitiesByQuoteId(client, id),
-    ]);
+  const [
+    company,
+    quote,
+    quoteLines,
+    quoteLineQuantitiesByQuoteId,
+    quoteLocations,
+  ] = await Promise.all([
+    getCompany(client),
+    getQuote(client, id),
+    getQuoteLines(client, id),
+    getQuoteLineQuantitiesByQuoteId(client, id),
+    getQuoteCustomerDetails(client, id),
+  ]);
 
   if (company.error) {
     logger.error(company.error);
@@ -43,19 +49,14 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     logger.error(quoteLineQuantitiesByQuoteId.error);
   }
 
-  const customer = await Promise.resolve(
-    getCustomer(client, quote.data?.customerId ?? "")
-  );
-
-  if (customer.error) {
-    logger.error(customer.error);
+  if (quoteLocations.error) {
+    logger.error(quoteLocations.error);
   }
 
   if (
     company.error ||
-    customer.error ||
-    customer.error ||
     quote.error ||
+    quoteLocations.error ||
     quoteLines.error
   ) {
     throw new Error("Failed to load quote");
@@ -64,10 +65,10 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const stream = await renderToStream(
     <QuotePDF
       company={company.data}
-      customer={customer.data}
       quote={quote.data}
       quoteLines={quoteLines.data}
       quoteLineQuantities={quoteLineQuantitiesByQuoteId.data}
+      quoteCustomerDetails={quoteLocations.data}
     />
   );
 

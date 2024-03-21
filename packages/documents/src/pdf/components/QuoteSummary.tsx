@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from "@react-pdf/renderer";
-import type { Company, Customer } from "../../types";
+import type { Company, QuoteCustomerDetails } from "../../types";
 
 type SummaryProps = {
   company: Company;
-  customer: Customer;
+  quoteCustomerDetails: QuoteCustomerDetails;
   items: {
     label: string;
     value?: string | null;
@@ -58,7 +58,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const QuoteSummary = ({ company, customer, items }: SummaryProps) => {
+const QuoteSummary = ({
+  company,
+  quoteCustomerDetails,
+  items,
+}: SummaryProps) => {
   return (
     <View style={styles.summary}>
       <View style={styles.companyDetails}>
@@ -74,7 +78,18 @@ const QuoteSummary = ({ company, customer, items }: SummaryProps) => {
       </View>
       <View style={styles.companyDetails}>
         <Text style={styles.documentSummaryLabel}>To</Text>
-        <Text style={styles.companyName}>{customer.name}</Text>
+        <Text style={styles.companyName}>
+          {quoteCustomerDetails.customerName}
+        </Text>
+        {quoteCustomerDetails.customerAddressLine1 && (
+          <Text>{quoteCustomerDetails.customerAddressLine1}</Text>
+        )}
+        {quoteCustomerDetails.customerAddressLine2 && (
+          <Text>{quoteCustomerDetails.customerAddressLine2}</Text>
+        )}
+        {quoteCustomerDetails.customerCity && (
+          <Text>{quoteCustomerDetails.customerCity}</Text>
+        )}
       </View>
       <View style={styles.documentSummary}>
         {items.map((item) => (

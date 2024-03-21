@@ -383,6 +383,17 @@ export async function getQuoteLines(
   return client.from("quoteLine").select("*").eq("quoteId", quoteId);
 }
 
+export async function getQuoteCustomerDetails(
+  client: SupabaseClient<Database>,
+  quoteId: string
+) {
+  return client
+    .from("quoteCustomerDetails")
+    .select("*")
+    .eq("quoteId", quoteId)
+    .single();
+}
+
 export async function getQuoteLineQuantities(
   client: SupabaseClient<Database>,
   quoteLineId: string

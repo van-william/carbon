@@ -6,21 +6,21 @@ import { QuoteSummary, Template, QuoteHeader } from "./components";
 import { getExtendedPrice, getUnitCost } from "../utils/quote";
 
 interface QuotePDFProps extends PDF {
-  customer: Database["public"]["Tables"]["customer"]["Row"];
   quote: Database["public"]["Views"]["quotes"]["Row"];
   quoteLines: Database["public"]["Tables"]["quoteLine"]["Row"][];
   quoteLineQuantities:
     | Database["public"]["Tables"]["quoteLineQuantity"]["Row"][]
     | null;
+  quoteCustomerDetails: Database["public"]["Views"]["quoteCustomerDetails"]["Row"];
 }
 
 const QuotePDF = ({
   company,
-  customer,
   meta,
   quote,
   quoteLines,
   quoteLineQuantities,
+  quoteCustomerDetails,
   title = "Quote",
 }: QuotePDFProps) => {
   return (
@@ -40,7 +40,7 @@ const QuotePDF = ({
         />
         <QuoteSummary
           company={company}
-          customer={customer}
+          quoteCustomerDetails={quoteCustomerDetails}
           items={[
             {
               label: "Date",
