@@ -42,7 +42,7 @@ const CustomerStatusesTable = memo(
           <>
             <MenuItem
               onClick={() => {
-                navigate(`${path.to.customers}?status=${row.id}`);
+                navigate(`${path.to.customers}?filter=status:eq:${row.name}`);
               }}
             >
               <MenuIcon icon={<BsPeopleFill />} />

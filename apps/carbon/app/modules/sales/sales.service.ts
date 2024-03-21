@@ -181,25 +181,15 @@ export async function getCustomerShipping(
 export async function getCustomers(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
-    name: string | null;
-    type: string | null;
-    status: string | null;
+    search: string | null;
   }
 ) {
   let query = client.from("customers").select("*", {
     count: "exact",
   });
 
-  if (args.name) {
-    query = query.ilike("name", `%${args.name}%`);
-  }
-
-  if (args.type) {
-    query = query.eq("customerTypeId", args.type);
-  }
-
-  if (args.status) {
-    query = query.eq("customerStatusId", args.status);
+  if (args.search) {
+    query = query.ilike("name", `%${args.search}%`);
   }
 
   query = setGenericQueryFilters(query, args, [
