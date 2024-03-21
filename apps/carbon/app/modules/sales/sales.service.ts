@@ -291,7 +291,7 @@ export async function getQuotes(
 
   if (args.search) {
     query = query.or(
-      `quoteId.ilike.%${args.search}%,name.ilike.%${args.search}%`
+      `quoteId.ilike.%${args.search}%,name.ilike.%${args.search}%,customerReference.ilike%${args.search}%`
     );
   }
 

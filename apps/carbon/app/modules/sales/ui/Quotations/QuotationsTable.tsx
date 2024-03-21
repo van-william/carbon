@@ -128,7 +128,7 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
       {
         accessorKey: "partIds",
         header: "Parts",
-        cell: (item) => item.getValue<string[]>(),
+        cell: (item) => item.getValue<string[]>()?.length ?? 0,
         meta: {
           filter: {
             type: "static",
@@ -171,7 +171,7 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
       {
         accessorKey: "locationName",
         header: "Location",
-        cell: (item) => item.getValue(),
+        cell: (item) => <Enumerable value={item.getValue<string>()} />,
         meta: {
           filter: {
             type: "fetcher",
