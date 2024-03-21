@@ -47,9 +47,7 @@ const CurrenciesTable = memo(({ data, count }: CurrenciesTableProps) => {
       {
         accessorKey: "isBaseCurrency",
         header: "Default Currency",
-        cell: ({ row }) => (
-          <Checkbox isChecked={row.original.isBaseCurrency} disabled />
-        ),
+        cell: ({ row }) => <Checkbox isChecked={row.original.isBaseCurrency} />,
       },
     ];
   }, [navigate]);

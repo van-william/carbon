@@ -10,7 +10,7 @@ export type ColumnFilter = {
 export type Option = {
   label: string | ReactNode;
   value: string;
-  helper?: string;
+  helperText?: string;
 };
 
 export type ColumnFilterData =

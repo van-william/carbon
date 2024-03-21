@@ -10,6 +10,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+  VStack,
 } from "@carbon/react";
 import { useFetcher } from "@remix-run/react";
 import type { PostgrestResponse } from "@supabase/supabase-js";
@@ -195,7 +196,16 @@ const Filter = forwardRef<HTMLButtonElement, FilterProps>(
                     >
                       <HStack spacing={2}>
                         <Checkbox id={option.value} isChecked={isChecked} />
-                        <label htmlFor={option.value}>{option.label}</label>
+                        <label htmlFor={option.value}>
+                          <VStack spacing={0}>
+                            <span>{option.label}</span>
+                            {option.helperText && (
+                              <p className="text-xs text-muted-foreground truncate">
+                                {option.helperText}
+                              </p>
+                            )}
+                          </VStack>
+                        </label>
                       </HStack>
                     </CommandItem>
                   );

@@ -118,7 +118,7 @@ export const PaginationButtons = ({
               />
             </TooltipTrigger>
             <TooltipContent>
-              <HStack>F</HStack>
+              <HStack>{prettifyKeyboardShortcut("ArrowLeft")}</HStack>
             </TooltipContent>
           </Tooltip>
           <Tooltip>
@@ -132,7 +132,7 @@ export const PaginationButtons = ({
               />
             </TooltipTrigger>
             <TooltipContent>
-              <HStack>J</HStack>
+              <HStack>{prettifyKeyboardShortcut("ArrowRight")}</HStack>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
