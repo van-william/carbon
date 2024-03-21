@@ -1,6 +1,6 @@
 const Background = () => {
   return (
-    <div className="background">
+    <div className="background dark:hidden">
       <div className="gradient" />
     </div>
   );
