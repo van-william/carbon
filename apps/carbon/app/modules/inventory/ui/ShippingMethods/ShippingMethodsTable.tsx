@@ -30,7 +30,15 @@ const ShippingMethodsTable = memo(
           accessorKey: "name",
           header: "Name",
           cell: ({ row }) => (
-            <Hyperlink onClick={() => navigate(row.original.id)}>
+            <Hyperlink
+              onClick={() =>
+                navigate(
+                  `${path.to.shippingMethod(
+                    row.original.id
+                  )}?${params.toString()}`
+                )
+              }
+            >
               {row.original.name}
             </Hyperlink>
           ),
