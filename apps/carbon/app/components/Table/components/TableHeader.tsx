@@ -1,6 +1,6 @@
 import { Button, HStack } from "@carbon/react";
 import type { Column, ColumnOrderState } from "@tanstack/react-table";
-import type { ReactNode } from "react";
+import { type ReactNode } from "react";
 import { BsFillCheckCircleFill } from "react-icons/bs";
 import { MdOutlineEditNote } from "react-icons/md";
 import { DebouncedInput } from "~/components/Search";

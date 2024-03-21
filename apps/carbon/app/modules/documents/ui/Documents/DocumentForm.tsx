@@ -45,7 +45,7 @@ const DocumentForm = ({ initialValues, ownerId }: DocumentFormProps) => {
           className="flex flex-col h-full"
         >
           <DrawerHeader>
-            <DrawerTitle>{`Edit ${initialValues.name}.${initialValues.extension}`}</DrawerTitle>
+            <DrawerTitle>{`${initialValues.name}.${initialValues.extension}`}</DrawerTitle>
           </DrawerHeader>
           <DrawerBody>
             <Hidden name="id" />
