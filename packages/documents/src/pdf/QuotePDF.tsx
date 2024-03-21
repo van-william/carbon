@@ -2,7 +2,7 @@ import type { Database } from "@carbon/database";
 import { StyleSheet, Text, View } from "@react-pdf/renderer";
 
 import type { PDF } from "../types";
-import { Header, Summary, Template } from "./components";
+import { QuoteSummary, Template, QuoteHeader } from "./components";
 import { getExtendedPrice, getUnitCost } from "../utils/quote";
 
 interface QuotePDFProps extends PDF {
@@ -31,17 +31,17 @@ const QuotePDF = ({
       }}
     >
       <View>
-        <Header title={title} company={company} />
-        <Summary
+        <QuoteHeader
+          title={title}
+          quoteNumber={quote.quoteId ? quote.quoteId : null}
+          company={company}
+        />
+        <QuoteSummary
           company={company}
           items={[
             {
               label: "Date",
-              value: quote?.quoteDate,
-            },
-            {
-              label: "Quote #",
-              value: quote?.quoteId,
+              value: quote?.quoteDate ? quote.quoteDate : null,
             },
           ]}
         />
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
   },
   tableCol5: {
     width: "15%",
-    textAlign: "left",
+    textAlign: "right",
   },
   quantityTable: {
     width: "60%",
@@ -224,6 +224,6 @@ const styles = StyleSheet.create({
   },
   quantityCol4: {
     width: "20%",
-    textAlign: "left",
+    textAlign: "right",
   },
 });
