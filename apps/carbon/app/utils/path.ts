@@ -381,6 +381,7 @@ export const path = {
     paymentTerms: `${x}/accounting/payment-terms`,
     people: `${x}/resources/people`,
     person: (id: string) => generatePath(`${x}/person/${id}`),
+    personDetails: (id: string) => generatePath(`${x}/person/${id}/details`),
     personJob: (id: string) => generatePath(`${x}/person/${id}/job`),
     profile: `${x}/account/profile`,
     purchaseInvoice: (id: string) =>
