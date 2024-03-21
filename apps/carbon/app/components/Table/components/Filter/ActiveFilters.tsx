@@ -89,8 +89,7 @@ const ActiveFilter = ({ filter, operator, value }: ActiveFilterProps) => {
     ) {
       setOptions(
         filter.filter.transform
-          ? // @ts-expect-error
-            filter.filter.transform(fetcher.data.data)
+          ? filter.filter.transform(fetcher.data.data)
           : fetcher.data.data?.map((d) => ({ label: d.name, value: d.id })) ??
               []
       );
@@ -118,7 +117,7 @@ const ActiveFilter = ({ filter, operator, value }: ActiveFilterProps) => {
         {filter.header}
       </Button>
       <Button className="rounded-none border-l-0" size="sm" variant="secondary">
-        {operator === "eq" ? "is" : "is any of"}
+        {operator === "eq" ? "is" : operator === "in" ? "is any of" : "matches"}
       </Button>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
@@ -156,7 +155,11 @@ const ActiveFilter = ({ filter, operator, value }: ActiveFilterProps) => {
                     value={option.value}
                     key={option.value}
                     onSelect={() => {
-                      toggleFilter(filter.accessorKey, option.value);
+                      toggleFilter(
+                        filter.accessorKey,
+                        option.value,
+                        filter.filter.isArray
+                      );
                       setOpen(false);
                     }}
                   >

@@ -11,6 +11,7 @@ export function useFilters() {
           case "eq":
             return key === searchKey && value === searchValue;
           case "in":
+          case "contains":
             const values = value.split(",");
             return key === searchKey && values.some((v) => v === searchValue);
           default:
@@ -35,14 +36,14 @@ export function useFilters() {
     });
   };
 
-  const addFilter = (newKey: string, newValue: string) => {
+  const addFilter = (newKey: string, newValue: string, isArray = false) => {
     if (hasFilterKey(newKey)) {
       const filterIndex = getFilterKeyIndex(newKey);
       const filter = urlFiltersParams[filterIndex];
       const [key, operator, value] = filter.split(":");
 
       let newFilter = "";
-      if (operator === "in") {
+      if (["in", "contains"].includes(operator)) {
         newFilter = `${filter},${newValue}`;
       } else {
         newFilter = `${key}:in:${value},${newValue}`;
@@ -54,28 +55,38 @@ export function useFilters() {
         ),
       });
     } else {
-      setParams({
-        filter: urlFiltersParams.concat(`${newKey}:eq:${newValue}`),
-      });
+      if (isArray) {
+        setParams({
+          filter: urlFiltersParams.concat(`${newKey}:contains:${newValue}`),
+        });
+      } else {
+        setParams({
+          filter: urlFiltersParams.concat(`${newKey}:eq:${newValue}`),
+        });
+      }
     }
   };
 
-  const removeFilter = (oldKey: string, oldValue: string) => {
+  const removeFilter = (oldKey: string, oldValue: string, isArray = false) => {
     const filterIndex = getFilterKeyIndex(oldKey);
     const filter = urlFiltersParams[filterIndex];
     const [key, operator, value] = filter.split(":");
-    if (operator === "in") {
+    if (["in", "contains"].includes(operator)) {
       const values = value.split(",").filter((v) => v !== oldValue);
-      if (values.length === 1) {
+      if (operator === "in" && values.length === 1) {
         setParams({
           filter: urlFiltersParams.map((f, index) =>
             index === filterIndex ? `${key}:eq:${values[0]}` : f
           ),
         });
+      } else if (values.length === 0) {
+        setParams({
+          filter: urlFiltersParams.filter((_, index) => index !== filterIndex),
+        });
       } else {
         setParams({
           filter: urlFiltersParams.map((f, index) =>
-            index === filterIndex ? `${key}:in:${values.join(",")}` : f
+            index === filterIndex ? `${key}:${operator}:${values.join(",")}` : f
           ),
         });
       }
@@ -95,11 +106,11 @@ export function useFilters() {
     });
   };
 
-  const toggleFilter = (key: string, value: string) => {
+  const toggleFilter = (key: string, value: string, isArray = false) => {
     if (hasFilter(key, value)) {
-      removeFilter(key, value);
+      removeFilter(key, value, isArray);
     } else {
-      addFilter(key, value);
+      addFilter(key, value, isArray);
     }
   };
 

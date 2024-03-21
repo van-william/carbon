@@ -16,7 +16,7 @@ import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
 import type { Quotation } from "~/modules/sales";
 import { quoteStatusType } from "~/modules/sales";
-import { useCustomers } from "~/stores";
+import { useCustomers, useParts } from "~/stores";
 import { favoriteSchema } from "~/types/validators";
 import { path } from "~/utils/path";
 import { QuotationStatus } from "../Quotation";
@@ -34,7 +34,9 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
     null
   );
   const deleteQuotationModal = useDisclosure();
+
   const [customers] = useCustomers();
+  const [parts] = useParts();
 
   const fetcher = useFetcher();
   const optimisticFavorite = useOptimisticFavorite();
@@ -126,7 +128,18 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
       {
         accessorKey: "partIds",
         header: "Parts",
-        cell: (item) => item.getValue<string[]>()?.filter(Boolean)?.length ?? 0,
+        cell: (item) => item.getValue<string[]>(),
+        meta: {
+          filter: {
+            type: "static",
+            options: parts.map((part) => ({
+              value: part.id,
+              label: part.id,
+              helperText: part.name,
+            })),
+            isArray: true,
+          },
+        },
       },
       {
         accessorKey: "status",
@@ -211,7 +224,7 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
         cell: (item) => item.getValue(),
       },
     ];
-  }, [customers, fetcher, navigate]);
+  }, [customers, fetcher, navigate, parts]);
 
   const renderContextMenu = useMemo(() => {
     // eslint-disable-next-line react/display-name

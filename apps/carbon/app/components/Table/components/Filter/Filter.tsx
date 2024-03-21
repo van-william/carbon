@@ -31,6 +31,7 @@ export type FilterProps = Omit<
 
 const Filter = forwardRef<HTMLButtonElement, FilterProps>(
   ({ filters, trigger = "button", ...props }, ref) => {
+    console.log({ filters });
     const { clearFilters, hasFilter, hasFilters, hasFilterKey, toggleFilter } =
       useFilters();
 
@@ -180,7 +181,11 @@ const Filter = forwardRef<HTMLButtonElement, FilterProps>(
                       value={option.value}
                       key={option.value}
                       onSelect={() => {
-                        toggleFilter(activeFilter.accessorKey, option.value);
+                        toggleFilter(
+                          activeFilter.accessorKey,
+                          option.value,
+                          activeFilter.filter.isArray
+                        );
                         if (trigger === "icon") {
                           setOpen(false);
                         } else {

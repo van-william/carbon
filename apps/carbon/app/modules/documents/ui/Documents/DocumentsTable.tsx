@@ -255,6 +255,13 @@ const DocumentsTable = memo(
               </Popover>
             </HStack>
           ),
+          meta: {
+            filter: {
+              type: "static",
+              options: labelOptions,
+              isArray: true,
+            },
+          },
         },
         {
           accessorKey: "size",
@@ -545,6 +552,7 @@ const CreatableCommand = ({
             onSelect={() => {
               onCreateOption(search);
             }}
+            value={search}
           >
             <span>Create</span>
             <span className="ml-1 font-bold">{search}</span>

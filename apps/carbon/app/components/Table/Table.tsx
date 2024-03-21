@@ -424,7 +424,7 @@ const Table = <T extends object>({
           typeof column.header === "string"
         ) {
           const filter: ColumnFilter = {
-            accessorKey: getAccessorKey(column) ?? "",
+            accessorKey: getAccessorKey(column) ?? column.id!,
             header: column.header,
             pluralHeader: column.meta.pluralHeader,
             filter: column.meta.filter,

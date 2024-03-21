@@ -17,9 +17,11 @@ export type ColumnFilterData =
   | {
       type: "static";
       options: Option[];
+      isArray?: boolean;
     }
   | {
       type: "fetcher";
       endpoint: string;
       transform?: (result: any) => Option[];
+      isArray?: boolean;
     };

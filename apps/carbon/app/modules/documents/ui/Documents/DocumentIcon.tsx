@@ -18,7 +18,7 @@ type DocumentIconProps = {
 const DocumentIcon = ({ type }: DocumentIconProps) => {
   switch (type) {
     case "Document":
-      return <BsFileWordFill className="w-6 h-6 color-blue-500" />;
+      return <BsFileWordFill className="w-6 h-6 text-blue-500" />;
     case "Spreadsheet":
       return <BsFileExcelFill className="w-6 h-6 text-green-700" />;
     case "Presentation":
