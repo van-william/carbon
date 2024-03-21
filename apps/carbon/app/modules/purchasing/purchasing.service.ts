@@ -145,15 +145,9 @@ export async function getPurchaseOrders(
   let query = client.from("purchaseOrders").select("*", { count: "exact" });
 
   if (args.search) {
-    query = query.ilike("purchaseOrderId", `%${args.search}%`);
-  }
-
-  if (args.status) {
-    if (args.status === "closed") {
-      query = query.eq("closed", true);
-    } else {
-      query = query.eq("status", args.status);
-    }
+    query = query.or(
+      `purchaseOrderId.ilike.%${args.search}%,supplierReference.ilike.%${args.search}%`
+    );
   }
 
   if (args.supplierId) {

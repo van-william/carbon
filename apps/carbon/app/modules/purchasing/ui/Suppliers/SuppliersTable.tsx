@@ -52,7 +52,7 @@ const SuppliersTable = memo(({ data, count }: SuppliersTableProps) => {
             variant="secondary"
             onClick={() =>
               navigate(
-                `${path.to.purchaseOrders}?supplierId=${row.original.id}`
+                `${path.to.purchaseOrders}?filter=supplierName:eq:${row.original.id}`
               )
             }
           >
