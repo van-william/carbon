@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill, BsPeopleFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Table } from "~/components";
+import { TableNew } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { CustomerType } from "~/modules/sales";
 import { path } from "~/utils/path";
@@ -74,10 +74,13 @@ const CustomerTypesTable = memo(({ data, count }: CustomerTypesTableProps) => {
   );
 
   return (
-    <Table<(typeof data)[number]>
+    <TableNew<(typeof data)[number]>
       data={data}
       columns={columns}
       count={count}
+      label="Customer Type"
+      newPath={path.to.newCustomerType}
+      newPermission={permissions.can("create", "sales")}
       renderContextMenu={renderContextMenu}
     />
   );
