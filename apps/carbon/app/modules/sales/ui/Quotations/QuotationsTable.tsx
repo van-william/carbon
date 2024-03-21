@@ -1,4 +1,5 @@
 import {
+  Enumerable,
   HStack,
   Hyperlink,
   MenuIcon,
@@ -13,7 +14,8 @@ import { IoMdTrash } from "react-icons/io";
 import { Avatar, TableNew } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
-import { type Quotation, type quoteStatusType } from "~/modules/sales";
+import { quoteStatusType, type Quotation } from "~/modules/sales";
+import { useCustomers } from "~/stores";
 import { favoriteSchema } from "~/types/validators";
 import { path } from "~/utils/path";
 import { QuotationStatus } from "../Quotation";
@@ -27,6 +29,13 @@ type QuotationsTableProps = {
 const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
   const permissions = usePermissions();
   const navigate = useNavigate();
+
+  const [selectedQuotation, setSelectedQuotation] = useState<Quotation | null>(
+    null
+  );
+  const deleteQuotationModal = useDisclosure();
+  const [customers] = useCustomers();
+
   const fetcher = useFetcher();
   const optimisticFavorite = useOptimisticFavorite();
 
@@ -44,12 +53,6 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
       ),
     [data, optimisticFavorite]
   );
-
-  const [selectedQuotation, setSelectedQuotation] = useState<Quotation | null>(
-    null
-  );
-  const deleteQuotationModal = useDisclosure();
-
   const columns = useMemo<ColumnDef<Quotation>[]>(() => {
     return [
       {
@@ -100,6 +103,15 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
         accessorKey: "customerName",
         header: "Customer",
         cell: (item) => item.getValue(),
+        meta: {
+          filter: {
+            type: "static",
+            options: customers.map(({ name }) => ({
+              value: name,
+              label: name,
+            })),
+          },
+        },
       },
       {
         accessorKey: "name",
@@ -123,6 +135,15 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
           const status = item.getValue<(typeof quoteStatusType)[number]>();
           return <QuotationStatus status={status} />;
         },
+        meta: {
+          filter: {
+            type: "static",
+            options: quoteStatusType.map((status) => ({
+              value: status,
+              label: <QuotationStatus status={status} />,
+            })),
+          },
+        },
       },
       {
         accessorKey: "quoteDate",
@@ -138,6 +159,17 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
         accessorKey: "locationName",
         header: "Location",
         cell: (item) => item.getValue(),
+        meta: {
+          filter: {
+            type: "fetcher",
+            endpoint: path.to.api.locations,
+            transform: (data: { id: string; name: string }[]) =>
+              data.map(({ id, name }) => ({
+                value: name,
+                label: <Enumerable value={name} />,
+              })),
+          },
+        },
       },
       {
         accessorKey: "customerReference",
@@ -179,7 +211,7 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
         cell: (item) => item.getValue(),
       },
     ];
-  }, [fetcher, navigate]);
+  }, [customers, fetcher, navigate]);
 
   const renderContextMenu = useMemo(() => {
     // eslint-disable-next-line react/display-name
@@ -209,6 +241,12 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
         count={count}
         columns={columns}
         data={rows}
+        defaultColumnPinning={{
+          left: ["quoteId"],
+        }}
+        label="Quote"
+        newPath={path.to.newQuote}
+        newPermission={permissions.can("create", "sales")}
         withColumnOrdering
         renderContextMenu={renderContextMenu}
       />

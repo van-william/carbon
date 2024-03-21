@@ -2,11 +2,7 @@ import { VStack } from "@carbon/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import {
-  QuotationsTable,
-  QuotationsTableFilters,
-  getQuotes,
-} from "~/modules/sales";
+import { QuotationsTable, getQuotes } from "~/modules/sales";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session.server";
 import type { Handle } from "~/utils/handle";
@@ -59,7 +55,6 @@ export default function QuotesRoute() {
 
   return (
     <VStack spacing={0} className="h-full">
-      <QuotationsTableFilters />
       <QuotationsTable data={quotes} count={count} />
       <Outlet />
     </VStack>
