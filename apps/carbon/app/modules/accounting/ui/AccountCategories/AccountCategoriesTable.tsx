@@ -12,10 +12,14 @@ import { memo, useCallback, useMemo, useState } from "react";
 import { BiAddToQueue } from "react-icons/bi";
 import { BsFillPenFill, BsListUl } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Table } from "~/components";
+import { New, TableNew } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions, useUrlParams } from "~/hooks";
-import type { AccountCategory } from "~/modules/accounting";
+import {
+  accountClassTypes,
+  incomeBalanceTypes,
+  type AccountCategory,
+} from "~/modules/accounting";
 import { path } from "~/utils/path";
 
 type AccountCategoriesTableProps = {
@@ -58,11 +62,31 @@ const AccountCategoriesTable = memo(
           header: "Income/Balance",
           accessorKey: "incomeBalance",
           cell: (item) => <Enumerable value={item.getValue<string>()} />,
+          meta: {
+            filter: {
+              type: "static",
+              options: incomeBalanceTypes.map((incomeBalance) => ({
+                value: incomeBalance,
+                label: <Enumerable value={incomeBalance} />,
+              })),
+            },
+            pluralHeader: "Income/Balance",
+          },
         },
         {
           header: "Class",
           accessorKey: "class",
           cell: (item) => <Enumerable value={item.getValue<string>()} />,
+          meta: {
+            filter: {
+              type: "static",
+              options: accountClassTypes.map((accountClass) => ({
+                value: accountClass,
+                label: <Enumerable value={accountClass} />,
+              })),
+            },
+            pluralHeader: "Income/Balance",
+          },
         },
 
         {
@@ -138,10 +162,15 @@ const AccountCategoriesTable = memo(
 
     return (
       <>
-        <Table<AccountCategory>
+        <TableNew<AccountCategory>
           data={data}
           columns={columns}
           count={count ?? 0}
+          primaryAction={
+            permissions.can("update", "accounting") && (
+              <New label="Account Category" to={`new?${params.toString()}`} />
+            )
+          }
           renderContextMenu={renderContextMenu}
         />
 

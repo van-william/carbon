@@ -165,8 +165,6 @@ export async function getAccountCategories(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
     search: string | null;
-    class: string | null;
-    incomeBalance: string | null;
   }
 ) {
   let query = client.from("accountCategories").select("*", {
@@ -175,14 +173,6 @@ export async function getAccountCategories(
 
   if (args.search) {
     query = query.ilike("category", `%${args.search}%`);
-  }
-
-  if (args.class) {
-    query = query.eq("class", args.class);
-  }
-
-  if (args.incomeBalance) {
-    query = query.eq("incomeBalance", args.incomeBalance);
   }
 
   query = setGenericQueryFilters(query, args, [
