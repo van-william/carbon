@@ -3,7 +3,7 @@ import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
-import { TableNew } from "~/components";
+import { New, TableNew } from "~/components";
 import { usePermissions } from "~/hooks";
 import type { Customer, CustomerStatus, CustomerType } from "~/modules/sales";
 import { path } from "~/utils/path";
@@ -97,9 +97,11 @@ const CustomersTable = memo(
           count={count}
           columns={columns}
           data={data}
-          newPath={path.to.newCustomer}
-          newPermission={permissions.can("create", "sales")}
-          withPagination
+          primaryAction={
+            permissions.can("create", "sales") && (
+              <New label="Customer" to={path.to.newCustomer} />
+            )
+          }
           renderContextMenu={renderContextMenu}
         />
       </>

@@ -9,7 +9,7 @@ import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
-import { TableNew } from "~/components";
+import { New, TableNew } from "~/components";
 import { usePermissions } from "~/hooks";
 import type {
   Supplier,
@@ -122,9 +122,11 @@ const SuppliersTable = memo(
           count={count}
           columns={columns}
           data={data}
-          label="Supplier"
-          newPath={path.to.newSupplier}
-          newPermission={permissions.can("create", "purchasing")}
+          primaryAction={
+            permissions.can("create", "purchasing") && (
+              <New label="Supplier" to={path.to.newSupplier} />
+            )
+          }
           renderContextMenu={renderContextMenu}
         />
       </>

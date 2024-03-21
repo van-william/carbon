@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { TableNew } from "~/components";
+import { New, TableNew } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { PartGroup } from "~/modules/parts";
 import { path } from "~/utils/path";
@@ -82,9 +82,14 @@ const PartGroupsTable = memo(({ data, count }: PartGroupsTableProps) => {
       data={data}
       columns={columns}
       count={count}
-      label="Part Group"
-      newPath={`${path.to.newPartGroup}?${params.toString()}`}
-      newPermission={permissions.can("create", "parts")}
+      primaryAction={
+        permissions.can("create", "parts") && (
+          <New
+            label="Part Group"
+            to={`${path.to.newPartGroup}?${params.toString()}`}
+          />
+        )
+      }
       renderContextMenu={renderContextMenu}
     />
   );

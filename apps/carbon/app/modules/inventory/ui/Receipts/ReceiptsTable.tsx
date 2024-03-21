@@ -12,7 +12,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Avatar, TableNew } from "~/components";
+import { Avatar, New, TableNew } from "~/components";
 import { usePermissions, useRealtime, useUrlParams } from "~/hooks";
 import type { Receipt } from "~/modules/inventory";
 import {
@@ -247,9 +247,11 @@ const ReceiptsTable = memo(({ data, count, locations }: ReceiptsTableProps) => {
       defaultColumnPinning={{
         left: ["receiptId"],
       }}
-      label="Receipt"
-      newPath={path.to.newReceipt}
-      newPermission={permissions.can("create", "inventory")}
+      primaryAction={
+        permissions.can("create", "inventory") && (
+          <New label="Receipt" to={path.to.newReceipt} />
+        )
+      }
       renderContextMenu={renderContextMenu}
       withColumnOrdering
     />

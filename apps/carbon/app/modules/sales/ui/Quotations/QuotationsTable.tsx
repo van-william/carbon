@@ -11,7 +11,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo, useState } from "react";
 import { BsFillPenFill, BsPin, BsPinFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Avatar, TableNew } from "~/components";
+import { Avatar, New, TableNew } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
 import type { Quotation } from "~/modules/sales";
@@ -244,9 +244,11 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
         defaultColumnPinning={{
           left: ["quoteId"],
         }}
-        label="Quote"
-        newPath={path.to.newQuote}
-        newPermission={permissions.can("create", "sales")}
+        primaryAction={
+          permissions.can("create", "sales") && (
+            <New label="Quote" to={path.to.newQuote} />
+          )
+        }
         withColumnOrdering
         renderContextMenu={renderContextMenu}
       />

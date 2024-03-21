@@ -13,7 +13,7 @@ import { memo, useMemo, useState } from "react";
 import { BsFillPenFill, BsPin, BsPinFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { MdCallReceived } from "react-icons/md";
-import { Avatar, TableNew } from "~/components";
+import { Avatar, New, TableNew } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
 import type { PurchaseOrder } from "~/modules/purchasing";
@@ -270,9 +270,11 @@ const PurchaseOrdersTable = memo(
           defaultColumnPinning={{
             left: ["purchaseOrderId"],
           }}
-          label="Purchase Order"
-          newPath={path.to.newPurchaseOrder}
-          newPermission={permissions.can("create", "purchasing")}
+          primaryAction={
+            permissions.can("create", "purchasing") && (
+              <New label="Purchase Order" to={path.to.newPurchaseOrder} />
+            )
+          }
           withColumnOrdering
           renderContextMenu={renderContextMenu}
         />

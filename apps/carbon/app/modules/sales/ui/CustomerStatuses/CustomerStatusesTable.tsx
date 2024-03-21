@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill, BsPeopleFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { TableNew } from "~/components";
+import { New, TableNew } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { CustomerStatus } from "~/modules/sales";
 import { path } from "~/utils/path";
@@ -80,9 +80,14 @@ const CustomerStatusesTable = memo(
         data={data}
         columns={columns}
         count={count}
-        label="Customer Status"
-        newPath={path.to.newCustomerStatus}
-        newPermission={permissions.can("create", "sales")}
+        primaryAction={
+          permissions.can("create", "sales") && (
+            <New
+              label="Customer Status"
+              to={`${path.to.newCustomerStatus}?${params.toString()}`}
+            />
+          )
+        }
         renderContextMenu={renderContextMenu}
       />
     );

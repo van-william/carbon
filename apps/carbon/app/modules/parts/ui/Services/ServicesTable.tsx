@@ -3,7 +3,7 @@ import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
-import { TableNew } from "~/components";
+import { New, TableNew } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import { serviceType, type Service } from "~/modules/parts";
 import type { ListItem } from "~/types";
@@ -93,10 +93,11 @@ const ServicesTable = memo(
           count={count}
           columns={columns}
           data={data}
-          label="Service"
-          newPath={path.to.newService}
-          newPermission={permissions.can("create", "parts")}
-          withPagination
+          primaryAction={
+            permissions.can("create", "parts") && (
+              <New label="Service" to={path.to.newService} />
+            )
+          }
           renderContextMenu={renderContextMenu}
         />
       </>

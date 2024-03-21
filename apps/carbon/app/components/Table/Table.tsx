@@ -26,6 +26,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import type { ReactNode } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FaSort, FaSortDown, FaSortUp } from "react-icons/fa";
 import type {
@@ -53,9 +54,7 @@ interface TableProps<T extends object> {
   defaultColumnPinning?: ColumnPinningState;
   defaultColumnVisibility?: Record<string, boolean>;
   editableComponents?: Record<string, EditableTableCellComponent<T>>;
-  label?: string;
-  newPath?: string;
-  newPermission?: boolean;
+  primaryAction?: ReactNode;
   withColumnOrdering?: boolean;
   withInlineEditing?: boolean;
   withPagination?: boolean;
@@ -76,9 +75,7 @@ const Table = <T extends object>({
   },
   defaultColumnVisibility,
   editableComponents,
-  label,
-  newPath,
-  newPermission,
+  primaryAction,
   withInlineEditing = false,
   withColumnOrdering = false,
   withPagination = true,
@@ -450,9 +447,7 @@ const Table = <T extends object>({
         columns={table.getAllLeafColumns()}
         editMode={editMode}
         filters={filters}
-        label={label}
-        newPath={newPath}
-        newPermission={newPermission}
+        primaryAction={primaryAction}
         selectedRows={selectedRows}
         setColumnOrder={setColumnOrder}
         setEditMode={setEditMode}

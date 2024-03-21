@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { TableNew } from "~/components";
+import { New, TableNew } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { UnitOfMeasure } from "~/modules/parts";
 import { path } from "~/utils/path";
@@ -73,9 +73,14 @@ const UnitOfMeasuresTable = memo(
         data={data}
         columns={columns}
         count={count}
-        label="Unit of Measure"
-        newPath={path.to.newUom}
-        newPermission={permissions.can("create", "parts")}
+        primaryAction={
+          permissions.can("create", "parts") && (
+            <New
+              label="Unit of Measure"
+              to={`${path.to.newUom}?${params.toString()}`}
+            />
+          )
+        }
         renderContextMenu={renderContextMenu}
       />
     );

@@ -3,7 +3,7 @@ import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
-import { TableNew } from "~/components";
+import { New, TableNew } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Part } from "~/modules/parts";
 import { partReplenishmentSystems, partTypes } from "~/modules/parts";
@@ -104,9 +104,11 @@ const PartsTable = memo(({ data, count, partGroups }: PartsTableProps) => {
         count={count}
         columns={columns}
         data={data}
-        label="Part"
-        newPath={path.to.newPart}
-        newPermission={permissions.can("create", "parts")}
+        primaryAction={
+          permissions.can("create", "parts") && (
+            <New label="Part" to={path.to.newPart} />
+          )
+        }
         renderContextMenu={renderContextMenu}
       />
     </>

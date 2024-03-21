@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { TableNew } from "~/components";
+import { New, TableNew } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import { shippingCarrierType, type ShippingMethod } from "~/modules/inventory";
 import { path } from "~/utils/path";
@@ -113,9 +113,14 @@ const ShippingMethodsTable = memo(
         data={data}
         columns={columns}
         count={count}
-        label="Shipping Method"
-        newPath={path.to.newShippingMethod}
-        newPermission={permissions.can("create", "inventory")}
+        primaryAction={
+          permissions.can("create", "inventory") && (
+            <New
+              label="Shipping Method"
+              to={`${path.to.newShippingMethod}?${params.toString()}`}
+            />
+          )
+        }
         renderContextMenu={renderContextMenu}
       />
     );

@@ -1,8 +1,8 @@
 import { Button, HStack } from "@carbon/react";
 import type { Column, ColumnOrderState } from "@tanstack/react-table";
+import type { ReactNode } from "react";
 import { BsFillCheckCircleFill } from "react-icons/bs";
 import { MdOutlineEditNote } from "react-icons/md";
-import New from "~/components/New";
 import { DebouncedInput } from "~/components/Search";
 import { useUrlParams } from "~/hooks";
 import type { TableAction } from "../types";
@@ -21,9 +21,7 @@ type HeaderProps<T> = {
   columns: Column<T, unknown>[];
   editMode: boolean;
   filters: ColumnFilter[];
-  label?: string;
-  newPath?: string;
-  newPermission?: boolean;
+  primaryAction?: ReactNode;
   pagination: PaginationProps;
   selectedRows: T[];
   setColumnOrder: (newOrder: ColumnOrderState) => void;
@@ -41,9 +39,7 @@ const TableHeader = <T extends object>({
   columns,
   editMode,
   filters,
-  label,
-  newPath,
-  newPermission,
+  primaryAction,
   pagination,
   selectedRows,
   setColumnOrder,
@@ -98,9 +94,7 @@ const TableHeader = <T extends object>({
             (pagination.canNextPage || pagination.canPreviousPage) && (
               <PaginationButtons {...pagination} condensed />
             )}
-          {!!newPath && !!newPermission && (
-            <New to={`${newPath}?${params.toString()}`} label={label} />
-          )}
+          <>{primaryAction}</>
         </HStack>
       </HStack>
       {currentFilters.length > 0 && (

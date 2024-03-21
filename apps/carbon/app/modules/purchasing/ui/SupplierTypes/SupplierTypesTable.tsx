@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill, BsPeopleFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { TableNew } from "~/components";
+import { New, TableNew } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { SupplierType } from "~/modules/purchasing";
 import { path } from "~/utils/path";
@@ -78,9 +78,14 @@ const SupplierTypesTable = memo(({ data, count }: SupplierTypesTableProps) => {
       data={data}
       columns={columns}
       count={count}
-      label="Supplier Type"
-      newPath={path.to.newSupplierType}
-      newPermission={permissions.can("create", "purchasing")}
+      primaryAction={
+        permissions.can("create", "purchasing") && (
+          <New
+            label="Supplier Type"
+            to={`${path.to.newSupplierType}?${params.toString()}`}
+          />
+        )
+      }
       renderContextMenu={renderContextMenu}
     />
   );

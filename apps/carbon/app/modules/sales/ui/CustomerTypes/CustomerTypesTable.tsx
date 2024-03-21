@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill, BsPeopleFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { TableNew } from "~/components";
+import { New, TableNew } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { CustomerType } from "~/modules/sales";
 import { path } from "~/utils/path";
@@ -78,9 +78,14 @@ const CustomerTypesTable = memo(({ data, count }: CustomerTypesTableProps) => {
       data={data}
       columns={columns}
       count={count}
-      label="Customer Type"
-      newPath={path.to.newCustomerType}
-      newPermission={permissions.can("create", "sales")}
+      primaryAction={
+        permissions.can("create", "sales") && (
+          <New
+            label="Customer Types"
+            to={`${path.to.newCustomerType}?${params.toString()}`}
+          />
+        )
+      }
       renderContextMenu={renderContextMenu}
     />
   );

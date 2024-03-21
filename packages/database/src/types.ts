@@ -2659,12 +2659,13 @@ export type Database = {
           createdAt: string
           createdBy: string
           description: string | null
+          extension: string | null
           id: string
           name: string
           path: string
           readGroups: string[] | null
           size: number
-          type: string | null
+          type: Database["public"]["Enums"]["documentType"]
           updatedAt: string | null
           updatedBy: string | null
           writeGroups: string[] | null
@@ -2674,12 +2675,13 @@ export type Database = {
           createdAt?: string
           createdBy: string
           description?: string | null
+          extension?: string | null
           id?: string
           name: string
           path: string
           readGroups?: string[] | null
           size: number
-          type?: string | null
+          type: Database["public"]["Enums"]["documentType"]
           updatedAt?: string | null
           updatedBy?: string | null
           writeGroups?: string[] | null
@@ -2689,12 +2691,13 @@ export type Database = {
           createdAt?: string
           createdBy?: string
           description?: string | null
+          extension?: string | null
           id?: string
           name?: string
           path?: string
           readGroups?: string[] | null
           size?: number
-          type?: string | null
+          type?: Database["public"]["Enums"]["documentType"]
           updatedAt?: string | null
           updatedBy?: string | null
           writeGroups?: string[] | null
@@ -12097,6 +12100,12 @@ export type Database = {
         }
         Relationships: []
       }
+      documentExtensions: {
+        Row: {
+          extension: string | null
+        }
+        Relationships: []
+      }
       documentLabels: {
         Row: {
           label: string | null
@@ -12134,6 +12143,7 @@ export type Database = {
           createdByAvatar: string | null
           createdByFullName: string | null
           description: string | null
+          extension: string | null
           favorite: boolean | null
           id: string | null
           labels: string[] | null
@@ -12142,7 +12152,7 @@ export type Database = {
           path: string | null
           readGroups: string[] | null
           size: number | null
-          type: string | null
+          type: Database["public"]["Enums"]["documentType"] | null
           updatedAt: string | null
           updatedBy: string | null
           updatedByAvatar: string | null
@@ -13623,6 +13633,17 @@ export type Database = {
         | "Label"
         | "Unfavorite"
         | "Upload"
+      documentType:
+        | "Archive"
+        | "Document"
+        | "Presentation"
+        | "PDF"
+        | "Spreadsheet"
+        | "Text"
+        | "Image"
+        | "Video"
+        | "Audio"
+        | "Other"
       factor:
         | "Hours/Piece"
         | "Hours/100 Pieces"
