@@ -14,7 +14,8 @@ import { IoMdTrash } from "react-icons/io";
 import { Avatar, TableNew } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
-import { quoteStatusType, type Quotation } from "~/modules/sales";
+import type { Quotation } from "~/modules/sales";
+import { quoteStatusType } from "~/modules/sales";
 import { useCustomers } from "~/stores";
 import { favoriteSchema } from "~/types/validators";
 import { path } from "~/utils/path";
@@ -106,9 +107,9 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
         meta: {
           filter: {
             type: "static",
-            options: customers.map(({ name }) => ({
-              value: name,
-              label: name,
+            options: customers?.map((customer) => ({
+              value: customer.name,
+              label: customer.name,
             })),
           },
         },
@@ -163,8 +164,8 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
           filter: {
             type: "fetcher",
             endpoint: path.to.api.locations,
-            transform: (data: { id: string; name: string }[]) =>
-              data.map(({ id, name }) => ({
+            transform: (data: { id: string; name: string }[] | null) =>
+              data?.map(({ id, name }) => ({
                 value: name,
                 label: <Enumerable value={name} />,
               })),
