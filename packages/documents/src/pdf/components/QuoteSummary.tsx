@@ -1,8 +1,9 @@
 import { StyleSheet, Text, View } from "@react-pdf/renderer";
-import type { Company } from "../../types";
+import type { Company, Customer } from "../../types";
 
 type SummaryProps = {
   company: Company;
+  customer: Customer;
   items: {
     label: string;
     value?: string | null;
@@ -57,10 +58,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const QuoteSummary = ({ company, items }: SummaryProps) => {
+const QuoteSummary = ({ company, customer, items }: SummaryProps) => {
   return (
     <View style={styles.summary}>
       <View style={styles.companyDetails}>
+        <Text style={styles.documentSummaryLabel}>From</Text>
         <Text style={styles.companyName}>{company.name}</Text>
         {company.addressLine1 && <Text>{company.addressLine1}</Text>}
         {company.addressLine2 && <Text>{company.addressLine2}</Text>}
@@ -69,7 +71,10 @@ const QuoteSummary = ({ company, items }: SummaryProps) => {
         )}
         {company.phone && <Text>{company.phone}</Text>}
         {company.email && <Text>{company.email}</Text>}
-        {company.website && <Text>{company.website}</Text>}
+      </View>
+      <View style={styles.companyDetails}>
+        <Text style={styles.documentSummaryLabel}>To</Text>
+        <Text style={styles.companyName}>{customer.name}</Text>
       </View>
       <View style={styles.documentSummary}>
         {items.map((item) => (

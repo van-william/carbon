@@ -27,3 +27,4 @@ export type Meta = {
 };
 
 export type Company = Database["public"]["Tables"]["company"]["Row"];
+export type Customer = Database["public"]["Tables"]["customer"]["Row"];

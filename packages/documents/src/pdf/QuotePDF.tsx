@@ -6,6 +6,7 @@ import { QuoteSummary, Template, QuoteHeader } from "./components";
 import { getExtendedPrice, getUnitCost } from "../utils/quote";
 
 interface QuotePDFProps extends PDF {
+  customer: Database["public"]["Tables"]["customer"]["Row"];
   quote: Database["public"]["Views"]["quotes"]["Row"];
   quoteLines: Database["public"]["Tables"]["quoteLine"]["Row"][];
   quoteLineQuantities:
@@ -15,6 +16,7 @@ interface QuotePDFProps extends PDF {
 
 const QuotePDF = ({
   company,
+  customer,
   meta,
   quote,
   quoteLines,
@@ -38,6 +40,7 @@ const QuotePDF = ({
         />
         <QuoteSummary
           company={company}
+          customer={customer}
           items={[
             {
               label: "Date",
@@ -48,8 +51,8 @@ const QuotePDF = ({
         <View style={styles.table}>
           <View style={styles.thead}>
             <Text style={styles.tableCol1}>Description</Text>
-            <Text style={styles.tableCol2}>Lead Time</Text>
-            <Text style={styles.tableCol3}>Qty</Text>
+            <Text style={styles.tableCol2}>Qty</Text>
+            <Text style={styles.tableCol3}>Time</Text>
             <Text style={styles.tableCol4}>Cost</Text>
             <Text style={styles.tableCol5}>Total</Text>
           </View>
@@ -65,10 +68,10 @@ const QuotePDF = ({
                     quantity.quoteLineId === line.id ? (
                       <View style={styles.quantityRow} key={quantity.id}>
                         <View style={styles.quantityCol1}>
-                          <Text>{quantity.leadTime} days</Text>
+                          <Text>{quantity.quantity}</Text>
                         </View>
                         <View style={styles.quantityCol2}>
-                          <Text>{quantity.quantity}</Text>
+                          <Text>{quantity.leadTime} d</Text>
                         </View>
                         <View style={styles.quantityCol3}>
                           <Text>{getUnitCost(quantity).toFixed(2)}</Text>

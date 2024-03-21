@@ -6,6 +6,7 @@ import {
   getQuote,
   getQuoteLineQuantitiesByQuoteId,
   getQuoteLines,
+  getCustomer,
 } from "~/modules/sales";
 import { getCompany } from "~/modules/settings";
 import { requirePermissions } from "~/services/auth";
@@ -42,13 +43,28 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     logger.error(quoteLineQuantitiesByQuoteId.error);
   }
 
-  if (company.error || quote.error || quoteLines.error) {
+  const customer = await Promise.resolve(
+    getCustomer(client, quote.data?.customerId ?? "")
+  );
+
+  if (customer.error) {
+    logger.error(customer.error);
+  }
+
+  if (
+    company.error ||
+    customer.error ||
+    customer.error ||
+    quote.error ||
+    quoteLines.error
+  ) {
     throw new Error("Failed to load quote");
   }
 
   const stream = await renderToStream(
     <QuotePDF
       company={company.data}
+      customer={customer.data}
       quote={quote.data}
       quoteLines={quoteLines.data}
       quoteLineQuantities={quoteLineQuantitiesByQuoteId.data}
