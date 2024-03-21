@@ -104,6 +104,8 @@ export const path = {
     currency: (id: string) => generatePath(`${x}/accounting/currencies/${id}`),
     currencies: `${x}/accounting/currencies`,
     customer: (id: string) => generatePath(`${x}/customer/${id}`),
+    customerDetails: (id: string) =>
+      generatePath(`${x}/customer/${id}/details`),
     customerRoot: `${x}/customer`,
     customers: `${x}/sales/customers`,
     customerAccounts: `${x}/users/customers`,
@@ -351,6 +353,7 @@ export const path = {
     newWorkCellType: `${x}/resources/work-cells/new`,
     part: (id: string) => generatePath(`${x}/part/${id}`),
     partCosting: (id: string) => generatePath(`${x}/part/${id}/costing`),
+    partDetails: (id: string) => generatePath(`${x}/part/${id}/details`),
     partGroup: (id: string) => generatePath(`${x}/parts/groups/${id}`),
     partGroups: `${x}/parts/groups`,
     partInventory: (id: string) => generatePath(`${x}/part/${id}/inventory`),
@@ -477,6 +480,8 @@ export const path = {
     supplierAccounts: `${x}/users/suppliers`,
     supplierContact: (supplierId: string, id: string) =>
       generatePath(`${x}/supplier/${supplierId}/contacts/${id}`),
+    supplierDetails: (id: string) =>
+      generatePath(`${x}/supplier/${id}/details`),
     supplierContacts: (id: string) =>
       generatePath(`${x}/supplier/${id}/contacts`),
     supplierLocation: (supplierId: string, id: string) =>
