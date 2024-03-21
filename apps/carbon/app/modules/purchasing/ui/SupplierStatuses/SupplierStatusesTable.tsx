@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill, BsPeopleFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Table } from "~/components";
+import { TableNew } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { SupplierStatus } from "~/modules/purchasing";
 import { path } from "~/utils/path";
@@ -76,10 +76,13 @@ const SupplierStatusesTable = memo(
     );
 
     return (
-      <Table<SupplierStatus>
+      <TableNew<SupplierStatus>
         data={data}
         columns={columns}
         count={count}
+        label="Supplier Status"
+        newPath={path.to.newSupplierStatus}
+        newPermission={permissions.can("create", "purchasing")}
         renderContextMenu={renderContextMenu}
       />
     );
