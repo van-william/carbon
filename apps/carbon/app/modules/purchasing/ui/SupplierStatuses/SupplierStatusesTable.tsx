@@ -28,13 +28,15 @@ const SupplierStatusesTable = memo(
           cell: ({ row }) => (
             <Enumerable
               value={row.original.name}
-              onClick={() => navigate(row.original.id as string)}
+              onClick={() =>
+                navigate(`${row.original.id}?${params.toString()}`)
+              }
               className="cursor-pointer"
             />
           ),
         },
       ];
-    }, [navigate]);
+    }, [navigate, params]);
 
     const renderContextMenu = useCallback(
       (row: SupplierStatus) => {
@@ -42,7 +44,7 @@ const SupplierStatusesTable = memo(
           <>
             <MenuItem
               onClick={() => {
-                navigate(`${path.to.suppliers}?status=${row.id}`);
+                navigate(`${path.to.suppliers}?filter=status:eq:${row.name}`);
               }}
             >
               <MenuIcon icon={<BsPeopleFill />} />
