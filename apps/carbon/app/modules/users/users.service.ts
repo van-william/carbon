@@ -21,7 +21,7 @@ export async function deleteGroup(
 export async function getCustomers(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
-    name: string | null;
+    search: string | null;
     type: string | null;
     active: boolean | null;
   }
@@ -32,8 +32,8 @@ export async function getCustomers(
     { count: "exact" }
   );
 
-  if (args.name) {
-    query = query.ilike("user.fullName", `%${args.name}%`);
+  if (args.search) {
+    query = query.ilike("user.fullName", `%${args.search}%`);
   }
 
   if (args.type) {
@@ -64,7 +64,7 @@ export async function getEmployee(
 export async function getEmployees(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
-    name: string | null;
+    search: string | null;
     type: string | null;
     active: boolean | null;
   }
@@ -76,8 +76,8 @@ export async function getEmployees(
       { count: "exact" }
     );
 
-  if (args.name) {
-    query = query.ilike("user.fullName", `%${args.name}%`);
+  if (args.search) {
+    query = query.ilike("user.fullName", `%${args.search}%`);
   }
 
   if (args.type) {
@@ -107,12 +107,12 @@ export async function getEmployeeType(
 
 export async function getEmployeeTypes(
   client: SupabaseClient<Database>,
-  args?: GenericQueryFilters & { name: string | null }
+  args?: GenericQueryFilters & { search: string | null }
 ) {
   let query = client.from("employeeType").select("*", { count: "exact" });
 
-  if (args?.name) {
-    query = query.ilike("name", `%${args.name}%`);
+  if (args?.search) {
+    query = query.ilike("name", `%${args.search}%`);
   }
 
   if (args) {
@@ -175,7 +175,7 @@ export async function getPermissionsByEmployeeType(
 export async function getSuppliers(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
-    name: string | null;
+    search: string | null;
     type: string | null;
     active: boolean | null;
   }
@@ -186,8 +186,8 @@ export async function getSuppliers(
     { count: "exact" }
   );
 
-  if (args.name) {
-    query = query.ilike("user.fullName", `%${args.name}%`);
+  if (args.search) {
+    query = query.ilike("user.fullName", `%${args.search}%`);
   }
 
   if (args.type) {

@@ -164,7 +164,7 @@ export async function getAccountsList(
 export async function getAccountCategories(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
-    name: string | null;
+    search: string | null;
     class: string | null;
     incomeBalance: string | null;
   }
@@ -173,8 +173,8 @@ export async function getAccountCategories(
     count: "exact",
   });
 
-  if (args.name) {
-    query = query.ilike("category", `%${args.name}%`);
+  if (args.search) {
+    query = query.ilike("category", `%${args.search}%`);
   }
 
   if (args.class) {
@@ -216,7 +216,7 @@ export async function getAccountCategory(
 export async function getAccountSubcategories(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
-    name: string | null;
+    search: string | null;
   }
 ) {
   let query = client
@@ -226,8 +226,8 @@ export async function getAccountSubcategories(
     })
     .eq("active", true);
 
-  if (args.name) {
-    query = query.ilike("name", `%${args.name}%`);
+  if (args.search) {
+    query = query.ilike("name", `%${args.search}%`);
   }
 
   query = setGenericQueryFilters(query, args, [
@@ -389,7 +389,7 @@ export async function getCurrency(
 export async function getCurrencies(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
-    name: string | null;
+    search: string | null;
   }
 ) {
   let query = client
@@ -399,8 +399,8 @@ export async function getCurrencies(
     })
     .eq("active", true);
 
-  if (args.name) {
-    query = query.ilike("name", `%${args.name}%`);
+  if (args.search) {
+    query = query.ilike("name", `%${args.search}%`);
   }
 
   query = setGenericQueryFilters(query, args, [
@@ -499,7 +499,7 @@ export async function getPaymentTerm(
 export async function getPaymentTerms(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
-    name: string | null;
+    search: string | null;
   }
 ) {
   let query = client
@@ -509,8 +509,8 @@ export async function getPaymentTerms(
     })
     .eq("active", true);
 
-  if (args.name) {
-    query = query.ilike("name", `%${args.name}%`);
+  if (args.search) {
+    query = query.ilike("name", `%${args.search}%`);
   }
 
   query = setGenericQueryFilters(query, args, [

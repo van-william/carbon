@@ -142,7 +142,7 @@ export async function deleteWorkCellType(
 
 export async function getAbilities(
   client: SupabaseClient<Database>,
-  args: GenericQueryFilters & { name: string | null }
+  args: GenericQueryFilters & { search: string | null }
 ) {
   let query = client
     .from("ability")
@@ -153,8 +153,8 @@ export async function getAbilities(
     .eq("employeeAbility.active", true)
     .eq("employeeAbility.user.active", true);
 
-  if (args?.name) {
-    query = query.ilike("name", `%${args.name}%`);
+  if (args?.search) {
+    query = query.ilike("name", `%${args.search}%`);
   }
 
   query = setGenericQueryFilters(query, args, [
@@ -220,7 +220,7 @@ async function getAttributes(
 
 export async function getAttributeCategories(
   client: SupabaseClient<Database>,
-  args?: { name: string | null } & GenericQueryFilters
+  args?: { search: string | null } & GenericQueryFilters
 ) {
   let query = client
     .from("userAttributeCategory")
@@ -230,8 +230,8 @@ export async function getAttributeCategories(
     .eq("active", true)
     .eq("userAttribute.active", true);
 
-  if (args?.name) {
-    query = query.ilike("name", `%${args.name}%`);
+  if (args?.search) {
+    query = query.ilike("name", `%${args.search}%`);
   }
 
   if (args) {
@@ -282,12 +282,12 @@ export async function getContractor(
 
 export async function getContractors(
   client: SupabaseClient<Database>,
-  args?: GenericQueryFilters & { name: string | null; ability: string | null }
+  args?: GenericQueryFilters & { search: string | null; ability: string | null }
 ) {
   let query = client.from("contractors").select("*").eq("active", true);
 
-  if (args?.name) {
-    query = query.ilike("supplierName", `%${args.name}%`);
+  if (args?.search) {
+    query = query.ilike("supplierName", `%${args.search}%`);
   }
 
   if (args?.ability) {
@@ -312,14 +312,14 @@ export async function getDepartment(
 
 export async function getDepartments(
   client: SupabaseClient<Database>,
-  args?: GenericQueryFilters & { name: string | null }
+  args?: GenericQueryFilters & { search: string | null }
 ) {
   let query = client.from("department").select(`*, department(id, name)`, {
     count: "exact",
   });
 
-  if (args?.name) {
-    query = query.ilike("name", `%${args.name}%`);
+  if (args?.search) {
+    query = query.ilike("name", `%${args.search}%`);
   }
 
   if (args) {
@@ -406,7 +406,7 @@ export async function getEquipmentType(
 
 export async function getEquipmentTypes(
   client: SupabaseClient<Database>,
-  args?: { name: string | null } & GenericQueryFilters
+  args?: { search: string | null } & GenericQueryFilters
 ) {
   let query = client
     .from("equipmentType")
@@ -416,8 +416,8 @@ export async function getEquipmentTypes(
     .eq("active", true)
     .eq("equipment.active", true);
 
-  if (args?.name) {
-    query = query.ilike("name", `%${args.name}%`);
+  if (args?.search) {
+    query = query.ilike("name", `%${args.search}%`);
   }
 
   if (args) {
@@ -442,14 +442,14 @@ export async function getHoliday(
 
 export async function getHolidays(
   client: SupabaseClient<Database>,
-  args?: GenericQueryFilters & { name: string | null; year: number | null }
+  args?: GenericQueryFilters & { search: string | null; year: number | null }
 ) {
   let query = client.from("holiday").select("*", {
     count: "exact",
   });
 
-  if (args?.name) {
-    query = query.ilike("name", `%${args.name}%`);
+  if (args?.search) {
+    query = query.ilike("name", `%${args.search}%`);
   }
 
   if (args?.year) {
@@ -478,12 +478,12 @@ export async function getLocation(
 
 export async function getLocations(
   client: SupabaseClient<Database>,
-  args?: GenericQueryFilters & { name: string | null }
+  args?: GenericQueryFilters & { search: string | null }
 ) {
   let query = client.from("location").select("*", { count: "exact" });
 
-  if (args?.name) {
-    query = query.ilike("name", `%${args.name}%`);
+  if (args?.search) {
+    query = query.ilike("name", `%${args.search}%`);
   }
 
   if (args) {
@@ -525,12 +525,12 @@ export async function getPartner(
 
 export async function getPartners(
   client: SupabaseClient<Database>,
-  args?: GenericQueryFilters & { name: string | null; ability: string | null }
+  args?: GenericQueryFilters & { search: string | null; ability: string | null }
 ) {
   let query = client.from("partners").select("*").eq("active", true);
 
-  if (args?.name) {
-    query = query.ilike("supplierName", `%${args.name}%`);
+  if (args?.search) {
+    query = query.ilike("supplierName", `%${args.search}%`);
   }
 
   if (args?.ability) {
@@ -568,7 +568,7 @@ type Person = Employee & {
 export async function getPeople(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
-    name: string | null;
+    search: string | null;
     type: string | null;
     active: boolean | null;
   }
@@ -661,7 +661,7 @@ export async function getShift(
 
 export async function getShifts(
   client: SupabaseClient<Database>,
-  args: GenericQueryFilters & { name: string | null; location: string | null }
+  args: GenericQueryFilters & { search: string | null; location: string | null }
 ) {
   let query = client
     .from("shift")
@@ -674,8 +674,8 @@ export async function getShifts(
     .eq("active", true)
     .eq("employeeShift.user.active", true);
 
-  if (args?.name) {
-    query = query.ilike("name", `%${args.name}%`);
+  if (args?.search) {
+    query = query.ilike("name", `%${args.search}%`);
   }
 
   if (args.location) {
@@ -747,7 +747,7 @@ export async function getWorkCellType(
 
 export async function getWorkCellTypes(
   client: SupabaseClient<Database>,
-  args?: { name: string | null } & GenericQueryFilters
+  args?: { search: string | null } & GenericQueryFilters
 ) {
   let query = client
     .from("workCellType")
@@ -757,8 +757,8 @@ export async function getWorkCellTypes(
     .eq("active", true)
     .eq("workCell.active", true);
 
-  if (args?.name) {
-    query = query.ilike("name", `%${args.name}%`);
+  if (args?.search) {
+    query = query.ilike("name", `%${args.search}%`);
   }
 
   if (args) {

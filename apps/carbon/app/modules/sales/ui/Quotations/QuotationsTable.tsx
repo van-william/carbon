@@ -10,7 +10,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo, useState } from "react";
 import { BsFillPenFill, BsPin, BsPinFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Avatar, Table } from "~/components";
+import { Avatar, TableNew } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
 import { type Quotation, type quoteStatusType } from "~/modules/sales";
@@ -181,17 +181,6 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
     ];
   }, [fetcher, navigate]);
 
-  const defaultColumnVisibility = {
-    expirationDate: false,
-    quoteDate: false,
-    customerReference: false,
-    locationName: false,
-    createdAt: false,
-    createdByFullName: false,
-    updatedAt: false,
-    updatedByFullName: false,
-  };
-
   const renderContextMenu = useMemo(() => {
     // eslint-disable-next-line react/display-name
     return (row: Quotation) => (
@@ -216,15 +205,11 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
 
   return (
     <>
-      <Table<Quotation>
+      <TableNew<Quotation>
         count={count}
         columns={columns}
         data={rows}
-        defaultColumnVisibility={defaultColumnVisibility}
         withColumnOrdering
-        withFilters
-        withPagination
-        withSimpleSorting
         renderContextMenu={renderContextMenu}
       />
       {selectedQuotation && selectedQuotation.id && (

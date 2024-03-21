@@ -69,23 +69,8 @@ export async function getPartGroups(
   return query;
 }
 
-export async function getPartGroupsList(
-  client: SupabaseClient<Database>,
-  args?: GenericQueryFilters & { name: string | null }
-) {
-  let query = client.from("partGroup").select("id, name", { count: "exact" });
-
-  if (args?.name) {
-    query = query.ilike("name", `%${args.name}%`);
-  }
-
-  if (args) {
-    query = setGenericQueryFilters(query, args, [
-      { column: "name", ascending: true },
-    ]);
-  }
-
-  return query;
+export async function getPartGroupsList(client: SupabaseClient<Database>) {
+  return client.from("partGroup").select("id, name", { count: "exact" });
 }
 
 export async function getPartInventory(

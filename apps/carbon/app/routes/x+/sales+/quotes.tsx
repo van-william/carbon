@@ -27,9 +27,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
   const search = searchParams.get("search");
-  const status = searchParams.get("status");
-  const customerId = searchParams.get("customerId");
-  const partId = searchParams.get("partId");
 
   const { limit, offset, sorts, filters } =
     getGenericQueryFilters(searchParams);
@@ -37,9 +34,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const [quotes] = await Promise.all([
     getQuotes(client, {
       search,
-      status,
-      partId,
-      customerId,
       limit,
       offset,
       sorts,

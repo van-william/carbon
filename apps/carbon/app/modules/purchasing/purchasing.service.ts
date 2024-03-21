@@ -347,7 +347,7 @@ export async function getSupplierShipping(
 export async function getSuppliers(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
-    name: string | null;
+    search: string | null;
     type: string | null;
     status: string | null;
   }
@@ -356,8 +356,8 @@ export async function getSuppliers(
     count: "exact",
   });
 
-  if (args.name) {
-    query = query.ilike("name", `%${args.name}%`);
+  if (args.search) {
+    query = query.ilike("name", `%${args.search}%`);
   }
 
   if (args.type) {
@@ -391,12 +391,12 @@ export async function getSupplierStatus(
 
 export async function getSupplierStatuses(
   client: SupabaseClient<Database>,
-  args?: GenericQueryFilters & { name: string | null }
+  args?: GenericQueryFilters & { search: string | null }
 ) {
   let query = client.from("supplierStatus").select("*", { count: "exact" });
 
-  if (args?.name) {
-    query = query.ilike("name", `%${args.name}%`);
+  if (args?.search) {
+    query = query.ilike("name", `%${args.search}%`);
   }
 
   if (args) {
@@ -427,12 +427,12 @@ export async function getSupplierType(
 
 export async function getSupplierTypes(
   client: SupabaseClient<Database>,
-  args?: GenericQueryFilters & { name: string | null }
+  args?: GenericQueryFilters & { search: string | null }
 ) {
   let query = client.from("supplierType").select("*", { count: "exact" });
 
-  if (args?.name) {
-    query = query.ilike("name", `%${args.name}%`);
+  if (args?.search) {
+    query = query.ilike("name", `%${args.search}%`);
   }
 
   if (args) {
