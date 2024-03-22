@@ -282,16 +282,14 @@ export async function getContractor(
 
 export async function getContractors(
   client: SupabaseClient<Database>,
-  args?: GenericQueryFilters & { search: string | null; ability: string | null }
+  args?: GenericQueryFilters & { search: string | null }
 ) {
   let query = client.from("contractors").select("*").eq("active", true);
 
   if (args?.search) {
-    query = query.ilike("supplierName", `%${args.search}%`);
-  }
-
-  if (args?.ability) {
-    query.eq("abilityId", args?.ability);
+    query = query.or(
+      `supplierName.ilike.%${args.search}%,firstName.ilike.%${args.search}%,lastName.ilike.%${args.search}%`
+    );
   }
 
   if (args) {
