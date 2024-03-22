@@ -13,6 +13,7 @@ import {
   PopoverHeader,
   PopoverTrigger,
   Switch,
+  cn,
 } from "@carbon/react";
 import { Reorder } from "framer-motion";
 import { BsChevronDown, BsSortUp } from "react-icons/bs";
@@ -40,8 +41,9 @@ const Sort = ({ columnAccessors }: SortProps) => {
         <IconButton
           aria-label="Sort"
           title="Sort"
-          variant={hasNoSorts ? "ghost" : "primary"}
+          variant={hasNoSorts ? "ghost" : "secondary"}
           icon={<BsSortUp />}
+          className={cn(hasNoSorts && "!border-dashed border-border")}
         />
       </PopoverTrigger>
       <PopoverContent className="w-[420px]">

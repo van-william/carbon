@@ -586,37 +586,40 @@ export async function getPeople(
       attributeCategories.data.reduce<PersonAttributes>((acc, category) => {
         if (!category.userAttribute || !Array.isArray(category.userAttribute))
           return acc;
-        category.userAttribute.forEach((attribute) => {
-          if (
-            attribute.userAttributeValue &&
-            Array.isArray(attribute.userAttributeValue) &&
-            !Array.isArray(attribute.attributeDataType)
-          ) {
-            const userAttributeId = attribute.id;
-            const userAttributeValue = attribute.userAttributeValue.find(
-              (attributeValue) => attributeValue.userId === userId
-            );
-            const value =
-              typeof userAttributeValue?.valueBoolean === "boolean"
-                ? userAttributeValue.valueBoolean
-                : userAttributeValue?.valueDate ||
-                  userAttributeValue?.valueNumeric ||
-                  userAttributeValue?.valueText ||
-                  userAttributeValue?.valueUser;
+        category.userAttribute.forEach(
+          // @ts-ignore
+          (attribute) => {
+            if (
+              attribute.userAttributeValue &&
+              Array.isArray(attribute.userAttributeValue) &&
+              !Array.isArray(attribute.attributeDataType)
+            ) {
+              const userAttributeId = attribute.id;
+              const userAttributeValue = attribute.userAttributeValue.find(
+                (attributeValue) => attributeValue.userId === userId
+              );
+              const value =
+                typeof userAttributeValue?.valueBoolean === "boolean"
+                  ? userAttributeValue.valueBoolean
+                  : userAttributeValue?.valueDate ||
+                    userAttributeValue?.valueNumeric ||
+                    userAttributeValue?.valueText ||
+                    userAttributeValue?.valueUser;
 
-            if (value && userAttributeValue?.id) {
-              acc[userAttributeId] = {
-                userAttributeValueId: userAttributeValue.id,
-                // @ts-ignore
-                dataType: attribute.attributeDataType?.id as DataType,
-                value,
-                user: !Array.isArray(userAttributeValue.user)
-                  ? userAttributeValue.user
-                  : undefined,
-              };
+              if (value && userAttributeValue?.id) {
+                acc[userAttributeId] = {
+                  userAttributeValueId: userAttributeValue.id,
+                  // @ts-ignore
+                  dataType: attribute.attributeDataType?.id as DataType,
+                  value,
+                  user: !Array.isArray(userAttributeValue.user)
+                    ? userAttributeValue.user
+                    : undefined,
+                };
+              }
             }
           }
-        });
+        );
         return acc;
       }, {});
 
@@ -638,10 +641,8 @@ export async function getShift(
   shiftId: string
 ) {
   return client
-    .from("shift")
-    .select(
-      `*, employeeShift(user(id, fullName, avatarUrl)), location(name, timezone)`
-    )
+    .from("shifts")
+    .select("*")
     .eq("id", shiftId)
     .eq("active", true)
     .single();
@@ -649,25 +650,17 @@ export async function getShift(
 
 export async function getShifts(
   client: SupabaseClient<Database>,
-  args: GenericQueryFilters & { search: string | null; location: string | null }
+  args: GenericQueryFilters & { search: string | null }
 ) {
   let query = client
-    .from("shift")
-    .select(
-      `*, employeeShift(user(id, fullName, avatarUrl)), location(name, timezone)`,
-      {
-        count: "exact",
-      }
-    )
-    .eq("active", true)
-    .eq("employeeShift.user.active", true);
+    .from("shifts")
+    .select("*", {
+      count: "exact",
+    })
+    .eq("active", true);
 
   if (args?.search) {
     query = query.ilike("name", `%${args.search}%`);
-  }
-
-  if (args.location) {
-    query = query.eq("locationId", args.location);
   }
 
   query = setGenericQueryFilters(query, args, [

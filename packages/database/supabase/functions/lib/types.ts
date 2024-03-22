@@ -3134,6 +3134,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "employeeJob_shiftId_fkey"
+            columns: ["shiftId"]
+            isOneToOne: false
+            referencedRelation: "shifts"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "employeeJob_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
@@ -3206,6 +3213,13 @@ export type Database = {
             columns: ["shiftId"]
             isOneToOne: false
             referencedRelation: "shift"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "employeeShift_shiftId_fkey"
+            columns: ["shiftId"]
+            isOneToOne: false
+            referencedRelation: "shifts"
             referencedColumns: ["id"]
           },
         ]
@@ -13419,6 +13433,93 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "partGroup"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      shifts: {
+        Row: {
+          active: boolean | null
+          createdAt: string | null
+          createdBy: string | null
+          endTime: string | null
+          friday: boolean | null
+          id: string | null
+          locationId: string | null
+          locationName: string | null
+          monday: boolean | null
+          name: string | null
+          saturday: boolean | null
+          startTime: string | null
+          sunday: boolean | null
+          thursday: boolean | null
+          tuesday: boolean | null
+          updatedAt: string | null
+          updatedBy: string | null
+          wednesday: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shifts_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shifts_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shifts_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "shifts_locationId_fkey"
+            columns: ["locationId"]
+            isOneToOne: false
+            referencedRelation: "location"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shifts_locationId_fkey"
+            columns: ["locationId"]
+            isOneToOne: false
+            referencedRelation: "partQuantities"
+            referencedColumns: ["locationId"]
+          },
+          {
+            foreignKeyName: "shifts_locationId_fkey"
+            columns: ["locationId"]
+            isOneToOne: false
+            referencedRelation: "purchaseOrders"
+            referencedColumns: ["locationId"]
+          },
+          {
+            foreignKeyName: "shifts_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shifts_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shifts_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
           },
         ]
       }
