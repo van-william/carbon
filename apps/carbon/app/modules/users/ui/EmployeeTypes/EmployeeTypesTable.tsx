@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill, BsPeopleFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Table } from "~/components";
+import { New, TableNew } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { EmployeeType } from "~/modules/users";
 import { path } from "~/utils/path";
@@ -80,10 +80,15 @@ const EmployeeTypesTable = memo(({ data, count }: EmployeeTypesTableProps) => {
   );
 
   return (
-    <Table<(typeof data)[number]>
+    <TableNew<(typeof data)[number]>
       data={data}
       columns={columns}
       count={count}
+      primaryAction={
+        permissions.can("create", "users") && (
+          <New label="Employee Type" to={`new?${params.toString()}`} />
+        )
+      }
       renderContextMenu={renderContextMenu}
     />
   );
