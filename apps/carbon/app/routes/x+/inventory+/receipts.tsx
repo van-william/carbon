@@ -19,7 +19,6 @@ export const handle: Handle = {
 export async function loader({ request }: LoaderFunctionArgs) {
   const { client } = await requirePermissions(request, {
     view: "inventory",
-    role: "employee",
   });
 
   const url = new URL(request.url);
@@ -41,7 +40,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   if (receipts.error) {
     return redirect(
-      path.to.inventory,
+      path.to.authenticatedRoot,
       await flash(request, error(null, "Error loading receipts"))
     );
   }
