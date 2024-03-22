@@ -129,13 +129,13 @@ export async function getGroupMembers(
 export async function getGroups(
   client: SupabaseClient<Database>,
   args?: GenericQueryFilters & {
-    name: string | null;
+    search: string | null;
     uid: string | null;
   }
 ) {
   let query = client.rpc("groups_query", {
     _uid: args?.uid ?? "",
-    _name: args?.name ?? "",
+    _name: args?.search ?? "",
   });
 
   if (args) query = setGenericQueryFilters(query, args);

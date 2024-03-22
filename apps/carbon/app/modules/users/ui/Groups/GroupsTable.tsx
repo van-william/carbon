@@ -10,8 +10,8 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Avatar, Table } from "~/components";
-import { usePermissions } from "~/hooks";
+import { Avatar, New, TableNew } from "~/components";
+import { usePermissions, useUrlParams } from "~/hooks";
 import type { Group } from "~/modules/users";
 import { path } from "~/utils/path";
 
@@ -23,6 +23,7 @@ type GroupsTableProps = {
 const GroupsTable = memo(({ data, count }: GroupsTableProps) => {
   const navigate = useNavigate();
   const permissions = usePermissions();
+  const [params] = useUrlParams();
 
   const rows = data.map((row) => ({
     id: row.data.id,
@@ -113,10 +114,15 @@ const GroupsTable = memo(({ data, count }: GroupsTableProps) => {
   );
 
   return (
-    <Table<(typeof rows)[number]>
+    <TableNew<(typeof rows)[number]>
       data={rows}
       count={count}
       columns={columns}
+      primaryAction={
+        permissions.can("create", "users") && (
+          <New label="Group" to={`new?${params.toString()}`} />
+        )
+      }
       renderContextMenu={renderContextMenu}
     />
   );
