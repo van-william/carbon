@@ -1,10 +1,10 @@
-import { Hyperlink, MenuIcon, MenuItem } from "@carbon/react";
+import { Enumerable, Hyperlink, MenuIcon, MenuItem } from "@carbon/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Table } from "~/components";
+import { New, TableNew } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Holiday } from "~/modules/resources";
 import { path } from "~/utils/path";
@@ -12,9 +12,10 @@ import { path } from "~/utils/path";
 type HolidaysTableProps = {
   data: Holiday[];
   count: number;
+  years: number[];
 };
 
-const HolidaysTable = memo(({ data, count }: HolidaysTableProps) => {
+const HolidaysTable = memo(({ data, count, years }: HolidaysTableProps) => {
   const navigate = useNavigate();
   const permissions = usePermissions();
   const [params] = useUrlParams();
@@ -28,9 +29,25 @@ const HolidaysTable = memo(({ data, count }: HolidaysTableProps) => {
         header: "Holiday",
         cell: ({ row }) => (
           <Hyperlink onClick={() => navigate(row.original.id)}>
-            {`${row.original.name} (${row.original.year})`}
+            {row.original.name}
           </Hyperlink>
         ),
+      },
+      {
+        accessorKey: "year",
+        header: "Year",
+        cell: (item) => (
+          <Enumerable value={item.getValue<number>().toString()} />
+        ),
+        meta: {
+          filter: {
+            type: "static",
+            options: years.map((year) => ({
+              label: <Enumerable value={year.toString()} />,
+              value: year.toString(),
+            })),
+          },
+        },
       },
       {
         accessorKey: "date",
@@ -38,7 +55,7 @@ const HolidaysTable = memo(({ data, count }: HolidaysTableProps) => {
         cell: (item) => item.getValue(),
       },
     ];
-  }, [navigate]);
+  }, [navigate, years]);
 
   const renderContextMenu = useCallback(
     (row: (typeof data)[number]) => {
@@ -68,10 +85,15 @@ const HolidaysTable = memo(({ data, count }: HolidaysTableProps) => {
   );
 
   return (
-    <Table<(typeof rows)[number]>
+    <TableNew<(typeof rows)[number]>
       data={rows}
       count={count}
       columns={columns}
+      primaryAction={
+        permissions.can("create", "resources") && (
+          <New label="Holiday" to={`new?${params.toString()}`} />
+        )
+      }
       renderContextMenu={renderContextMenu}
     />
   );

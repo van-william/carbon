@@ -440,7 +440,7 @@ export async function getHoliday(
 
 export async function getHolidays(
   client: SupabaseClient<Database>,
-  args?: GenericQueryFilters & { search: string | null; year: number | null }
+  args?: GenericQueryFilters & { search: string | null }
 ) {
   let query = client.from("holiday").select("*", {
     count: "exact",
@@ -448,10 +448,6 @@ export async function getHolidays(
 
   if (args?.search) {
     query = query.ilike("name", `%${args.search}%`);
-  }
-
-  if (args?.year) {
-    query = query.eq("year", args.year);
   }
 
   if (args) {
