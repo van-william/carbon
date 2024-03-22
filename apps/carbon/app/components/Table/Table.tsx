@@ -58,6 +58,7 @@ interface TableProps<T extends object> {
   withColumnOrdering?: boolean;
   withInlineEditing?: boolean;
   withPagination?: boolean;
+  withSearch?: boolean;
   withSelectableRows?: boolean;
   withSimpleSorting?: boolean;
   onSelectedRowsChange?: (selectedRows: T[]) => void;
@@ -79,6 +80,7 @@ const Table = <T extends object>({
   withInlineEditing = false,
   withColumnOrdering = false,
   withPagination = true,
+  withSearch = true,
   withSelectableRows = false,
   withSimpleSorting = true,
   onSelectedRowsChange,
@@ -455,6 +457,7 @@ const Table = <T extends object>({
         withInlineEditing={withInlineEditing}
         withColumnOrdering={withColumnOrdering}
         withPagination={withPagination}
+        withSearch={withSearch}
         withSelectableRows={withSelectableRows}
       />
 

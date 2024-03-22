@@ -168,7 +168,8 @@ const RequestForQuotesTable = memo(
               type: "static",
               options: parts.map((part) => ({
                 value: part.id,
-                label: part.name,
+                label: part.id,
+                helperText: part.name,
               })),
               isArray: true,
             },

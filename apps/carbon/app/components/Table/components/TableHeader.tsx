@@ -29,6 +29,7 @@ type HeaderProps<T> = {
   withColumnOrdering: boolean;
   withInlineEditing: boolean;
   withPagination: boolean;
+  withSearch: boolean;
   withSelectableRows: boolean;
 };
 
@@ -47,6 +48,7 @@ const TableHeader = <T extends object>({
   withColumnOrdering,
   withInlineEditing,
   withPagination,
+  withSearch,
   withSelectableRows,
 }: HeaderProps<T>) => {
   const [params] = useUrlParams();
@@ -56,7 +58,9 @@ const TableHeader = <T extends object>({
     <>
       <HStack className="px-4 py-2 justify-between bg-card border-b border-border w-full">
         <HStack>
-          <DebouncedInput param="search" size="sm" placeholder="Search" />
+          {withSearch && (
+            <DebouncedInput param="search" size="sm" placeholder="Search" />
+          )}
           {!!filters?.length && <Filter filters={filters} />}
         </HStack>
         <HStack>

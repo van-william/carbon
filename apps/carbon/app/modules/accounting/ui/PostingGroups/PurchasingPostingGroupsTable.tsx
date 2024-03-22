@@ -1,7 +1,7 @@
 import { Enumerable } from "@carbon/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useMemo } from "react";
-import { Table } from "~/components";
+import { TableNew } from "~/components";
 import { EditableList } from "~/components/Editable";
 import type {
   AccountListItem,
@@ -46,7 +46,7 @@ const PurchasingPostingGroupsTable = ({
   const columns = useMemo<ColumnDef<PurchasingPostingGroup>[]>(() => {
     return [
       {
-        id: "partGroup",
+        id: "partGroupId",
         header: "Part Group",
         cell: ({ row }) => (
           <Enumerable
@@ -56,9 +56,18 @@ const PurchasingPostingGroupsTable = ({
             }
           />
         ),
+        meta: {
+          filter: {
+            type: "static",
+            options: partGroups.map((group) => ({
+              label: <Enumerable value={group.name} />,
+              value: group.id,
+            })),
+          },
+        },
       },
       {
-        id: "supplierType",
+        id: "supplierTypeId",
         header: "Supplier Type",
         cell: ({ row }) => (
           <Enumerable
@@ -69,6 +78,15 @@ const PurchasingPostingGroupsTable = ({
             }
           />
         ),
+        meta: {
+          filter: {
+            type: "static",
+            options: supplierTypes.map((t) => ({
+              label: <Enumerable value={t.name} />,
+              value: t.id,
+            })),
+          },
+        },
       },
       {
         accessorKey: "payablesAccount",
@@ -128,12 +146,13 @@ const PurchasingPostingGroupsTable = ({
   );
 
   return (
-    <Table<PurchasingPostingGroup>
+    <TableNew<PurchasingPostingGroup>
       data={data}
       columns={columns}
       count={count}
       editableComponents={editableComponents}
       withInlineEditing={canEdit}
+      withSearch={false}
     />
   );
 };
