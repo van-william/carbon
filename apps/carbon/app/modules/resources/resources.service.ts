@@ -523,16 +523,12 @@ export async function getPartner(
 
 export async function getPartners(
   client: SupabaseClient<Database>,
-  args?: GenericQueryFilters & { search: string | null; ability: string | null }
+  args?: GenericQueryFilters & { search: string | null }
 ) {
   let query = client.from("partners").select("*").eq("active", true);
 
   if (args?.search) {
     query = query.ilike("supplierName", `%${args.search}%`);
-  }
-
-  if (args?.ability) {
-    query.eq("abilityId", args.ability);
   }
 
   if (args) {
