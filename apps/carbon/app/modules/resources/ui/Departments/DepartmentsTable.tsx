@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Table } from "~/components";
+import { New, TableNew } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Department } from "~/modules/resources";
 import { path } from "~/utils/path";
@@ -83,10 +83,15 @@ const DepartmentsTable = memo(({ data, count }: DepartmentsTableProps) => {
   );
 
   return (
-    <Table<(typeof rows)[number]>
+    <TableNew<(typeof rows)[number]>
       data={rows}
       count={count}
       columns={columns}
+      primaryAction={
+        permissions.can("create", "resources") && (
+          <New label="Department" to={`new?${params.toString()}`} />
+        )
+      }
       renderContextMenu={renderContextMenu}
     />
   );
