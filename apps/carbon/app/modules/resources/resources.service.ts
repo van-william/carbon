@@ -596,6 +596,7 @@ export async function getPeople(
             ) {
               const userAttributeId = attribute.id;
               const userAttributeValue = attribute.userAttributeValue.find(
+                // @ts-ignore
                 (attributeValue) => attributeValue.userId === userId
               );
               const value =
