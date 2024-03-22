@@ -227,9 +227,6 @@ export async function getRequestsForQuotes(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
     search: string | null;
-    status: string | null;
-    supplierId: string | null;
-    partId: string | null;
   }
 ) {
   let query = client.from("requestForQuotes").select("*", { count: "exact" });
@@ -238,18 +235,6 @@ export async function getRequestsForQuotes(
     query = query.or(
       `id.ilike.%${args.search}%,requestForQuoteId.ilike.%${args.search}%,name.ilike.%${args.search}%`
     );
-  }
-
-  if (args.status) {
-    query = query.eq("status", args.status);
-  }
-
-  if (args.supplierId) {
-    query = query.contains("supplierIds", [args.supplierId]);
-  }
-
-  if (args.partId) {
-    query = query.contains("partIds", [args.partId]);
   }
 
   query = setGenericQueryFilters(query, args, [

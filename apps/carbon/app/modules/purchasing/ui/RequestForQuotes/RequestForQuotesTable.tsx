@@ -10,13 +10,14 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo, useState } from "react";
 import { BsFillPenFill, BsPin, BsPinFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Avatar, Table } from "~/components";
+import { Avatar, TableNew } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
 import {
+  requestForQuoteStatusType,
   type RequestForQuote,
-  type requestForQuoteStatusType,
 } from "~/modules/purchasing";
+import { useParts, useSuppliers } from "~/stores";
 import { favoriteSchema } from "~/types/validators";
 import { path } from "~/utils/path";
 import { RequestForQuoteStatus } from "../RequestForQuote";
@@ -33,6 +34,9 @@ const RequestForQuotesTable = memo(
     const navigate = useNavigate();
     const fetcher = useFetcher();
     const optimisticFavorite = useOptimisticFavorite();
+
+    const [suppliers] = useSuppliers();
+    const [parts] = useParts();
 
     const rows = useMemo<RequestForQuote[]>(
       () =>
@@ -119,6 +123,15 @@ const RequestForQuotesTable = memo(
               item.getValue<(typeof requestForQuoteStatusType)[number]>();
             return <RequestForQuoteStatus status={status} />;
           },
+          meta: {
+            filter: {
+              type: "static",
+              options: requestForQuoteStatusType.map((status) => ({
+                value: status,
+                label: <RequestForQuoteStatus status={status} />,
+              })),
+            },
+          },
         },
         {
           accessorKey: "receiptDate",
@@ -129,6 +142,38 @@ const RequestForQuotesTable = memo(
           accessorKey: "expirationDate",
           header: "Expiration Date",
           cell: (item) => item.getValue(),
+        },
+        {
+          accessorKey: "supplierIds",
+          header: "Suppliers",
+          cell: ({ row }) => row.original.supplierIds?.length ?? 0,
+          meta: {
+            filter: {
+              type: "static",
+              options: suppliers.map((supplier) => ({
+                value: supplier.id,
+                label: supplier.name,
+              })),
+              isArray: true,
+            },
+            pluralHeader: "Suppliers",
+          },
+        },
+        {
+          accessorKey: "partIds",
+          header: "Parts",
+          cell: ({ row }) => row.original.partIds?.length ?? 0,
+          meta: {
+            filter: {
+              type: "static",
+              options: parts.map((part) => ({
+                value: part.id,
+                label: part.name,
+              })),
+              isArray: true,
+            },
+            pluralHeader: "Parts",
+          },
         },
         {
           accessorKey: "createdByFullName",
@@ -165,13 +210,11 @@ const RequestForQuotesTable = memo(
           cell: (item) => item.getValue(),
         },
       ];
-    }, [fetcher, navigate]);
+    }, [fetcher, navigate, parts, suppliers]);
 
     const defaultColumnVisibility = {
-      createdAt: false,
-      createdByFullName: false,
-      updatedAt: false,
-      updatedByFullName: false,
+      partIds: false,
+      supplierIds: false,
     };
 
     const renderContextMenu = useMemo(() => {
@@ -198,16 +241,13 @@ const RequestForQuotesTable = memo(
 
     return (
       <>
-        <Table<RequestForQuote>
+        <TableNew<RequestForQuote>
           count={count}
           columns={columns}
           data={rows}
           defaultColumnVisibility={defaultColumnVisibility}
-          withColumnOrdering
-          withFilters
-          withPagination
-          withSimpleSorting
           renderContextMenu={renderContextMenu}
+          withColumnOrdering
         />
         {selectedRequestForQuote && selectedRequestForQuote.id && (
           <ConfirmDelete
