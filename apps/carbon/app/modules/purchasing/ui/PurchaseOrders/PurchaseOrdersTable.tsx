@@ -1,4 +1,6 @@
 import {
+  Checkbox,
+  Enumerable,
   HStack,
   Hyperlink,
   MenuIcon,
@@ -11,14 +13,15 @@ import { memo, useMemo, useState } from "react";
 import { BsFillPenFill, BsPin, BsPinFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { MdCallReceived } from "react-icons/md";
-import { Avatar, Table } from "~/components";
+import { Avatar, New, Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
-import type {
-  PurchaseOrder,
+import type { PurchaseOrder } from "~/modules/purchasing";
+import {
+  PurchasingStatus,
   purchaseOrderStatusType,
 } from "~/modules/purchasing";
-import { PurchasingStatus } from "~/modules/purchasing";
+import { useSuppliers } from "~/stores";
 import { favoriteSchema } from "~/types/validators";
 import { path } from "~/utils/path";
 import { usePurchaseOrder } from "./usePurchaseOrder";
@@ -31,6 +34,13 @@ type PurchaseOrdersTableProps = {
 const PurchaseOrdersTable = memo(
   ({ data, count }: PurchaseOrdersTableProps) => {
     const permissions = usePermissions();
+
+    const [selectedPurchaseOrder, setSelectedPurchaseOrder] =
+      useState<PurchaseOrder | null>(null);
+
+    const deletePurchaseOrderModal = useDisclosure();
+    const [suppliers] = useSuppliers();
+
     const fetcher = useFetcher();
     const optimisticFavorite = useOptimisticFavorite();
 
@@ -50,10 +60,6 @@ const PurchaseOrdersTable = memo(
     );
 
     const { edit, receive } = usePurchaseOrder();
-
-    const [selectedPurchaseOrder, setSelectedPurchaseOrder] =
-      useState<PurchaseOrder | null>(null);
-    const deletePurchaseOrderModal = useDisclosure();
 
     const columns = useMemo<ColumnDef<PurchaseOrder>[]>(() => {
       return [
@@ -104,6 +110,20 @@ const PurchaseOrdersTable = memo(
           accessorKey: "supplierName",
           header: "Supplier",
           cell: (item) => item.getValue(),
+          meta: {
+            filter: {
+              type: "static",
+              options: suppliers?.map((supplier) => ({
+                value: supplier.name,
+                label: supplier.name,
+              })),
+            },
+          },
+        },
+        {
+          accessorKey: "supplierReference",
+          header: "Supplier Ref.",
+          cell: (item) => item.getValue(),
         },
         {
           accessorKey: "orderDate",
@@ -118,11 +138,51 @@ const PurchaseOrdersTable = memo(
               item.getValue<(typeof purchaseOrderStatusType)[number]>();
             return <PurchasingStatus status={status} />;
           },
+          meta: {
+            filter: {
+              type: "static",
+              options: purchaseOrderStatusType.map((status) => ({
+                value: status,
+                label: <PurchasingStatus status={status} />,
+              })),
+            },
+            pluralHeader: "Statuses",
+          },
         },
         {
           accessorKey: "receiptPromisedDate",
           header: "Promised Date",
           cell: (item) => item.getValue(),
+        },
+        {
+          acessorKey: "shippingMethodName",
+          header: "Shipping Method",
+          cell: (item) => item.getValue(),
+        },
+        {
+          acessorKey: "shippingTermName",
+          header: "Shipping Term",
+          cell: (item) => <Enumerable value={item.getValue<string>()} />,
+        },
+        {
+          acessorKey: "paymentTermName",
+          header: "Payment Method",
+          cell: (item) => <Enumerable value={item.getValue<string>()} />,
+        },
+        {
+          accessorKey: "dropShipment",
+          header: "Drop Shipment",
+          cell: (item) => <Checkbox isChecked={item.getValue<boolean>()} />,
+          meta: {
+            filter: {
+              type: "static",
+              options: [
+                { value: "true", label: "Yes" },
+                { value: "false", label: "No" },
+              ],
+            },
+            pluralHeader: "Drop Shipment Statuses",
+          },
         },
         {
           accessorKey: "createdByFullName",
@@ -159,15 +219,7 @@ const PurchaseOrdersTable = memo(
           cell: (item) => item.getValue(),
         },
       ];
-    }, [edit, fetcher]);
-
-    const defaultColumnVisibility = {
-      createdAt: false,
-      createdByFullName: false,
-      receiptPromisedDate: false,
-      updatedAt: false,
-      updatedByFullName: false,
-    };
+    }, [edit, fetcher, suppliers]);
 
     const renderContextMenu = useMemo(() => {
       // eslint-disable-next-line react/display-name
@@ -214,11 +266,15 @@ const PurchaseOrdersTable = memo(
           count={count}
           columns={columns}
           data={rows}
-          defaultColumnVisibility={defaultColumnVisibility}
+          defaultColumnPinning={{
+            left: ["purchaseOrderId"],
+          }}
+          primaryAction={
+            permissions.can("create", "purchasing") && (
+              <New label="Purchase Order" to={path.to.newPurchaseOrder} />
+            )
+          }
           withColumnOrdering
-          withFilters
-          withPagination
-          withSimpleSorting
           renderContextMenu={renderContextMenu}
         />
 

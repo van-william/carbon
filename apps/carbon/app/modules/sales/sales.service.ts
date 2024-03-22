@@ -181,25 +181,15 @@ export async function getCustomerShipping(
 export async function getCustomers(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
-    name: string | null;
-    type: string | null;
-    status: string | null;
+    search: string | null;
   }
 ) {
   let query = client.from("customers").select("*", {
     count: "exact",
   });
 
-  if (args.name) {
-    query = query.ilike("name", `%${args.name}%`);
-  }
-
-  if (args.type) {
-    query = query.eq("customerTypeId", args.type);
-  }
-
-  if (args.status) {
-    query = query.eq("customerStatusId", args.status);
+  if (args.search) {
+    query = query.ilike("name", `%${args.search}%`);
   }
 
   query = setGenericQueryFilters(query, args, [
@@ -225,14 +215,14 @@ export async function getCustomerStatus(
 
 export async function getCustomerStatuses(
   client: SupabaseClient<Database>,
-  args?: GenericQueryFilters & { name: string | null }
+  args?: GenericQueryFilters & { search: string | null }
 ) {
   let query = client
     .from("customerStatus")
     .select("id, name", { count: "exact" });
 
-  if (args?.name) {
-    query = query.ilike("name", `%${args.name}%`);
+  if (args?.search) {
+    query = query.ilike("name", `%${args.search}%`);
   }
 
   if (args) {
@@ -263,12 +253,12 @@ export async function getCustomerType(
 
 export async function getCustomerTypes(
   client: SupabaseClient<Database>,
-  args?: GenericQueryFilters & { name: string | null }
+  args?: GenericQueryFilters & { search: string | null }
 ) {
   let query = client.from("customerType").select("*", { count: "exact" });
 
-  if (args?.name) {
-    query = query.ilike("name", `%${args.name}%`);
+  if (args?.search) {
+    query = query.ilike("name", `%${args.search}%`);
   }
 
   if (args) {
@@ -295,29 +285,14 @@ export async function getQuotes(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
     search: string | null;
-    status: string | null;
-    customerId: string | null;
-    partId: string | null;
   }
 ) {
   let query = client.from("quotes").select("*", { count: "exact" });
 
   if (args.search) {
     query = query.or(
-      `id.ilike.%${args.search}%,quoteId.ilike.%${args.search}%,name.ilike.%${args.search}%`
+      `quoteId.ilike.%${args.search}%,name.ilike.%${args.search}%,customerReference.ilike%${args.search}%`
     );
-  }
-
-  if (args.status) {
-    query = query.eq("status", args.status);
-  }
-
-  if (args.customerId) {
-    query = query.eq("customerId", args.customerId);
-  }
-
-  if (args.partId) {
-    query = query.contains("partIds", [args.partId]);
   }
 
   query = setGenericQueryFilters(query, args, [

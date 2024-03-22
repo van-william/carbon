@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Table } from "~/components";
+import { New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { ShiftLocation } from "~/modules/resources";
 import { path } from "~/utils/path";
@@ -94,6 +94,11 @@ const LocationsTable = memo(({ data, count }: LocationsTableProps) => {
       data={rows}
       count={count}
       columns={columns}
+      primaryAction={
+        permissions.can("create", "resources") && (
+          <New label="Location" to={`new?${params.toString()}`} />
+        )
+      }
       renderContextMenu={renderContextMenu}
     />
   );

@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Table } from "~/components";
+import { New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Currency } from "~/modules/accounting";
 import { path } from "~/utils/path";
@@ -19,7 +19,7 @@ const CurrenciesTable = memo(({ data, count }: CurrenciesTableProps) => {
   const navigate = useNavigate();
   const permissions = usePermissions();
 
-  const columns = useMemo<ColumnDef<(typeof data)[number]>[]>(() => {
+  const columns = useMemo<ColumnDef<Currency>[]>(() => {
     return [
       {
         accessorKey: "name",
@@ -47,15 +47,13 @@ const CurrenciesTable = memo(({ data, count }: CurrenciesTableProps) => {
       {
         accessorKey: "isBaseCurrency",
         header: "Default Currency",
-        cell: ({ row }) => (
-          <Checkbox isChecked={row.original.isBaseCurrency} disabled />
-        ),
+        cell: ({ row }) => <Checkbox isChecked={row.original.isBaseCurrency} />,
       },
     ];
   }, [navigate]);
 
   const renderContextMenu = useCallback(
-    (row: (typeof data)[number]) => {
+    (row: Currency) => {
       return (
         <>
           <MenuItem
@@ -85,10 +83,15 @@ const CurrenciesTable = memo(({ data, count }: CurrenciesTableProps) => {
   );
 
   return (
-    <Table<(typeof data)[number]>
+    <Table<Currency>
       data={data}
       columns={columns}
       count={count}
+      primaryAction={
+        permissions.can("create", "accounting") && (
+          <New label="Currency" to={`new?${params.toString()}`} />
+        )
+      }
       renderContextMenu={renderContextMenu}
     />
   );

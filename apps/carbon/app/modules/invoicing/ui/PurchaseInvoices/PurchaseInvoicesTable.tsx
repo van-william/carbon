@@ -10,14 +10,15 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo, useState } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Avatar, Table } from "~/components";
+import { Avatar, New, Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions, useRealtime } from "~/hooks";
-import type {
-  PurchaseInvoice,
+import type { PurchaseInvoice } from "~/modules/invoicing";
+import {
+  PurchaseInvoicingStatus,
   purchaseInvoiceStatusType,
 } from "~/modules/invoicing";
-import { PurchaseInvoicingStatus } from "~/modules/invoicing";
+import { useSuppliers } from "~/stores";
 import { path } from "~/utils/path";
 
 type PurchaseInvoicesTableProps = {
@@ -38,6 +39,8 @@ const PurchaseInvoicesTable = memo(
     const [selectedPurchaseInvoice, setSelectedPurchaseInvoice] =
       useState<PurchaseInvoice | null>(null);
     const closePurchaseInvoiceModal = useDisclosure();
+
+    const [suppliers] = useSuppliers();
 
     const columns = useMemo<ColumnDef<PurchaseInvoice>[]>(() => {
       return [
@@ -60,6 +63,15 @@ const PurchaseInvoicesTable = memo(
           accessorKey: "supplierName",
           header: "Supplier",
           cell: (item) => item.getValue(),
+          meta: {
+            filter: {
+              type: "static",
+              options: suppliers?.map((supplier) => ({
+                value: supplier.name,
+                label: supplier.name,
+              })),
+            },
+          },
         },
         {
           accessorKey: "dateDue",
@@ -73,6 +85,16 @@ const PurchaseInvoicesTable = memo(
             const status =
               item.getValue<(typeof purchaseInvoiceStatusType)[number]>();
             return <PurchaseInvoicingStatus status={status} />;
+          },
+          meta: {
+            filter: {
+              type: "static",
+              options: purchaseInvoiceStatusType.map((status) => ({
+                value: status,
+                label: <PurchaseInvoicingStatus status={status} />,
+              })),
+            },
+            pluralHeader: "Statuses",
           },
         },
         {
@@ -115,15 +137,7 @@ const PurchaseInvoicesTable = memo(
           cell: (item) => item.getValue(),
         },
       ];
-    }, [navigate]);
-
-    const defaultColumnVisibility = {
-      createdAt: false,
-      createdByFullName: false,
-      receiptPromisedDate: false,
-      updatedAt: false,
-      updatedByFullName: false,
-    };
+    }, [navigate, suppliers]);
 
     const renderContextMenu = useMemo(() => {
       // eslint-disable-next-line react/display-name
@@ -158,11 +172,15 @@ const PurchaseInvoicesTable = memo(
           count={count}
           columns={columns}
           data={data}
-          defaultColumnVisibility={defaultColumnVisibility}
+          defaultColumnPinning={{
+            left: ["invoiceId"],
+          }}
+          primaryAction={
+            permissions.can("create", "invoicing") && (
+              <New label="Purchase Invoice" to={path.to.newPurchaseInvoice} />
+            )
+          }
           withColumnOrdering
-          withFilters
-          withPagination
-          withSimpleSorting
           renderContextMenu={renderContextMenu}
         />
 

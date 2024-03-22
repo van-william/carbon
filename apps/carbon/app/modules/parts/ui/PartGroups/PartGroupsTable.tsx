@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Table } from "~/components";
+import { New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { PartGroup } from "~/modules/parts";
 import { path } from "~/utils/path";
@@ -29,7 +29,11 @@ const PartGroupsTable = memo(({ data, count }: PartGroupsTableProps) => {
         cell: ({ row }) => (
           <Enumerable
             value={row.original.name}
-            onClick={() => navigate(row.original.id)}
+            onClick={() =>
+              navigate(
+                `${path.to.partGroup(row.original.id)}?${params.toString()}`
+              )
+            }
             className="cursor-pointer"
           />
         ),
@@ -40,7 +44,7 @@ const PartGroupsTable = memo(({ data, count }: PartGroupsTableProps) => {
         cell: (item) => item.getValue(),
       },
     ],
-    [navigate]
+    [navigate, params]
   );
 
   const renderContextMenu = useCallback(
@@ -78,6 +82,14 @@ const PartGroupsTable = memo(({ data, count }: PartGroupsTableProps) => {
       data={data}
       columns={columns}
       count={count}
+      primaryAction={
+        permissions.can("create", "parts") && (
+          <New
+            label="Part Group"
+            to={`${path.to.newPartGroup}?${params.toString()}`}
+          />
+        )
+      }
       renderContextMenu={renderContextMenu}
     />
   );

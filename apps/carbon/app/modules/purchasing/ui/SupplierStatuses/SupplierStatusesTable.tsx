@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill, BsPeopleFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Table } from "~/components";
+import { New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { SupplierStatus } from "~/modules/purchasing";
 import { path } from "~/utils/path";
@@ -28,13 +28,15 @@ const SupplierStatusesTable = memo(
           cell: ({ row }) => (
             <Enumerable
               value={row.original.name}
-              onClick={() => navigate(row.original.id as string)}
+              onClick={() =>
+                navigate(`${row.original.id}?${params.toString()}`)
+              }
               className="cursor-pointer"
             />
           ),
         },
       ];
-    }, [navigate]);
+    }, [navigate, params]);
 
     const renderContextMenu = useCallback(
       (row: SupplierStatus) => {
@@ -42,7 +44,7 @@ const SupplierStatusesTable = memo(
           <>
             <MenuItem
               onClick={() => {
-                navigate(`${path.to.suppliers}?status=${row.id}`);
+                navigate(`${path.to.suppliers}?filter=status:eq:${row.name}`);
               }}
             >
               <MenuIcon icon={<BsPeopleFill />} />
@@ -80,6 +82,14 @@ const SupplierStatusesTable = memo(
         data={data}
         columns={columns}
         count={count}
+        primaryAction={
+          permissions.can("create", "purchasing") && (
+            <New
+              label="Supplier Status"
+              to={`${path.to.newSupplierStatus}?${params.toString()}`}
+            />
+          )
+        }
         renderContextMenu={renderContextMenu}
       />
     );

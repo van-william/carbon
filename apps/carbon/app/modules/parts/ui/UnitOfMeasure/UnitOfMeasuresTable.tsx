@@ -1,10 +1,10 @@
-import { Hyperlink, MenuIcon, MenuItem } from "@carbon/react";
+import { Enumerable, MenuIcon, MenuItem } from "@carbon/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Table } from "~/components";
+import { New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { UnitOfMeasure } from "~/modules/parts";
 import { path } from "~/utils/path";
@@ -26,9 +26,10 @@ const UnitOfMeasuresTable = memo(
           accessorKey: "name",
           header: "Name",
           cell: ({ row }) => (
-            <Hyperlink onClick={() => navigate(row.original.id)}>
-              {row.original.name}
-            </Hyperlink>
+            <Enumerable
+              onClick={() => navigate(row.original.id)}
+              value={row.original.name}
+            />
           ),
         },
         {
@@ -72,6 +73,14 @@ const UnitOfMeasuresTable = memo(
         data={data}
         columns={columns}
         count={count}
+        primaryAction={
+          permissions.can("create", "parts") && (
+            <New
+              label="Unit of Measure"
+              to={`${path.to.newUom}?${params.toString()}`}
+            />
+          )
+        }
         renderContextMenu={renderContextMenu}
       />
     );

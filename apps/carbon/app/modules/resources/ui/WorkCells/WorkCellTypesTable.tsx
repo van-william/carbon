@@ -12,7 +12,7 @@ import { memo, useCallback, useMemo, useState } from "react";
 import { BiAddToQueue } from "react-icons/bi";
 import { BsFillCheckCircleFill, BsFillPenFill, BsListUl } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Table } from "~/components";
+import { New, Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { WorkCellType } from "~/modules/resources";
@@ -40,7 +40,7 @@ const WorkCellTypesTable = memo(({ data, count }: WorkCellTypesTableProps) => {
     deleteModal.onClose();
   };
 
-  const columns = useMemo<ColumnDef<(typeof data)[number]>[]>(() => {
+  const columns = useMemo<ColumnDef<WorkCellType>[]>(() => {
     return [
       {
         accessorKey: "name",
@@ -95,9 +95,7 @@ const WorkCellTypesTable = memo(({ data, count }: WorkCellTypesTableProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params]);
 
-  const renderContextMenu = useCallback<
-    (row: (typeof data)[number]) => JSX.Element
-  >(
+  const renderContextMenu = useCallback<(row: WorkCellType) => JSX.Element>(
     (row) => (
       <>
         <MenuItem
@@ -122,7 +120,7 @@ const WorkCellTypesTable = memo(({ data, count }: WorkCellTypesTableProps) => {
         </MenuItem>
         <MenuItem
           onClick={() => {
-            navigate(path.to.workCellType(row.id));
+            navigate(`${path.to.workCellType(row.id)}?${params?.toString()}`);
           }}
         >
           <MenuIcon icon={<BsFillPenFill />} />
@@ -143,10 +141,15 @@ const WorkCellTypesTable = memo(({ data, count }: WorkCellTypesTableProps) => {
 
   return (
     <>
-      <Table<(typeof data)[number]>
+      <Table<WorkCellType>
         data={data}
         columns={columns}
         count={count ?? 0}
+        primaryAction={
+          permissions.can("update", "resources") && (
+            <New label="Work Cell Type" to={`new?${params.toString()}`} />
+          )
+        }
         renderContextMenu={renderContextMenu}
       />
 

@@ -1,7 +1,7 @@
 const Background = () => {
   return (
-    <div className="background dark:hidden">
-      <div className="gradient" />
+    <div className="background">
+      <div className="gradient dark:hidden" />
     </div>
   );
 };

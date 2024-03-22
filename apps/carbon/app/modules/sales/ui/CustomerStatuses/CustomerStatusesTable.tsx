@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill, BsPeopleFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Table } from "~/components";
+import { New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { CustomerStatus } from "~/modules/sales";
 import { path } from "~/utils/path";
@@ -42,7 +42,7 @@ const CustomerStatusesTable = memo(
           <>
             <MenuItem
               onClick={() => {
-                navigate(`${path.to.customers}?status=${row.id}`);
+                navigate(`${path.to.customers}?filter=status:eq:${row.name}`);
               }}
             >
               <MenuIcon icon={<BsPeopleFill />} />
@@ -80,6 +80,14 @@ const CustomerStatusesTable = memo(
         data={data}
         columns={columns}
         count={count}
+        primaryAction={
+          permissions.can("create", "sales") && (
+            <New
+              label="Customer Status"
+              to={`${path.to.newCustomerStatus}?${params.toString()}`}
+            />
+          )
+        }
         renderContextMenu={renderContextMenu}
       />
     );

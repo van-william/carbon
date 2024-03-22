@@ -11,26 +11,25 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Table } from "~/components";
+import { New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
-import type { Partner } from "~/modules/resources";
+import type { Ability, Partner } from "~/modules/resources";
+import { useSuppliers } from "~/stores";
 import { path } from "~/utils/path";
 
 type PartnersTableProps = {
   data: Partner[];
   count: number;
+  abilities: Partial<Ability>[];
 };
 
-const PartnersTable = memo(({ data, count }: PartnersTableProps) => {
+const PartnersTable = memo(({ data, count, abilities }: PartnersTableProps) => {
   const navigate = useNavigate();
   const permissions = usePermissions();
   const [params] = useUrlParams();
+  const [suppliers] = useSuppliers();
 
-  const rows = data.map((row) => ({
-    ...row,
-  }));
-
-  const columns = useMemo<ColumnDef<(typeof rows)[number]>[]>(() => {
+  const columns = useMemo<ColumnDef<Partner>[]>(() => {
     return [
       {
         accessorKey: "supplierName",
@@ -53,6 +52,15 @@ const PartnersTable = memo(({ data, count }: PartnersTableProps) => {
             </Hyperlink>
           </HStack>
         ),
+        meta: {
+          filter: {
+            type: "static",
+            options: suppliers.map((supplier) => ({
+              value: supplier.name,
+              label: supplier.name,
+            })),
+          },
+        },
       },
       {
         header: "Location",
@@ -62,6 +70,15 @@ const PartnersTable = memo(({ data, count }: PartnersTableProps) => {
         accessorKey: "abilityName",
         header: "Ability",
         cell: (item) => <Enumerable value={item.getValue<string>()} />,
+        meta: {
+          filter: {
+            type: "static",
+            options: abilities.map((ability) => ({
+              value: ability.name,
+              label: <Enumerable value={ability.name} />,
+            })),
+          },
+        },
       },
       {
         accessorKey: "hoursPerWeek",
@@ -69,10 +86,10 @@ const PartnersTable = memo(({ data, count }: PartnersTableProps) => {
         cell: (item) => item.getValue(),
       },
     ];
-  }, [navigate, params]);
+  }, [abilities, navigate, params, suppliers]);
 
   const renderContextMenu = useCallback(
-    (row: (typeof rows)[number]) => {
+    (row: Partner) => {
       return (
         <>
           <MenuItem
@@ -109,9 +126,14 @@ const PartnersTable = memo(({ data, count }: PartnersTableProps) => {
 
   return (
     <Table<Partner>
-      data={rows}
+      data={data}
       count={count}
       columns={columns}
+      primaryAction={
+        permissions.can("create", "resources") && (
+          <New label="Partner" to={`new?${params.toString()}`} />
+        )
+      }
       renderContextMenu={renderContextMenu}
     />
   );

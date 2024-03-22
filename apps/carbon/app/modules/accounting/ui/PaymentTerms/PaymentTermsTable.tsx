@@ -4,9 +4,12 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Table } from "~/components";
+import { New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
-import type { PaymentTerm } from "~/modules/accounting";
+import {
+  paymentTermsCalculationMethod,
+  type PaymentTerm,
+} from "~/modules/accounting";
 import { path } from "~/utils/path";
 
 type PaymentTermsTableProps = {
@@ -19,13 +22,15 @@ const PaymentTermsTable = memo(({ data, count }: PaymentTermsTableProps) => {
   const navigate = useNavigate();
   const permissions = usePermissions();
 
-  const columns = useMemo<ColumnDef<(typeof data)[number]>[]>(() => {
+  const columns = useMemo<ColumnDef<PaymentTerm>[]>(() => {
     return [
       {
         accessorKey: "name",
         header: "Name",
         cell: ({ row }) => (
-          <Hyperlink onClick={() => navigate(row.original.id)}>
+          <Hyperlink
+            onClick={() => navigate(`${row.original.id}?${params.toString()}`)}
+          >
             {row.original.name}
           </Hyperlink>
         ),
@@ -49,12 +54,21 @@ const PaymentTermsTable = memo(({ data, count }: PaymentTermsTableProps) => {
         accessorKey: "calculationMethod",
         header: "Calculation Method",
         cell: (item) => <Enumerable value={item.getValue<string>()} />,
+        meta: {
+          filter: {
+            type: "static",
+            options: paymentTermsCalculationMethod.map((v) => ({
+              label: <Enumerable value={v} />,
+              value: v,
+            })),
+          },
+        },
       },
     ];
-  }, [navigate]);
+  }, [navigate, params]);
 
   const renderContextMenu = useCallback(
-    (row: (typeof data)[number]) => {
+    (row: PaymentTerm) => {
       return (
         <>
           <MenuItem
@@ -84,10 +98,15 @@ const PaymentTermsTable = memo(({ data, count }: PaymentTermsTableProps) => {
   );
 
   return (
-    <Table<(typeof data)[number]>
+    <Table<PaymentTerm>
       data={data}
       columns={columns}
       count={count}
+      primaryAction={
+        permissions.can("create", "accounting") && (
+          <New label="Payment Term" to={`new?${params.toString()}`} />
+        )
+      }
       renderContextMenu={renderContextMenu}
     />
   );
