@@ -12,7 +12,7 @@ import { memo, useCallback, useMemo, useState } from "react";
 import { BiAddToQueue } from "react-icons/bi";
 import { BsFillCheckCircleFill, BsFillPenFill, BsListUl } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Table } from "~/components";
+import { New, TableNew } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { EquipmentType } from "~/modules/resources";
@@ -43,7 +43,7 @@ const EquipmentTypesTable = memo(
       deleteModal.onClose();
     };
 
-    const columns = useMemo<ColumnDef<(typeof data)[number]>[]>(() => {
+    const columns = useMemo<ColumnDef<EquipmentType>[]>(() => {
       return [
         {
           accessorKey: "name",
@@ -96,9 +96,7 @@ const EquipmentTypesTable = memo(
       ];
     }, [navigate, params]);
 
-    const renderContextMenu = useCallback<
-      (row: (typeof data)[number]) => JSX.Element
-    >(
+    const renderContextMenu = useCallback<(row: EquipmentType) => JSX.Element>(
       (row) => (
         <>
           <MenuItem
@@ -142,10 +140,15 @@ const EquipmentTypesTable = memo(
 
     return (
       <>
-        <Table<(typeof data)[number]>
+        <TableNew<EquipmentType>
           data={data}
           columns={columns}
           count={count ?? 0}
+          primaryAction={
+            permissions.can("update", "resources") && (
+              <New label="Equipment Type" to={`new?${params.toString()}`} />
+            )
+          }
           renderContextMenu={renderContextMenu}
         />
         {selectedType && selectedType.id && (
