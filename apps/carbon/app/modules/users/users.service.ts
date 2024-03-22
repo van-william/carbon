@@ -22,10 +22,9 @@ export async function getCustomers(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
     search: string | null;
-    type: string | null;
-    active: boolean | null;
   }
 ) {
+  // TODO: this breaks on customerType filters -- convert to view
   let query = client.from("customerAccount").select(
     `user!inner(id, fullName, firstName, lastName, email, avatarUrl, active), 
       customer!inner(name, customerType!left(name))`,
@@ -34,14 +33,6 @@ export async function getCustomers(
 
   if (args.search) {
     query = query.ilike("user.fullName", `%${args.search}%`);
-  }
-
-  if (args.type) {
-    query = query.eq("customer.customerTypeId", args.type);
-  }
-
-  if (args.active !== null) {
-    query = query.eq("user.active", args.active);
   }
 
   query = setGenericQueryFilters(query, args, [
@@ -170,6 +161,7 @@ export async function getSuppliers(
     active: boolean | null;
   }
 ) {
+  // TODO: this breaks on supplierType filters -- convert to view
   let query = client.from("supplierAccount").select(
     `user!inner(id, fullName, firstName, lastName, email, avatarUrl, active), 
       supplier!inner(name, supplierType!left(name))`,
