@@ -157,8 +157,6 @@ export async function getSuppliers(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
     search: string | null;
-    type: string | null;
-    active: boolean | null;
   }
 ) {
   // TODO: this breaks on supplierType filters -- convert to view
@@ -170,14 +168,6 @@ export async function getSuppliers(
 
   if (args.search) {
     query = query.ilike("user.fullName", `%${args.search}%`);
-  }
-
-  if (args.type) {
-    query = query.eq("supplier.supplierTypeId", args.type);
-  }
-
-  if (args.active !== null) {
-    query = query.eq("user.active", args.active);
   }
 
   query = setGenericQueryFilters(query, args, [

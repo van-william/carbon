@@ -113,7 +113,7 @@ const CustomerAccountsTable = memo(
           },
         },
         {
-          accessorKey: "customer.customerType.name",
+          accessorKey: "customer.customerTypeId",
           header: "Customer Type",
           cell: ({ row }) => (
             // @ts-ignore
@@ -123,7 +123,7 @@ const CustomerAccountsTable = memo(
             filter: {
               type: "static",
               options: customerTypes.map((type) => ({
-                value: type.name,
+                value: type.id,
                 label: <Enumerable value={type.name} />,
               })),
             },
@@ -234,7 +234,7 @@ const CustomerAccountsTable = memo(
           defaultColumnVisibility={defaultColumnVisibility}
           primaryAction={
             permissions.can("create", "users") && (
-              <New label="Employee" to={`new?${params.toString()}`} />
+              <New label="Customer" to={`new?${params.toString()}`} />
             )
           }
           renderContextMenu={renderContextMenu}
