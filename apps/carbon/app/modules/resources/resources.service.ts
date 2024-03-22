@@ -569,8 +569,6 @@ export async function getPeople(
   client: SupabaseClient<Database>,
   args: GenericQueryFilters & {
     search: string | null;
-    type: string | null;
-    active: boolean | null;
   }
 ) {
   const employees = await getEmployees(client, args);
