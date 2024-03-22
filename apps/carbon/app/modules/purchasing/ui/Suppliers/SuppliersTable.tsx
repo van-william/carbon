@@ -9,7 +9,7 @@ import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
-import { New, TableNew } from "~/components";
+import { New, Table } from "~/components";
 import { usePermissions } from "~/hooks";
 import type {
   Supplier,
@@ -118,7 +118,7 @@ const SuppliersTable = memo(
 
     return (
       <>
-        <TableNew<Supplier>
+        <Table<Supplier>
           count={count}
           columns={columns}
           data={data}

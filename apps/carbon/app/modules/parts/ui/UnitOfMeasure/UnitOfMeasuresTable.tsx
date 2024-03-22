@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { New, TableNew } from "~/components";
+import { New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { UnitOfMeasure } from "~/modules/parts";
 import { path } from "~/utils/path";
@@ -69,7 +69,7 @@ const UnitOfMeasuresTable = memo(
     );
 
     return (
-      <TableNew<(typeof data)[number]>
+      <Table<(typeof data)[number]>
         data={data}
         columns={columns}
         count={count}

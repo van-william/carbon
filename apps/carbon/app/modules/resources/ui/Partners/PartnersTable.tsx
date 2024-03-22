@@ -11,7 +11,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { New, TableNew } from "~/components";
+import { New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Ability, Partner } from "~/modules/resources";
 import { useSuppliers } from "~/stores";
@@ -125,7 +125,7 @@ const PartnersTable = memo(({ data, count, abilities }: PartnersTableProps) => {
   );
 
   return (
-    <TableNew<Partner>
+    <Table<Partner>
       data={data}
       count={count}
       columns={columns}

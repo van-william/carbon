@@ -12,7 +12,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Avatar, New, TableNew } from "~/components";
+import { Avatar, New, Table } from "~/components";
 import { usePermissions, useRealtime, useUrlParams } from "~/hooks";
 import type { Receipt } from "~/modules/inventory";
 import {
@@ -240,7 +240,7 @@ const ReceiptsTable = memo(({ data, count, locations }: ReceiptsTableProps) => {
   );
 
   return (
-    <TableNew<(typeof data)[number]>
+    <Table<(typeof data)[number]>
       data={data}
       columns={columns}
       count={count}

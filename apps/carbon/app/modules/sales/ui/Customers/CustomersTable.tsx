@@ -3,7 +3,7 @@ import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
-import { New, TableNew } from "~/components";
+import { New, Table } from "~/components";
 import { usePermissions } from "~/hooks";
 import type { Customer, CustomerStatus, CustomerType } from "~/modules/sales";
 import { path } from "~/utils/path";
@@ -93,7 +93,7 @@ const CustomersTable = memo(
 
     return (
       <>
-        <TableNew<Customer>
+        <Table<Customer>
           count={count}
           columns={columns}
           data={data}

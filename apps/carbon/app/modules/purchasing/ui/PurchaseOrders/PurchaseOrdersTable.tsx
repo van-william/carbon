@@ -13,7 +13,7 @@ import { memo, useMemo, useState } from "react";
 import { BsFillPenFill, BsPin, BsPinFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { MdCallReceived } from "react-icons/md";
-import { Avatar, New, TableNew } from "~/components";
+import { Avatar, New, Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
 import type { PurchaseOrder } from "~/modules/purchasing";
@@ -262,7 +262,7 @@ const PurchaseOrdersTable = memo(
 
     return (
       <>
-        <TableNew<PurchaseOrder>
+        <Table<PurchaseOrder>
           count={count}
           columns={columns}
           data={rows}

@@ -10,7 +10,7 @@ import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
-import { Avatar, New, TableNew } from "~/components";
+import { Avatar, New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { AttributeCategory, Person } from "~/modules/resources";
 import { DataType } from "~/modules/shared";
@@ -142,7 +142,7 @@ const PeopleTable = memo(
               type: "static",
               options: employeeTypes.map((type) => ({
                 value: type.name!,
-                label: type.name!,
+                label: <Enumerable value={type.name!} />,
               })),
             },
           },
@@ -206,7 +206,7 @@ const PeopleTable = memo(
 
     return (
       <>
-        <TableNew<(typeof rows)[number]>
+        <Table<(typeof rows)[number]>
           // actions={actions}
           count={count}
           columns={columns}

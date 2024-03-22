@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { New, TableNew } from "~/components";
+import { New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Currency } from "~/modules/accounting";
 import { path } from "~/utils/path";
@@ -83,7 +83,7 @@ const CurrenciesTable = memo(({ data, count }: CurrenciesTableProps) => {
   );
 
   return (
-    <TableNew<Currency>
+    <Table<Currency>
       data={data}
       columns={columns}
       count={count}

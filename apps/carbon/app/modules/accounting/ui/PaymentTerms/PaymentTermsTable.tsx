@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { New, TableNew } from "~/components";
+import { New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import {
   paymentTermsCalculationMethod,
@@ -98,7 +98,7 @@ const PaymentTermsTable = memo(({ data, count }: PaymentTermsTableProps) => {
   );
 
   return (
-    <TableNew<PaymentTerm>
+    <Table<PaymentTerm>
       data={data}
       columns={columns}
       count={count}

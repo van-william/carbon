@@ -1,7 +1,7 @@
 import { Enumerable } from "@carbon/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useMemo } from "react";
-import { TableNew } from "~/components";
+import { Table } from "~/components";
 import { EditableList } from "~/components/Editable";
 import type {
   AccountListItem,
@@ -146,7 +146,7 @@ const PurchasingPostingGroupsTable = ({
   );
 
   return (
-    <TableNew<PurchasingPostingGroup>
+    <Table<PurchasingPostingGroup>
       data={data}
       columns={columns}
       count={count}

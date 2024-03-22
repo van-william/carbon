@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill, BsPeopleFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { New, TableNew } from "~/components";
+import { New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { SupplierStatus } from "~/modules/purchasing";
 import { path } from "~/utils/path";
@@ -78,7 +78,7 @@ const SupplierStatusesTable = memo(
     );
 
     return (
-      <TableNew<SupplierStatus>
+      <Table<SupplierStatus>
         data={data}
         columns={columns}
         count={count}

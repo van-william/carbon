@@ -12,7 +12,7 @@ import { memo, useCallback, useMemo, useState } from "react";
 import { BiAddToQueue } from "react-icons/bi";
 import { BsFillPenFill, BsListUl } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { New, TableNew } from "~/components";
+import { New, Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { AttributeCategory } from "~/modules/resources";
@@ -151,7 +151,7 @@ const AttributeCategoriesTable = memo(
 
     return (
       <>
-        <TableNew<AttributeCategory>
+        <Table<AttributeCategory>
           data={data}
           columns={columns}
           count={count ?? 0}

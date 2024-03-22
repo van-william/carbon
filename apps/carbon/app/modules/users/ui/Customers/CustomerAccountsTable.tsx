@@ -10,7 +10,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo, useState } from "react";
 import { BsEnvelope } from "react-icons/bs";
 import { FaBan } from "react-icons/fa";
-import { Avatar, New, TableNew } from "~/components";
+import { Avatar, New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Customer } from "~/modules/users";
 import { DeactivateUsersModal, ResendInviteModal } from "~/modules/users";
@@ -226,7 +226,7 @@ const CustomerAccountsTable = memo(
 
     return (
       <>
-        <TableNew<(typeof rows)[number]>
+        <Table<(typeof rows)[number]>
           actions={actions}
           count={count}
           columns={columns}

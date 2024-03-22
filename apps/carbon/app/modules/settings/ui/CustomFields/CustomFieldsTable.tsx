@@ -10,7 +10,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BiAddToQueue } from "react-icons/bi";
 import { BsListUl } from "react-icons/bs";
-import { TableNew } from "~/components";
+import { Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import { modulesType, type CustomFieldsTableType } from "~/modules/settings";
 import { path } from "~/utils/path";
@@ -103,7 +103,7 @@ const CustomFieldsTable = memo(({ data, count }: CustomFieldsTableProps) => {
 
   return (
     <>
-      <TableNew<CustomFieldsTableType>
+      <Table<CustomFieldsTableType>
         data={data}
         columns={columns}
         count={count ?? 0}

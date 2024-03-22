@@ -3,7 +3,7 @@ import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
-import { New, TableNew } from "~/components";
+import { New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import { serviceType, type Service } from "~/modules/parts";
 import type { ListItem } from "~/types";
@@ -89,7 +89,7 @@ const ServicesTable = memo(
 
     return (
       <>
-        <TableNew<Service>
+        <Table<Service>
           count={count}
           columns={columns}
           data={data}

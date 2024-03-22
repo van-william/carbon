@@ -10,7 +10,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo, useState } from "react";
 import { BsFillPenFill, BsPin, BsPinFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Avatar, TableNew } from "~/components";
+import { Avatar, Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
 import {
@@ -242,7 +242,7 @@ const RequestForQuotesTable = memo(
 
     return (
       <>
-        <TableNew<RequestForQuote>
+        <Table<RequestForQuote>
           count={count}
           columns={columns}
           data={rows}

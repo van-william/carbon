@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill, BsPeopleFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { New, TableNew } from "~/components";
+import { New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { SupplierType } from "~/modules/purchasing";
 import { path } from "~/utils/path";
@@ -74,7 +74,7 @@ const SupplierTypesTable = memo(({ data, count }: SupplierTypesTableProps) => {
   );
 
   return (
-    <TableNew<SupplierType>
+    <Table<SupplierType>
       data={data}
       columns={columns}
       count={count}

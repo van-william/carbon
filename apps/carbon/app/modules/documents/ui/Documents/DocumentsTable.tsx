@@ -27,7 +27,7 @@ import { BsFillPenFill, BsPin, BsPinFill } from "react-icons/bs";
 import { IoMdAdd, IoMdTrash } from "react-icons/io";
 import { RxCheck } from "react-icons/rx";
 import { VscOpenPreview } from "react-icons/vsc";
-import { Avatar, TableNew } from "~/components";
+import { Avatar, Table } from "~/components";
 import { Confirm, ConfirmDelete } from "~/components/Modals";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Document, DocumentLabel } from "~/modules/documents";
@@ -441,7 +441,7 @@ const DocumentsTable = memo(
 
     return (
       <>
-        <TableNew<Document>
+        <Table<Document>
           actions={actions}
           count={count}
           columns={columns}

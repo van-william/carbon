@@ -3,7 +3,7 @@ import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
-import { New, TableNew } from "~/components";
+import { New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Part } from "~/modules/parts";
 import { partReplenishmentSystems, partTypes } from "~/modules/parts";
@@ -100,7 +100,7 @@ const PartsTable = memo(({ data, count, partGroups }: PartsTableProps) => {
 
   return (
     <>
-      <TableNew<Part>
+      <Table<Part>
         count={count}
         columns={columns}
         data={data}

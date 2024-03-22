@@ -10,7 +10,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { New, TableNew } from "~/components";
+import { New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Shift, ShiftLocation } from "~/modules/resources";
 import { path } from "~/utils/path";
@@ -116,7 +116,7 @@ const ShiftsTable = memo(({ data, count, locations }: ShiftsTableProps) => {
   );
 
   return (
-    <TableNew<Shift>
+    <Table<Shift>
       data={data}
       count={count}
       columns={columns}

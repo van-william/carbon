@@ -11,7 +11,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { New, TableNew } from "~/components";
+import { New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Ability, Contractor } from "~/modules/resources";
 import { useSuppliers } from "~/stores";
@@ -159,7 +159,7 @@ const ContractorsTable = memo(
     );
 
     return (
-      <TableNew<Contractor>
+      <Table<Contractor>
         data={data}
         count={count}
         columns={columns}

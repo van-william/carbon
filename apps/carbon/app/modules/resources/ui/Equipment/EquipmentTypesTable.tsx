@@ -12,7 +12,7 @@ import { memo, useCallback, useMemo, useState } from "react";
 import { BiAddToQueue } from "react-icons/bi";
 import { BsFillCheckCircleFill, BsFillPenFill, BsListUl } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { New, TableNew } from "~/components";
+import { New, Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { EquipmentType } from "~/modules/resources";
@@ -140,7 +140,7 @@ const EquipmentTypesTable = memo(
 
     return (
       <>
-        <TableNew<EquipmentType>
+        <Table<EquipmentType>
           data={data}
           columns={columns}
           count={count ?? 0}

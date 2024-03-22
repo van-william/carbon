@@ -10,7 +10,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo, useState } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Avatar, New, TableNew } from "~/components";
+import { Avatar, New, Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions, useRealtime } from "~/hooks";
 import type { PurchaseInvoice } from "~/modules/invoicing";
@@ -168,7 +168,7 @@ const PurchaseInvoicesTable = memo(
 
     return (
       <>
-        <TableNew<PurchaseInvoice>
+        <Table<PurchaseInvoice>
           count={count}
           columns={columns}
           data={data}
