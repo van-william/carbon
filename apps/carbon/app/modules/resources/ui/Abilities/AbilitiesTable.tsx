@@ -11,8 +11,8 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Avatar, Table } from "~/components";
-import { usePermissions } from "~/hooks";
+import { Avatar, New, TableNew } from "~/components";
+import { usePermissions, useUrlParams } from "~/hooks";
 import type { Abilities, AbilityDatum } from "~/modules/resources";
 import { path } from "~/utils/path";
 import AbilityChart from "./AbilityChart";
@@ -25,6 +25,7 @@ type AbilitiesTableProps = {
 const AbilitiesTable = memo(({ data, count }: AbilitiesTableProps) => {
   const navigate = useNavigate();
   const permissions = usePermissions();
+  const [params] = useUrlParams();
 
   const rows = data.map((row) => ({
     id: row.id,
@@ -142,10 +143,15 @@ const AbilitiesTable = memo(({ data, count }: AbilitiesTableProps) => {
   );
 
   return (
-    <Table<(typeof rows)[number]>
+    <TableNew<(typeof rows)[number]>
       data={rows}
       count={count}
       columns={columns}
+      primaryAction={
+        permissions.can("create", "resources") && (
+          <New label="Ability" to={`new?${params.toString()}`} />
+        )
+      }
       renderContextMenu={renderContextMenu}
     />
   );
