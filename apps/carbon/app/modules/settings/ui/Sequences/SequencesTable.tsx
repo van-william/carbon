@@ -3,7 +3,7 @@ import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
-import { Table } from "~/components";
+import { TableNew } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Sequence } from "~/modules/settings";
 import { path } from "~/utils/path";
@@ -79,7 +79,7 @@ const SequencesTable = memo(({ data, count }: SequencesTableProps) => {
   );
 
   return (
-    <Table<(typeof data)[number]>
+    <TableNew<(typeof data)[number]>
       data={data}
       columns={columns}
       count={count}
