@@ -1,9 +1,9 @@
-import { Enumerable, Hyperlink, MenuIcon, MenuItem } from "@carbon/react";
+import { Enumerable, MenuIcon, MenuItem } from "@carbon/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
-import { New, Table } from "~/components";
+import { Hyperlink, New, Table } from "~/components";
 import { usePermissions } from "~/hooks";
 import type { Customer, CustomerStatus, CustomerType } from "~/modules/sales";
 import { path } from "~/utils/path";
@@ -26,9 +26,7 @@ const CustomersTable = memo(
           accessorKey: "name",
           header: "Name",
           cell: ({ row }) => (
-            <Hyperlink
-              onClick={() => navigate(path.to.customer(row.original.id!))}
-            >
+            <Hyperlink to={path.to.customerDetails(row.original.id!)}>
               {row.original.name}
             </Hyperlink>
           ),
@@ -77,7 +75,7 @@ const CustomersTable = memo(
         //   ),
         // },
       ];
-    }, [customerStatuses, customerTypes, navigate]);
+    }, [customerStatuses, customerTypes]);
 
     const renderContextMenu = useMemo(
       // eslint-disable-next-line react/display-name

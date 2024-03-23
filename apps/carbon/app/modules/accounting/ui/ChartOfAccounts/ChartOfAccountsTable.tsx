@@ -1,15 +1,9 @@
-import {
-  Button,
-  Checkbox,
-  Enumerable,
-  HStack,
-  Hyperlink,
-  cn,
-} from "@carbon/react";
-import { Link as RemixLink, useNavigate } from "@remix-run/react";
+import { Button, Checkbox, Enumerable, HStack, cn } from "@carbon/react";
+import { Link as RemixLink } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
 import { MdMoreHoriz } from "react-icons/md";
+import { Hyperlink } from "~/components";
 import Grid from "~/components/Grid";
 import { useRealtime } from "~/hooks";
 import type { Chart } from "~/modules/accounting";
@@ -21,7 +15,6 @@ type ChartOfAccountsTableProps = {
 const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
   useRealtime("journal");
 
-  const navigate = useNavigate();
   const columns = useMemo<ColumnDef<Chart>[]>(() => {
     return [
       {
@@ -33,8 +26,8 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
           return (
             <HStack>
               <Hyperlink
+                to={row.original.id as string}
                 className={cn(!isPosting && "font-bold")}
-                onClick={() => navigate(row.original.id)}
               >
                 {row.original.number}
               </Hyperlink>
@@ -133,7 +126,7 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
         cell: (item) => <Checkbox isChecked={item.getValue<boolean>()} />,
       },
     ];
-  }, [navigate]);
+  }, []);
 
   return <Grid<Chart> data={data} columns={columns} withSimpleSorting />;
 });
