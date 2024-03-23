@@ -1,17 +1,10 @@
-import {
-  Avatar,
-  Enumerable,
-  HStack,
-  Hyperlink,
-  MenuIcon,
-  MenuItem,
-} from "@carbon/react";
+import { Avatar, Enumerable, HStack, MenuIcon, MenuItem } from "@carbon/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { New, Table } from "~/components";
+import { Hyperlink, New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Ability, Contractor } from "~/modules/resources";
 import { useSuppliers } from "~/stores";
@@ -43,13 +36,9 @@ const ContractorsTable = memo(
                 }
               />
               <Hyperlink
-                onClick={() => {
-                  navigate(
-                    `${path.to.contractor(
-                      row.original.supplierContactId!
-                    )}?${params.toString()}`
-                  );
-                }}
+                to={`${path.to.contractor(
+                  row.original.supplierContactId!
+                )}?${params.toString()}`}
               >
                 {row.original.firstName} {row.original.lastName}
               </Hyperlink>
@@ -62,11 +51,7 @@ const ContractorsTable = memo(
           cell: ({ row }) => (
             <HStack>
               <Avatar size="sm" name={row.original.supplierName ?? ""} />
-              <Hyperlink
-                onClick={() => {
-                  navigate(path.to.supplier(row.original.supplierId!));
-                }}
-              >
+              <Hyperlink to={path.to.supplier(row.original.supplierId!)}>
                 {row.original.supplierName}
               </Hyperlink>
             </HStack>
@@ -121,7 +106,7 @@ const ContractorsTable = memo(
           cell: (item) => item.getValue(),
         },
       ];
-    }, [abilities, navigate, params, suppliers]);
+    }, [abilities, params, suppliers]);
 
     const renderContextMenu = useCallback(
       (row: Contractor) => {

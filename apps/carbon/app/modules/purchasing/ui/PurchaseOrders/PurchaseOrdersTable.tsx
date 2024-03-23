@@ -2,7 +2,6 @@ import {
   Checkbox,
   Enumerable,
   HStack,
-  Hyperlink,
   MenuIcon,
   MenuItem,
   useDisclosure,
@@ -13,7 +12,7 @@ import { memo, useMemo, useState } from "react";
 import { BsFillPenFill, BsPin, BsPinFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { MdCallReceived } from "react-icons/md";
-import { Avatar, New, Table } from "~/components";
+import { Avatar, Hyperlink, New, Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
 import type { PurchaseOrder } from "~/modules/purchasing";

@@ -1,9 +1,9 @@
-import { Enumerable, Hyperlink, MenuIcon, MenuItem } from "@carbon/react";
+import { Enumerable, MenuIcon, MenuItem } from "@carbon/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
-import { New, Table } from "~/components";
+import { Hyperlink, New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Part } from "~/modules/parts";
 import { partReplenishmentSystems, partTypes } from "~/modules/parts";
@@ -27,7 +27,7 @@ const PartsTable = memo(({ data, count, partGroups }: PartsTableProps) => {
         accessorKey: "id",
         header: "Part ID",
         cell: ({ row }) => (
-          <Hyperlink onClick={() => navigate(path.to.part(row.original.id!))}>
+          <Hyperlink to={path.to.partDetails(row.original.id!)}>
             {row.original.id}
           </Hyperlink>
         ),

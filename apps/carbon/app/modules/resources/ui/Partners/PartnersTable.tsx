@@ -1,17 +1,10 @@
-import {
-  Avatar,
-  Enumerable,
-  HStack,
-  Hyperlink,
-  MenuIcon,
-  MenuItem,
-} from "@carbon/react";
+import { Avatar, Enumerable, HStack, MenuIcon, MenuItem } from "@carbon/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { New, Table } from "~/components";
+import { Hyperlink, New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Ability, Partner } from "~/modules/resources";
 import { useSuppliers } from "~/stores";
@@ -39,14 +32,10 @@ const PartnersTable = memo(({ data, count, abilities }: PartnersTableProps) => {
             <Avatar size="sm" name={row.original.supplierName ?? ""} />
 
             <Hyperlink
-              onClick={() => {
-                navigate(
-                  `${path.to.partner(
-                    row.original.supplierLocationId!,
-                    row.original.abilityId!
-                  )}?${params.toString()}`
-                );
-              }}
+              to={`${path.to.partner(
+                row.original.supplierLocationId!,
+                row.original.abilityId!
+              )}?${params.toString()}`}
             >
               {row.original.supplierName}
             </Hyperlink>
@@ -74,8 +63,8 @@ const PartnersTable = memo(({ data, count, abilities }: PartnersTableProps) => {
           filter: {
             type: "static",
             options: abilities.map((ability) => ({
-              value: ability.name,
-              label: <Enumerable value={ability.name} />,
+              value: ability.name!,
+              label: <Enumerable value={ability.name!} />,
             })),
           },
         },
@@ -86,7 +75,7 @@ const PartnersTable = memo(({ data, count, abilities }: PartnersTableProps) => {
         cell: (item) => item.getValue(),
       },
     ];
-  }, [abilities, navigate, params, suppliers]);
+  }, [abilities, params, suppliers]);
 
   const renderContextMenu = useCallback(
     (row: Partner) => {

@@ -1,16 +1,10 @@
-import {
-  HStack,
-  Hyperlink,
-  MenuIcon,
-  MenuItem,
-  useDisclosure,
-} from "@carbon/react";
+import { HStack, MenuIcon, MenuItem, useDisclosure } from "@carbon/react";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo, useState } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Avatar, New, Table } from "~/components";
+import { Avatar, Hyperlink, New, Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions, useRealtime } from "~/hooks";
 import type { PurchaseInvoice } from "~/modules/invoicing";
@@ -48,13 +42,7 @@ const PurchaseInvoicesTable = memo(
           accessorKey: "invoiceId",
           header: "Invoice Number",
           cell: ({ row }) => (
-            <Hyperlink
-              onClick={
-                row.original?.id !== null
-                  ? () => navigate(path.to.purchaseInvoice(row.original.id!))
-                  : undefined
-              }
-            >
+            <Hyperlink to={path.to.purchaseInvoice(row.original.id!)}>
               {row.original?.invoiceId}
             </Hyperlink>
           ),
@@ -137,7 +125,7 @@ const PurchaseInvoicesTable = memo(
           cell: (item) => item.getValue(),
         },
       ];
-    }, [navigate, suppliers]);
+    }, [suppliers]);
 
     const renderContextMenu = useMemo(() => {
       // eslint-disable-next-line react/display-name
