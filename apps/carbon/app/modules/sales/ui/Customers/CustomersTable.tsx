@@ -26,9 +26,7 @@ const CustomersTable = memo(
           accessorKey: "name",
           header: "Name",
           cell: ({ row }) => (
-            <Hyperlink
-              onClick={() => navigate(path.to.customer(row.original.id!))}
-            >
+            <Hyperlink to={path.to.customerDetails(row.original.id!)}>
               {row.original.name}
             </Hyperlink>
           ),
@@ -77,7 +75,7 @@ const CustomersTable = memo(
         //   ),
         // },
       ];
-    }, [customerStatuses, customerTypes, navigate]);
+    }, [customerStatuses, customerTypes]);
 
     const renderContextMenu = useMemo(
       // eslint-disable-next-line react/display-name

@@ -106,7 +106,7 @@ const PeopleTable = memo(
                 path={row.original.user?.avatarUrl!}
               />
 
-              <Hyperlink to={path.to.person(row?.original.user?.id!)}>
+              <Hyperlink to={path.to.personDetails(row?.original.user?.id!)}>
                 {row.original.user?.fullName}
               </Hyperlink>
             </HStack>
@@ -187,7 +187,9 @@ const PeopleTable = memo(
               <MenuItem
                 onClick={() =>
                   navigate(
-                    `${path.to.person(row.user?.id!)}?${params.toString()}`
+                    `${path.to.personDetails(
+                      row.user?.id!
+                    )}?${params.toString()}`
                   )
                 }
               >

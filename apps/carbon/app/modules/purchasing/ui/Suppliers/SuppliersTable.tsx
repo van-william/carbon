@@ -30,7 +30,7 @@ const SuppliersTable = memo(
           accessorKey: "name",
           header: "Name",
           cell: ({ row }) => (
-            <Hyperlink to={path.to.supplier(row.original.id!)}>
+            <Hyperlink to={path.to.supplierDetails(row.original.id!)}>
               {row.original.name}
             </Hyperlink>
           ),

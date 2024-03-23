@@ -1,4 +1,5 @@
 import { HStack, MenuIcon, MenuItem, useDisclosure } from "@carbon/react";
+import { formatDate } from "@carbon/utils";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo, useState } from "react";
@@ -42,7 +43,7 @@ const PurchaseInvoicesTable = memo(
           accessorKey: "invoiceId",
           header: "Invoice Number",
           cell: ({ row }) => (
-            <Hyperlink to={path.to.purchaseInvoice(row.original.id!)}>
+            <Hyperlink to={path.to.purchaseInvoiceDetails(row.original.id!)}>
               {row.original?.invoiceId}
             </Hyperlink>
           ),
@@ -105,7 +106,7 @@ const PurchaseInvoicesTable = memo(
         {
           accessorKey: "createdAt",
           header: "Created At",
-          cell: (item) => item.getValue(),
+          cell: (item) => formatDate(item.getValue<string>()),
         },
         {
           accessorKey: "updatedByFullName",
@@ -122,7 +123,7 @@ const PurchaseInvoicesTable = memo(
         {
           accessorKey: "updatedAt",
           header: "Updated At",
-          cell: (item) => item.getValue(),
+          cell: (item) => formatDate(item.getValue<string>()),
         },
       ];
     }, [suppliers]);

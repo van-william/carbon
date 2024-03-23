@@ -99,7 +99,7 @@ const PurchaseOrdersTable = memo(
                 </fetcher.Form>
               )}
 
-              <Hyperlink onClick={() => edit(row.original)}>
+              <Hyperlink to={path.to.purchaseOrderDetails(row.original.id!)}>
                 {row.original.purchaseOrderId}
               </Hyperlink>
             </HStack>
@@ -218,7 +218,7 @@ const PurchaseOrdersTable = memo(
           cell: (item) => item.getValue(),
         },
       ];
-    }, [edit, fetcher, suppliers]);
+    }, [fetcher, suppliers]);
 
     const renderContextMenu = useMemo(() => {
       // eslint-disable-next-line react/display-name

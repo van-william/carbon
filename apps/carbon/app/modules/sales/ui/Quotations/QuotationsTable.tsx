@@ -92,7 +92,7 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
                 </button>
               </fetcher.Form>
             )}
-            <Hyperlink to={path.to.quote(row.original.id!)}>
+            <Hyperlink to={path.to.quoteDetails(row.original.id!)}>
               {row.original.quoteId}
             </Hyperlink>
           </HStack>
