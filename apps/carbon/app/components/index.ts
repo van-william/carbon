@@ -1,4 +1,5 @@
 import Address from "./Address";
+import Assign, { useOptimisticAssignment } from "./Assign";
 import Avatar from "./Avatar";
 import { BreadcrumbItem, BreadcrumbLink, Breadcrumbs } from "./Breadcrumb";
 import Combobox from "./Combobox";
@@ -14,6 +15,7 @@ import Table from "./Table";
 
 export {
   Address,
+  Assign,
   Avatar,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -28,4 +30,5 @@ export {
   Select,
   SupplierAvatar,
   Table,
+  useOptimisticAssignment,
 };

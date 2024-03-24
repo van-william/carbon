@@ -10,7 +10,6 @@ export const customerValidator = z.object({
   customerStatusId: zfd.text(z.string().optional()),
   taxId: zfd.text(z.string().optional()),
   accountManagerId: zfd.text(z.string().optional()),
-  assignee: zfd.text(z.string().optional()),
 });
 
 export const customerContactValidator = z.object({

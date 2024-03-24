@@ -36,6 +36,35 @@ const CustomersTable = memo(
             </Hyperlink>
           ),
         },
+
+        {
+          accessorKey: "type",
+          header: "Customer Type",
+          cell: (item) => <Enumerable value={item.getValue<string>()} />,
+          meta: {
+            filter: {
+              type: "static",
+              options: customerTypes?.map((type) => ({
+                value: type.name ?? "",
+                label: <Enumerable value={type.name ?? ""} />,
+              })),
+            },
+          },
+        },
+        {
+          accessorKey: "status",
+          header: "Customer Status",
+          cell: (item) => <Enumerable value={item.getValue<string>()} />,
+          meta: {
+            filter: {
+              type: "static",
+              options: customerStatuses?.map((status) => ({
+                value: status.name,
+                label: <Enumerable value={status.name ?? ""} />,
+              })),
+            },
+          },
+        },
         {
           id: "accountManagerId",
           header: "Updated By",
@@ -64,34 +93,6 @@ const CustomersTable = memo(
               options: people.map((employee) => ({
                 value: employee.id,
                 label: employee.name,
-              })),
-            },
-          },
-        },
-        {
-          accessorKey: "type",
-          header: "Customer Type",
-          cell: (item) => <Enumerable value={item.getValue<string>()} />,
-          meta: {
-            filter: {
-              type: "static",
-              options: customerTypes?.map((type) => ({
-                value: type.name ?? "",
-                label: <Enumerable value={type.name ?? ""} />,
-              })),
-            },
-          },
-        },
-        {
-          accessorKey: "status",
-          header: "Customer Status",
-          cell: (item) => <Enumerable value={item.getValue<string>()} />,
-          meta: {
-            filter: {
-              type: "static",
-              options: customerStatuses?.map((status) => ({
-                value: status.name,
-                label: <Enumerable value={status.name ?? ""} />,
               })),
             },
           },

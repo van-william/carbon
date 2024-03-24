@@ -10,12 +10,13 @@ import {
   CardTitle,
   Enumerable,
   HStack,
+  Menubar,
   VStack,
 } from "@carbon/react";
 
 import { useParams } from "@remix-run/react";
-import { EmployeeAvatar } from "~/components";
-import { useRouteData } from "~/hooks";
+import { Assign, EmployeeAvatar, useOptimisticAssignment } from "~/components";
+import { usePermissions, useRouteData } from "~/hooks";
 import type {
   SupplierDetail,
   SupplierStatus,
@@ -25,11 +26,14 @@ import type { ListItem } from "~/types";
 import { path } from "~/utils/path";
 
 const SupplierHeader = () => {
+  const permissions = usePermissions();
   const { supplierId } = useParams();
+
   if (!supplierId) throw new Error("Could not find supplierId");
   const routeData = useRouteData<{ supplier: SupplierDetail }>(
     path.to.supplier(supplierId)
   );
+
   const sharedSupplierData = useRouteData<{
     supplierTypes: SupplierType[];
     supplierStatuses: SupplierStatus[];
@@ -44,8 +48,26 @@ const SupplierHeader = () => {
     (type) => type.id === routeData?.supplier?.supplierTypeId
   )?.name;
 
+  const optimisticAssignment = useOptimisticAssignment({
+    id: supplierId,
+    table: "supplier",
+  });
+  const assignee =
+    optimisticAssignment !== undefined
+      ? optimisticAssignment
+      : routeData?.supplier?.assignee;
+
   return (
     <VStack>
+      {permissions.is("employee") && (
+        <Menubar>
+          <Assign
+            id={supplierId}
+            table="supplier"
+            value={routeData?.supplier?.assignee ?? ""}
+          />
+        </Menubar>
+      )}
       <Card>
         <HStack className="justify-between items-start">
           <CardHeader>
@@ -74,10 +96,8 @@ const SupplierHeader = () => {
             <CardAttribute>
               <CardAttributeLabel>Assignee</CardAttributeLabel>
               <CardAttributeValue>
-                {routeData?.supplier?.assignee ? (
-                  <EmployeeAvatar
-                    employeeId={routeData?.supplier?.assignee ?? null}
-                  />
+                {assignee ? (
+                  <EmployeeAvatar employeeId={assignee ?? null} />
                 ) : (
                   "-"
                 )}

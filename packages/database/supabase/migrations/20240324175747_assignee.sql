@@ -1,7 +1,7 @@
 -- ALTER TABLE "account" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 ALTER TABLE "contractor" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 ALTER TABLE "customer" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
--- ALTER TABLE "part" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
+ALTER TABLE "part" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 -- ALTER TABLE "partner" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 -- ALTER TABLE "purchaseOrder" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 -- ALTER TABLE "purchaseInvoice" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
@@ -91,31 +91,21 @@ CREATE OR REPLACE VIEW "customers" AS
 --       ON a2.id = p."abilityId"
 --   WHERE p."active" = true;
 
--- DROP VIEW "parts";
--- CREATE OR REPLACE VIEW "parts" WITH(SECURITY_INVOKER=true) AS 
---   SELECT
---     p.id,
---     p.name,
---     p.description,
---     p."partType",
---     p."partGroupId",
---     pg.name AS "partGroup",
---     p."replenishmentSystem",
---     p.active,
---     p."customFields",
---     array_agg(ps."supplierId") AS "supplierIds"
---   FROM "part" p
---   LEFT JOIN "partGroup" pg ON pg.id = p."partGroupId"
---   LEFT JOIN "partSupplier" ps ON ps."partId" = p.id
---   GROUP BY p.id,
---     p.name,
---     p.description,
---     p."partType",
---     p."partGroupId",
---     pg.name,
---     p."replenishmentSystem",
---     p.active,
---     p."customFields";
+DROP VIEW "parts";
+CREATE OR REPLACE VIEW "parts" WITH(SECURITY_INVOKER=true) AS 
+  SELECT
+    p.*,
+    pg.name AS "partGroup",
+    ps."supplierIds"
+  FROM "part" p
+  LEFT JOIN "partGroup" pg ON pg.id = p."partGroupId"
+  LEFT JOIN (
+    SELECT 
+      "partId",
+      array_agg(ps."supplierId") AS "supplierIds"
+    FROM "partSupplier" ps
+    GROUP BY "partId"
+  )  ps ON ps."partId" = p.id;
   
 -- DROP VIEW "purchaseOrders";
 -- CREATE OR REPLACE VIEW "purchaseOrders" WITH(SECURITY_INVOKER=true) AS

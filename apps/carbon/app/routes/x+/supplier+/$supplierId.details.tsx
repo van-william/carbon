@@ -70,7 +70,6 @@ export default function SupplierEditRoute() {
     supplierStatusId: routeData?.supplier?.supplierStatusId ?? undefined,
     accountManagerId: routeData?.supplier?.accountManagerId ?? undefined,
     taxId: routeData?.supplier?.taxId ?? "",
-    assignee: routeData?.supplier?.assignee ?? undefined,
     ...getCustomFields(routeData?.supplier?.customFields),
   };
 

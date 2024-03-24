@@ -70,7 +70,6 @@ export default function CustomerEditRoute() {
     customerStatusId: routeData?.customer?.customerStatusId ?? undefined,
     accountManagerId: routeData?.customer?.accountManagerId ?? undefined,
     taxId: routeData?.customer?.taxId ?? "",
-    assignee: routeData?.customer?.assignee ?? undefined,
     ...getCustomFields(routeData?.customer?.customFields),
   };
 

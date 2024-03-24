@@ -1,6 +1,6 @@
 import { Button, Enumerable, MenuIcon, MenuItem } from "@carbon/react";
 import { formatDate } from "@carbon/utils";
-import { useNavigate } from "@remix-run/react";
+import { Link, useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
@@ -40,9 +40,38 @@ const SuppliersTable = memo(
             </Hyperlink>
           ),
         },
+
+        {
+          accessorKey: "type",
+          header: "Supplier Type",
+          cell: (item) => <Enumerable value={item.getValue<string>()} />,
+          meta: {
+            filter: {
+              type: "static",
+              options: supplierTypes?.map((type) => ({
+                value: type.name ?? "",
+                label: <Enumerable value={type.name ?? ""} />,
+              })),
+            },
+          },
+        },
+        {
+          accessorKey: "status",
+          header: "Supplier Status",
+          cell: (item) => <Enumerable value={item.getValue<string>()} />,
+          meta: {
+            filter: {
+              type: "static",
+              options: supplierStatuses?.map((status) => ({
+                value: status.name,
+                label: <Enumerable value={status.name ?? ""} />,
+              })),
+            },
+          },
+        },
         {
           id: "accountManagerId",
-          header: "Updated By",
+          header: "Account Manager",
           cell: ({ row }) => (
             <EmployeeAvatar employeeId={row.original.accountManagerId} />
           ),
@@ -73,46 +102,15 @@ const SuppliersTable = memo(
           },
         },
         {
-          accessorKey: "type",
-          header: "Supplier Type",
-          cell: (item) => <Enumerable value={item.getValue<string>()} />,
-          meta: {
-            filter: {
-              type: "static",
-              options: supplierTypes?.map((type) => ({
-                value: type.name ?? "",
-                label: <Enumerable value={type.name ?? ""} />,
-              })),
-            },
-          },
-        },
-        {
-          accessorKey: "status",
-          header: "Supplier Status",
-          cell: (item) => <Enumerable value={item.getValue<string>()} />,
-          meta: {
-            filter: {
-              type: "static",
-              options: supplierStatuses?.map((status) => ({
-                value: status.name,
-                label: <Enumerable value={status.name ?? ""} />,
-              })),
-            },
-          },
-        },
-        {
           id: "orders",
           header: "Orders",
           cell: ({ row }) => (
-            <Button
-              variant="secondary"
-              onClick={() =>
-                navigate(
-                  `${path.to.purchaseOrders}?filter=supplierName:eq:${row.original.name}`
-                )
-              }
-            >
-              {row.original.orderCount ?? 0} Orders
+            <Button variant="secondary" asChild>
+              <Link
+                to={`${path.to.purchaseOrders}?filter=supplierName:eq:${row.original.name}`}
+              >
+                {row.original.orderCount ?? 0} Orders
+              </Link>
             </Button>
           ),
         },
@@ -120,13 +118,10 @@ const SuppliersTable = memo(
           id: "parts",
           header: "Parts",
           cell: ({ row }) => (
-            <Button
-              variant="secondary"
-              onClick={() =>
-                navigate(`${path.to.partsSearch}?supplierId=${row.original.id}`)
-              }
-            >
-              {row.original.partCount ?? 0} Parts
+            <Button variant="secondary" asChild>
+              <Link to={`${path.to.partsSearch}?supplierId=${row.original.id}`}>
+                {row.original.partCount ?? 0} Parts
+              </Link>
             </Button>
           ),
         },
@@ -175,7 +170,7 @@ const SuppliersTable = memo(
       ];
 
       return [...defaultColumns, ...customColumns];
-    }, [supplierTypes, supplierStatuses, people, customColumns]);
+    }, [people, supplierTypes, supplierStatuses, customColumns]);
 
     const renderContextMenu = useMemo(
       // eslint-disable-next-line react/display-name

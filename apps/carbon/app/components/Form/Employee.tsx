@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { usePeople } from "~/stores";
 import type { ComboboxProps } from "./Combobox";
-import CreatableCombobox from "./CreatableCombobox";
+import Combobox from "./Combobox";
 
 type EmployeeSelectProps = Omit<ComboboxProps, "options" | "type"> & {
   type?: "assignee";
@@ -26,7 +26,7 @@ const Employee = ({ type, ...props }: EmployeeSelectProps) => {
 
   return (
     <>
-      <CreatableCombobox
+      <Combobox
         options={options}
         {...props}
         label={props?.label ?? "Employee"}

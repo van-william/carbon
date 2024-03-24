@@ -14,6 +14,7 @@ export const path = {
       accountingCategories: `${api}/accounting/categories`,
       accountingSubcategories: (id: string) =>
         generatePath(`${api}/accounting/subcategories?accountCategoryId=${id}`),
+      assign: `${api}/assign`,
       currencies: `${api}/accounting/currencies`,
       customerContacts: (id: string) =>
         generatePath(`${api}/sales/customer-contacts?customerId=${id}`),
