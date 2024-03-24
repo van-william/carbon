@@ -212,6 +212,7 @@ export const supplierValidator = z.object({
   supplierStatusId: zfd.text(z.string().optional()),
   taxId: zfd.text(z.string().optional()),
   accountManagerId: zfd.text(z.string().optional()),
+  assignee: zfd.text(z.string().optional()),
 });
 
 export const supplierContactValidator = z.object({

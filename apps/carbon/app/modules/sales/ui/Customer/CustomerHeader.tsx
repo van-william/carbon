@@ -62,17 +62,25 @@ const CustomerHeader = () => {
             <CardAttribute>
               <CardAttributeLabel>Account Manager</CardAttributeLabel>
               <CardAttributeValue>
-                <EmployeeAvatar
-                  employeeId={routeData?.customer?.accountManagerId ?? null}
-                />
+                {routeData?.customer?.accountManagerId ? (
+                  <EmployeeAvatar
+                    employeeId={routeData?.customer?.accountManagerId ?? null}
+                  />
+                ) : (
+                  "-"
+                )}
               </CardAttributeValue>
             </CardAttribute>
             <CardAttribute>
               <CardAttributeLabel>Assignee</CardAttributeLabel>
               <CardAttributeValue>
-                <EmployeeAvatar
-                  employeeId={routeData?.customer?.assignee ?? null}
-                />
+                {routeData?.customer?.assignee ? (
+                  <EmployeeAvatar
+                    employeeId={routeData?.customer?.assignee ?? null}
+                  />
+                ) : (
+                  "-"
+                )}
               </CardAttributeValue>
             </CardAttribute>
             <CardAttribute>

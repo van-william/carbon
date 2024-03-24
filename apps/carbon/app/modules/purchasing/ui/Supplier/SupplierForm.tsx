@@ -92,7 +92,7 @@ const SupplierForm = ({
                 />
 
                 <Employee name="accountManagerId" label="Account Manager" />
-
+                <Employee name="assignee" label="Assignee" type="assignee" />
                 <CustomFormFields table="supplier" />
               </div>
             </ModalCardBody>

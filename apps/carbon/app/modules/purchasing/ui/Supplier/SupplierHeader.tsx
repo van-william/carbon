@@ -8,10 +8,13 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
+  Enumerable,
   HStack,
   VStack,
 } from "@carbon/react";
+
 import { useParams } from "@remix-run/react";
+import { EmployeeAvatar } from "~/components";
 import { useRouteData } from "~/hooks";
 import type {
   SupplierDetail,
@@ -27,12 +30,19 @@ const SupplierHeader = () => {
   const routeData = useRouteData<{ supplier: SupplierDetail }>(
     path.to.supplier(supplierId)
   );
-
   const sharedSupplierData = useRouteData<{
     supplierTypes: SupplierType[];
     supplierStatuses: SupplierStatus[];
     paymentTerms: ListItem[];
   }>(path.to.supplierRoot);
+
+  const supplierStatus = sharedSupplierData?.supplierStatuses?.find(
+    (status) => status.id === routeData?.supplier?.supplierStatusId
+  )?.name;
+
+  const supplierType = sharedSupplierData?.supplierTypes?.find(
+    (type) => type.id === routeData?.supplier?.supplierTypeId
+  )?.name;
 
   return (
     <VStack>
@@ -42,11 +52,7 @@ const SupplierHeader = () => {
             <CardTitle>{routeData?.supplier?.name}</CardTitle>
           </CardHeader>
           <CardAction>
-            {/* <Button
-              variant="secondary"
-              onClick={() => alert("TODO")}
-              leftIcon={<FaHistory />}
-            >
+            {/* <Button onClick={() => alert("TODO")} leftIcon={<FaHistory />}>
               Supplier Details
             </Button> */}
           </CardAction>
@@ -54,25 +60,40 @@ const SupplierHeader = () => {
         <CardContent>
           <CardAttributes>
             <CardAttribute>
+              <CardAttributeLabel>Account Manager</CardAttributeLabel>
+              <CardAttributeValue>
+                {routeData?.supplier?.accountManagerId ? (
+                  <EmployeeAvatar
+                    employeeId={routeData?.supplier?.accountManagerId ?? null}
+                  />
+                ) : (
+                  "-"
+                )}
+              </CardAttributeValue>
+            </CardAttribute>
+            <CardAttribute>
+              <CardAttributeLabel>Assignee</CardAttributeLabel>
+              <CardAttributeValue>
+                {routeData?.supplier?.assignee ? (
+                  <EmployeeAvatar
+                    employeeId={routeData?.supplier?.assignee ?? null}
+                  />
+                ) : (
+                  "-"
+                )}
+              </CardAttributeValue>
+            </CardAttribute>
+            <CardAttribute>
               <CardAttributeLabel>Type</CardAttributeLabel>
               <CardAttributeValue>
-                {sharedSupplierData?.supplierTypes?.find(
-                  (type) => type.id === routeData?.supplier?.supplierTypeId
-                )?.name ?? "-"}
+                {supplierType ? <Enumerable value={supplierType!} /> : "-"}
               </CardAttributeValue>
             </CardAttribute>
             <CardAttribute>
               <CardAttributeLabel>Status</CardAttributeLabel>
               <CardAttributeValue>
-                {sharedSupplierData?.supplierStatuses?.find(
-                  (status) =>
-                    status.id === routeData?.supplier?.supplierStatusId
-                )?.name ?? "-"}
+                {supplierStatus ? <Enumerable value={supplierStatus!} /> : "-"}
               </CardAttributeValue>
-            </CardAttribute>
-            <CardAttribute>
-              <CardAttributeLabel>Payment Terms</CardAttributeLabel>
-              <CardAttributeValue>-</CardAttributeValue>
             </CardAttribute>
           </CardAttributes>
         </CardContent>

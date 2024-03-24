@@ -1,24 +1,24 @@
-ALTER TABLE "account" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
+-- ALTER TABLE "account" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 ALTER TABLE "contractor" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 ALTER TABLE "customer" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
-ALTER TABLE "part" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
-ALTER TABLE "partner" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
-ALTER TABLE "purchaseOrder" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
-ALTER TABLE "purchaseInvoice" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
-ALTER TABLE "quote" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
-ALTER TABLE "receipt" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
-ALTER TABLE "requestForQuote" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
-ALTER TABLE "service" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
+-- ALTER TABLE "part" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
+-- ALTER TABLE "partner" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
+-- ALTER TABLE "purchaseOrder" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
+-- ALTER TABLE "purchaseInvoice" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
+-- ALTER TABLE "quote" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
+-- ALTER TABLE "receipt" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
+-- ALTER TABLE "requestForQuote" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
+-- ALTER TABLE "service" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 ALTER TABLE "supplier" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 
-DROP VIEW "accounts";
-CREATE OR REPLACE VIEW "accounts" WITH(SECURITY_INVOKER=true) AS
-  SELECT 
-    "account".*,
-    (SELECT "category" FROM "accountCategory" WHERE "accountCategory"."id" = "account"."accountCategoryId") AS "accountCategory",
-    (SELECT "name" FROM "accountSubcategory" WHERE "accountSubcategory"."id" = "account"."accountSubcategoryId") AS "accountSubCategory"  
-  FROM "account"
-;
+-- DROP VIEW "accounts";
+-- CREATE OR REPLACE VIEW "accounts" WITH(SECURITY_INVOKER=true) AS
+--   SELECT 
+--     "account".*,
+--     (SELECT "category" FROM "accountCategory" WHERE "accountCategory"."id" = "account"."accountCategoryId") AS "accountCategory",
+--     (SELECT "name" FROM "accountSubcategory" WHERE "accountSubcategory"."id" = "account"."accountSubcategoryId") AS "accountSubCategory"  
+--   FROM "account"
+-- ;
 
 DROP VIEW "contractors";
 CREATE OR REPLACE VIEW "contractors" WITH(SECURITY_INVOKER=true) AS
@@ -366,31 +366,28 @@ CREATE OR REPLACE VIEW "customers" AS
 --     s."customFields",
 --     pg.name;
 
--- CREATE OR REPLACE VIEW "suppliers" AS 
---   SELECT 
---     s.id,
---     s.name,
---     s."supplierTypeId",
---     st.name AS "type",
---     s."supplierStatusId",
---     ss.name AS "status",
---     po.count AS "orderCount",
---     p.count AS "partCount",
---     s."customFields"
---   FROM "supplier" s
---   LEFT JOIN "supplierType" st ON st.id = s."supplierTypeId"
---   LEFT JOIN "supplierStatus" ss ON ss.id = s."supplierStatusId"
---   LEFT JOIN (
---     SELECT 
---       "supplierId",
---       COUNT(*) AS "count"
---     FROM "purchaseOrder"
---     GROUP BY "supplierId"
---   ) po ON po."supplierId" = s.id
---   LEFT JOIN (
---     SELECT 
---       "supplierId",
---       COUNT(*) AS "count"
---     FROM "partSupplier"
---     GROUP BY "supplierId"
---   ) p ON p."supplierId" = s.id;
+DROP VIEW "suppliers";
+CREATE OR REPLACE VIEW "suppliers" AS 
+  SELECT 
+    s.*,
+    st.name AS "type",    
+    ss.name AS "status",
+    po.count AS "orderCount",
+    p.count AS "partCount"
+  FROM "supplier" s
+  LEFT JOIN "supplierType" st ON st.id = s."supplierTypeId"
+  LEFT JOIN "supplierStatus" ss ON ss.id = s."supplierStatusId"
+  LEFT JOIN (
+    SELECT 
+      "supplierId",
+      COUNT(*) AS "count"
+    FROM "purchaseOrder"
+    GROUP BY "supplierId"
+  ) po ON po."supplierId" = s.id
+  LEFT JOIN (
+    SELECT 
+      "supplierId",
+      COUNT(*) AS "count"
+    FROM "partSupplier"
+    GROUP BY "supplierId"
+  ) p ON p."supplierId" = s.id;

@@ -100,7 +100,7 @@ const CustomersTable = memo(
           id: "createdBy",
           header: "Created By",
           cell: ({ row }) => (
-            <EmployeeAvatar employeeId={row.original.accountManagerId} />
+            <EmployeeAvatar employeeId={row.original.createdBy} />
           ),
           meta: {
             filter: {
@@ -121,7 +121,7 @@ const CustomersTable = memo(
           id: "updatedBy",
           header: "Updated By",
           cell: ({ row }) => (
-            <EmployeeAvatar employeeId={row.original.accountManagerId} />
+            <EmployeeAvatar employeeId={row.original.updatedBy} />
           ),
           meta: {
             filter: {
