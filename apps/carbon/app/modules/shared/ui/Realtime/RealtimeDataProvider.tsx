@@ -1,7 +1,7 @@
 import idb from "localforage";
 import { useEffect } from "react";
 import { useSupabase } from "~/lib/supabase";
-import { useCustomers, useParts, useSuppliers } from "~/stores";
+import { useCustomers, useParts, usePeople, useSuppliers } from "~/stores";
 import type { Part } from "~/stores/parts";
 import type { ListItem } from "~/types";
 
@@ -14,6 +14,7 @@ const RealtimeDataProvider = ({ children }: { children: React.ReactNode }) => {
   const [, setParts] = useParts();
   const [, setSuppliers] = useSuppliers();
   const [, setCustomers] = useCustomers();
+  const [, setPeople] = usePeople();
 
   const hydrate = async () => {
     if (!hydratedFromIdb) {
@@ -28,11 +29,14 @@ const RealtimeDataProvider = ({ children }: { children: React.ReactNode }) => {
       idb.getItem("suppliers").then((data) => {
         if (data && !hydratedFromServer) setSuppliers(data as ListItem[], true);
       });
+      idb.getItem("people").then((data) => {
+        if (data && !hydratedFromServer) setPeople(data as ListItem[], true);
+      });
     }
 
     if (!supabase || !accessToken) return;
 
-    const [parts, suppliers, customers] = await Promise.all([
+    const [parts, suppliers, customers, people] = await Promise.all([
       supabase
         .from("part")
         .select("id, name, replenishmentSystem")
@@ -41,9 +45,10 @@ const RealtimeDataProvider = ({ children }: { children: React.ReactNode }) => {
         .order("name"),
       supabase.from("supplier").select("id, name").order("name"),
       supabase.from("customer").select("id, name").order("name"),
+      supabase.from("employees").select("id, name, avatarUrl").order("name"),
     ]);
 
-    if (parts.error || suppliers.error || customers.error) {
+    if (parts.error || suppliers.error || customers.error || people.error) {
       throw new Error("Failed to fetch core data");
     }
 
@@ -52,6 +57,7 @@ const RealtimeDataProvider = ({ children }: { children: React.ReactNode }) => {
     setParts(parts.data ?? []);
     setSuppliers(suppliers.data ?? []);
     setCustomers(customers.data ?? []);
+    setPeople(people.data ?? []);
   };
 
   useEffect(() => {
@@ -202,6 +208,26 @@ const RealtimeDataProvider = ({ children }: { children: React.ReactNode }) => {
               break;
             default:
               break;
+          }
+        }
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "employee",
+        },
+        async (payload) => {
+          // TODO: there's a cleaner way of doing this, but since customers and suppliers
+          // are also in the users table, we can't automatically add/update/delete them
+          // from our list of employees. So for now we just refetch.
+          const { data } = await supabase
+            .from("employees")
+            .select("id, name, avatarUrl")
+            .order("name");
+          if (data) {
+            setPeople(data ?? []);
           }
         }
       )
