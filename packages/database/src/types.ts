@@ -73,6 +73,13 @@ export type Database = {
             foreignKeyName: "abilities_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "abilities_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -89,6 +96,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "abilities_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "abilities_updatedBy_fkey"
@@ -193,6 +207,13 @@ export type Database = {
             foreignKeyName: "account_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "account_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -209,6 +230,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "account_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "account_updatedBy_fkey"
@@ -272,6 +300,13 @@ export type Database = {
             foreignKeyName: "accountCategory_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accountCategory_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -288,6 +323,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "accountCategory_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "accountCategory_updatedBy_fkey"
@@ -965,6 +1007,13 @@ export type Database = {
             foreignKeyName: "accountDefault_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accountDefault_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -1040,6 +1089,13 @@ export type Database = {
             foreignKeyName: "accountingPeriod_closedBy_fkey"
             columns: ["closedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accountingPeriod_closedBy_fkey"
+            columns: ["closedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -1061,6 +1117,13 @@ export type Database = {
             foreignKeyName: "accountingPeriod_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accountingPeriod_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -1077,6 +1140,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "accountingPeriod_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "accountingPeriod_updatedBy_fkey"
@@ -1154,6 +1224,13 @@ export type Database = {
             foreignKeyName: "accountSubcategory_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accountSubcategory_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -1170,6 +1247,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "accountSubcategory_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "accountSubcategory_updatedBy_fkey"
@@ -1328,6 +1412,13 @@ export type Database = {
             foreignKeyName: "accountDefault_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accountDefault_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -1454,6 +1545,13 @@ export type Database = {
             foreignKeyName: "contractor_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contractor_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -1476,6 +1574,13 @@ export type Database = {
             columns: ["id"]
             isOneToOne: true
             referencedRelation: "supplierContact"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contractor_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -1541,6 +1646,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "contractors"
             referencedColumns: ["supplierContactId"]
+          },
+          {
+            foreignKeyName: "contractorAbility_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "contractorAbility_createdBy_fkey"
@@ -1670,6 +1782,13 @@ export type Database = {
             foreignKeyName: "crew_crewLeaderId_fkey"
             columns: ["crewLeaderId"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crew_crewLeaderId_fkey"
+            columns: ["crewLeaderId"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -1790,6 +1909,13 @@ export type Database = {
             foreignKeyName: "currency_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "currency_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -1875,6 +2001,13 @@ export type Database = {
             foreignKeyName: "customer_accountManagerId_fkey"
             columns: ["accountManagerId"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_accountManagerId_fkey"
+            columns: ["accountManagerId"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -1891,6 +2024,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "customer_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "customer_createdBy_fkey"
@@ -1925,6 +2065,13 @@ export type Database = {
             columns: ["customerTypeId"]
             isOneToOne: false
             referencedRelation: "customerType"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -1976,6 +2123,13 @@ export type Database = {
             columns: ["customerId"]
             isOneToOne: false
             referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customerAccount_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -2053,6 +2207,13 @@ export type Database = {
             columns: ["customerLocationId"]
             isOneToOne: false
             referencedRelation: "customerLocation"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customerContact_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -2206,6 +2367,13 @@ export type Database = {
             foreignKeyName: "customerPayment_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customerPayment_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -2317,6 +2485,13 @@ export type Database = {
             foreignKeyName: "customerShipping_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customerShipping_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -2369,6 +2544,13 @@ export type Database = {
             foreignKeyName: "customerStatus_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customerStatus_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -2385,6 +2567,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "customerStatus_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "customerStatus_updatedBy_fkey"
@@ -2445,6 +2634,13 @@ export type Database = {
             foreignKeyName: "customerType_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customerType_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -2461,6 +2657,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "customerType_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "customerType_updatedBy_fkey"
@@ -2530,6 +2733,13 @@ export type Database = {
             foreignKeyName: "customField_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customField_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -2566,6 +2776,13 @@ export type Database = {
             columns: ["dataTypeId"]
             isOneToOne: false
             referencedRelation: "attributeDataType"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customField_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -2707,6 +2924,13 @@ export type Database = {
             foreignKeyName: "document_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "document_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -2723,6 +2947,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "document_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "document_updatedBy_fkey"
@@ -2779,6 +3010,13 @@ export type Database = {
             foreignKeyName: "documentFavorites_userId_fkey"
             columns: ["userId"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documentFavorites_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -2827,6 +3065,13 @@ export type Database = {
             columns: ["documentId"]
             isOneToOne: false
             referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documentLabels_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -2893,6 +3138,13 @@ export type Database = {
             foreignKeyName: "documentTransaction_userId_fkey"
             columns: ["userId"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documentTransaction_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -2931,6 +3183,13 @@ export type Database = {
             columns: ["employeeTypeId"]
             isOneToOne: false
             referencedRelation: "employeeType"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "employee_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -2990,6 +3249,13 @@ export type Database = {
             columns: ["abilityId"]
             isOneToOne: false
             referencedRelation: "ability"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "employeeAbilities_employeeId_fkey"
+            columns: ["employeeId"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -3067,6 +3333,13 @@ export type Database = {
             foreignKeyName: "employeeJob_id_fkey"
             columns: ["id"]
             isOneToOne: true
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "employeeJob_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -3109,6 +3382,13 @@ export type Database = {
             foreignKeyName: "employeeJob_managerId_fkey"
             columns: ["managerId"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "employeeJob_managerId_fkey"
+            columns: ["managerId"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -3138,6 +3418,13 @@ export type Database = {
             columns: ["shiftId"]
             isOneToOne: false
             referencedRelation: "shifts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "employeeJob_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -3187,6 +3474,13 @@ export type Database = {
           shiftId?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "employeeShift_employeeId_fkey"
+            columns: ["employeeId"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "employeeShift_employeeId_fkey"
             columns: ["employeeId"]
@@ -3353,6 +3647,13 @@ export type Database = {
             foreignKeyName: "equipment_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "equipment_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -3397,6 +3698,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "purchaseOrders"
             referencedColumns: ["locationId"]
+          },
+          {
+            foreignKeyName: "equipment_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "equipment_updatedBy_fkey"
@@ -3473,6 +3781,13 @@ export type Database = {
             foreignKeyName: "equipmentType_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "equipmentType_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -3495,6 +3810,13 @@ export type Database = {
             columns: ["requiredAbility"]
             isOneToOne: false
             referencedRelation: "ability"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "equipmentType_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -3561,6 +3883,13 @@ export type Database = {
           updatedBy?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fiscalYearSettings_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "fiscalYearSettings_updatedBy_fkey"
             columns: ["updatedBy"]
@@ -3662,6 +3991,13 @@ export type Database = {
             foreignKeyName: "holiday_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "holiday_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -3678,6 +4014,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "holiday_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "holiday_updatedBy_fkey"
@@ -3740,6 +4083,13 @@ export type Database = {
           visible?: boolean
         }
         Relationships: [
+          {
+            foreignKeyName: "integration_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "integration_updatedBy_fkey"
             columns: ["updatedBy"]
@@ -3965,6 +4315,13 @@ export type Database = {
             foreignKeyName: "membership_memberUserId_fkey"
             columns: ["memberUserId"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "membership_memberUserId_fkey"
+            columns: ["memberUserId"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -4016,6 +4373,13 @@ export type Database = {
           updatedAt?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "notes_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "notes_createdBy_fkey"
             columns: ["createdBy"]
@@ -4108,6 +4472,13 @@ export type Database = {
             foreignKeyName: "part_approvedBy_fkey"
             columns: ["approvedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "part_approvedBy_fkey"
+            columns: ["approvedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -4124,6 +4495,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "part_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "part_createdBy_fkey"
@@ -4159,6 +4537,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "unitOfMeasure"
             referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "part_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "part_updatedBy_fkey"
@@ -4246,6 +4631,13 @@ export type Database = {
             foreignKeyName: "partGroup_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partGroup_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -4262,6 +4654,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "partGroup_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "partGroup_updatedBy_fkey"
@@ -4325,6 +4724,13 @@ export type Database = {
             foreignKeyName: "partGroup_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partGroup_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -4341,6 +4747,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "partGroup_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "partGroup_updatedBy_fkey"
@@ -4397,6 +4810,13 @@ export type Database = {
           updatedBy?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "partInventory_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "partInventory_createdBy_fkey"
             columns: ["createdBy"]
@@ -4466,6 +4886,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "shelf"
             referencedColumns: ["id", "locationId"]
+          },
+          {
+            foreignKeyName: "partInventory_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "partInventory_updatedBy_fkey"
@@ -4637,6 +5064,13 @@ export type Database = {
             foreignKeyName: "partner_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -4659,6 +5093,13 @@ export type Database = {
             columns: ["id"]
             isOneToOne: false
             referencedRelation: "supplierLocation"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -4756,6 +5197,13 @@ export type Database = {
             foreignKeyName: "partPlanning_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partPlanning_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -4813,6 +5261,13 @@ export type Database = {
             columns: ["partId"]
             isOneToOne: false
             referencedRelation: "parts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partPlanning_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -4901,6 +5356,13 @@ export type Database = {
             foreignKeyName: "partReplenishment_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partReplenishment_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -4985,6 +5447,13 @@ export type Database = {
             foreignKeyName: "partReplenishment_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partReplenishment_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -5051,6 +5520,13 @@ export type Database = {
           updatedBy?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "partSupplier_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "partSupplier_createdBy_fkey"
             columns: ["createdBy"]
@@ -5132,6 +5608,13 @@ export type Database = {
             foreignKeyName: "partSupplier_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partSupplier_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -5199,6 +5682,13 @@ export type Database = {
             foreignKeyName: "partUnitSalePrice_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partUnitSalePrice_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -5250,6 +5740,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "unitOfMeasure"
             referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "partUnitSalePrice_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "partUnitSalePrice_updatedBy_fkey"
@@ -5322,6 +5819,13 @@ export type Database = {
             foreignKeyName: "paymentTerm_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "paymentTerm_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -5338,6 +5842,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "paymentTerm_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "paymentTerm_updatedBy_fkey"
@@ -5638,6 +6149,13 @@ export type Database = {
             foreignKeyName: "postingGroupInventory_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "postingGroupInventory_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -5811,6 +6329,13 @@ export type Database = {
             foreignKeyName: "postingGroupPurchasing_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "postingGroupPurchasing_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -5970,6 +6495,13 @@ export type Database = {
             foreignKeyName: "postingGroupSales_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "postingGroupSales_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -6072,6 +6604,13 @@ export type Database = {
           updatedBy?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "purchaseInvoice_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "purchaseInvoice_createdBy_fkey"
             columns: ["createdBy"]
@@ -6195,6 +6734,13 @@ export type Database = {
             foreignKeyName: "purchaseInvoice_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseInvoice_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -6304,6 +6850,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "accounts"
             referencedColumns: ["number"]
+          },
+          {
+            foreignKeyName: "purchaseInvoiceLines_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "purchaseInvoiceLines_createdBy_fkey"
@@ -6456,6 +7009,13 @@ export type Database = {
             foreignKeyName: "purchaseInvoiceLines_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseInvoiceLines_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -6566,6 +7126,13 @@ export type Database = {
             columns: ["invoiceLineId"]
             isOneToOne: false
             referencedRelation: "purchaseInvoiceLine"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseInvoicePriceChange_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -6693,6 +7260,13 @@ export type Database = {
             foreignKeyName: "purchaseOrder_closedBy_fkey"
             columns: ["closedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseOrder_closedBy_fkey"
+            columns: ["closedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -6709,6 +7283,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "purchaseOrder_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "purchaseOrder_createdBy_fkey"
@@ -6778,6 +7359,13 @@ export type Database = {
             columns: ["supplierLocationId"]
             isOneToOne: false
             referencedRelation: "supplierLocation"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseOrder_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -6937,6 +7525,13 @@ export type Database = {
             foreignKeyName: "purchaseOrderDelivery_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseOrderDelivery_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -6989,6 +7584,13 @@ export type Database = {
             columns: ["purchaseOrderId"]
             isOneToOne: false
             referencedRelation: "purchaseOrders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseOrderFavorites_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -7118,6 +7720,13 @@ export type Database = {
             foreignKeyName: "purchaseOrderLine_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseOrderLine_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -7204,6 +7813,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "unitOfMeasure"
             referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "purchaseOrderLine_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "purchaseOrderLine_updatedBy_fkey"
@@ -7379,6 +7995,13 @@ export type Database = {
             foreignKeyName: "purchaseOrderStatusHistory_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseOrderStatusHistory_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -7467,6 +8090,13 @@ export type Database = {
             foreignKeyName: "purchaseOrderTransaction_userId_fkey"
             columns: ["userId"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseOrderTransaction_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -7534,6 +8164,13 @@ export type Database = {
             foreignKeyName: "purchasePayment_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchasePayment_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -7591,6 +8228,13 @@ export type Database = {
             columns: ["supplierId"]
             isOneToOne: false
             referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchasePayment_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -7685,6 +8329,13 @@ export type Database = {
             foreignKeyName: "quote_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quote_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -7755,6 +8406,13 @@ export type Database = {
             foreignKeyName: "quote_ownerId_fkey"
             columns: ["ownerId"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quote_ownerId_fkey"
+            columns: ["ownerId"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -7771,6 +8429,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "quote_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "quote_updatedBy_fkey"
@@ -7846,6 +8511,13 @@ export type Database = {
             foreignKeyName: "quoteAssembly_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteAssembly_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -7896,6 +8568,13 @@ export type Database = {
             columns: ["quoteLineId"]
             isOneToOne: false
             referencedRelation: "quoteLine"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteAssembly_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -7954,6 +8633,13 @@ export type Database = {
             columns: ["quoteId"]
             isOneToOne: false
             referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteFavorites_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -8033,6 +8719,13 @@ export type Database = {
             foreignKeyName: "quoteLine_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteLine_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -8090,6 +8783,13 @@ export type Database = {
             columns: ["quoteId"]
             isOneToOne: false
             referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteLine_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -8190,6 +8890,13 @@ export type Database = {
             foreignKeyName: "quoteLineQuantity_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteLineQuantity_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -8212,6 +8919,13 @@ export type Database = {
             columns: ["quoteLineId"]
             isOneToOne: false
             referencedRelation: "quoteLine"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteLineQuantity_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -8291,6 +9005,13 @@ export type Database = {
             foreignKeyName: "quoteMaterial_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteMaterial_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -8362,6 +9083,13 @@ export type Database = {
             columns: ["quoteOperationId"]
             isOneToOne: false
             referencedRelation: "quoteOperation"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteMaterial_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -8453,6 +9181,13 @@ export type Database = {
             foreignKeyName: "quoteOperation_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteOperation_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -8510,6 +9245,13 @@ export type Database = {
             columns: ["quoteLineId"]
             isOneToOne: false
             referencedRelation: "quoteLine"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteOperation_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -8608,6 +9350,13 @@ export type Database = {
             foreignKeyName: "receipt_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "receipt_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -8679,6 +9428,13 @@ export type Database = {
             columns: ["supplierId"]
             isOneToOne: false
             referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "receipt_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -8757,6 +9513,13 @@ export type Database = {
           updatedBy?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "receiptLine_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "receiptLine_createdBy_fkey"
             columns: ["createdBy"]
@@ -8852,6 +9615,13 @@ export type Database = {
             foreignKeyName: "receiptLine_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "receiptLine_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -8925,6 +9695,13 @@ export type Database = {
             foreignKeyName: "requestForQuote_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "requestForQuote_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -8962,6 +9739,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "purchaseOrders"
             referencedColumns: ["locationId"]
+          },
+          {
+            foreignKeyName: "requestForQuote_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "requestForQuote_updatedBy_fkey"
@@ -9012,6 +9796,13 @@ export type Database = {
             columns: ["requestForQuoteId"]
             isOneToOne: false
             referencedRelation: "requestForQuotes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "requestForQuoteFavorites_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -9087,6 +9878,13 @@ export type Database = {
           updatedBy?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "requestForQuoteLine_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "requestForQuoteLine_createdBy_fkey"
             columns: ["createdBy"]
@@ -9182,6 +9980,13 @@ export type Database = {
             foreignKeyName: "requestForQuoteLine_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "requestForQuoteLine_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -9248,6 +10053,13 @@ export type Database = {
           updatedBy?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "requestForQuoteSupplier_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "requestForQuoteSupplier_createdBy_fkey"
             columns: ["createdBy"]
@@ -9350,6 +10162,13 @@ export type Database = {
             foreignKeyName: "requestForQuoteSupplier_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "requestForQuoteSupplier_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -9405,6 +10224,13 @@ export type Database = {
             foreignKeyName: "requestForQuoteSupplierLine_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "requestForQuoteSupplierLine_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -9434,6 +10260,13 @@ export type Database = {
             columns: ["requestForQuoteSupplierId"]
             isOneToOne: false
             referencedRelation: "requestForQuoteSupplier"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "requestForQuoteSupplierLine_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -9531,6 +10364,13 @@ export type Database = {
             foreignKeyName: "sequence_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sequence_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -9610,6 +10450,13 @@ export type Database = {
             foreignKeyName: "service_approvedBy_fkey"
             columns: ["approvedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_approvedBy_fkey"
+            columns: ["approvedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -9626,6 +10473,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "service_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "service_createdBy_fkey"
@@ -9653,6 +10507,13 @@ export type Database = {
             columns: ["partGroupId"]
             isOneToOne: false
             referencedRelation: "partGroup"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -9716,6 +10577,13 @@ export type Database = {
           updatedBy?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "serviceSupplier_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "serviceSupplier_createdBy_fkey"
             columns: ["createdBy"]
@@ -9790,6 +10658,13 @@ export type Database = {
             foreignKeyName: "serviceSupplier_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "serviceSupplier_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -9848,6 +10723,13 @@ export type Database = {
             foreignKeyName: "shelf_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shelf_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -9885,6 +10767,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "purchaseOrders"
             referencedColumns: ["locationId"]
+          },
+          {
+            foreignKeyName: "shelf_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "shelf_updatedBy_fkey"
@@ -9982,6 +10871,13 @@ export type Database = {
             foreignKeyName: "shifts_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shifts_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -10019,6 +10915,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "purchaseOrders"
             referencedColumns: ["locationId"]
+          },
+          {
+            foreignKeyName: "shifts_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "shifts_updatedBy_fkey"
@@ -10102,6 +11005,13 @@ export type Database = {
             foreignKeyName: "shippingMethod_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shippingMethod_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -10118,6 +11028,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "shippingMethod_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "shippingMethod_updatedBy_fkey"
@@ -10175,6 +11092,13 @@ export type Database = {
             foreignKeyName: "shippingTerm_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shippingTerm_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -10191,6 +11115,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "shippingTerm_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "shippingTerm_updatedBy_fkey"
@@ -10263,6 +11194,13 @@ export type Database = {
             foreignKeyName: "supplier_accountManagerId_fkey"
             columns: ["accountManagerId"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "supplier_accountManagerId_fkey"
+            columns: ["accountManagerId"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -10279,6 +11217,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "supplier_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "supplier_createdBy_fkey"
@@ -10319,6 +11264,13 @@ export type Database = {
             foreignKeyName: "supplier_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "supplier_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -10352,6 +11304,13 @@ export type Database = {
           supplierId?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "supplierAccount_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "supplierAccount_id_fkey"
             columns: ["id"]
@@ -10483,6 +11442,13 @@ export type Database = {
             columns: ["supplierLocationId"]
             isOneToOne: false
             referencedRelation: "supplierLocation"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "supplierContact_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -10780,6 +11746,13 @@ export type Database = {
             foreignKeyName: "supplierPayment_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "supplierPayment_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -10936,6 +11909,13 @@ export type Database = {
             foreignKeyName: "supplierShipping_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "supplierShipping_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -10988,6 +11968,13 @@ export type Database = {
             foreignKeyName: "supplierStatus_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "supplierStatus_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -11004,6 +11991,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "supplierStatus_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "supplierStatus_updatedBy_fkey"
@@ -11064,6 +12058,13 @@ export type Database = {
             foreignKeyName: "supplierType_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "supplierType_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -11080,6 +12081,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "supplierType_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "supplierType_updatedBy_fkey"
@@ -11124,6 +12132,13 @@ export type Database = {
           updatedBy?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "theme_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "theme_updatedBy_fkey"
             columns: ["updatedBy"]
@@ -11186,6 +12201,13 @@ export type Database = {
             foreignKeyName: "unitOfMeasure_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "unitOfMeasure_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -11202,6 +12224,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "unitOfMeasure_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "unitOfMeasure_updatedBy_fkey"
@@ -11323,6 +12352,13 @@ export type Database = {
             foreignKeyName: "userAttribute_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "userAttribute_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -11339,6 +12375,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "userAttribute_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "userAttribute_updatedBy_fkey"
@@ -11409,6 +12452,13 @@ export type Database = {
             foreignKeyName: "userAttributeCategory_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "userAttributeCategory_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -11425,6 +12475,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "userAttributeCategory_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "userAttributeCategory_updatedBy_fkey"
@@ -11497,6 +12554,13 @@ export type Database = {
             foreignKeyName: "userAttributeValue_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "userAttributeValue_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -11513,6 +12577,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "userAttributeValue_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "userAttributeValue_updatedBy_fkey"
@@ -11546,6 +12617,13 @@ export type Database = {
             foreignKeyName: "userAttributeValue_userId_fkey"
             columns: ["userId"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "userAttributeValue_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -11562,6 +12640,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "userAttributeValue_valueUser_fkey"
+            columns: ["valueUser"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "userAttributeValue_valueUser_fkey"
@@ -11637,6 +12722,13 @@ export type Database = {
             foreignKeyName: "warehouse_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "warehouse_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -11674,6 +12766,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "purchaseOrders"
             referencedColumns: ["locationId"]
+          },
+          {
+            foreignKeyName: "warehouse_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "warehouse_updatedBy_fkey"
@@ -11839,6 +12938,13 @@ export type Database = {
             foreignKeyName: "workCellType_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workCellType_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
@@ -11861,6 +12967,13 @@ export type Database = {
             columns: ["requiredAbility"]
             isOneToOne: false
             referencedRelation: "ability"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workCellType_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -11944,6 +13057,13 @@ export type Database = {
             foreignKeyName: "accountCategory_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accountCategory_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
           },
@@ -11959,6 +13079,13 @@ export type Database = {
             columns: ["updatedBy"]
             isOneToOne: false
             referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "accountCategory_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -12070,6 +13197,13 @@ export type Database = {
             foreignKeyName: "account_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "account_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
           },
@@ -12085,6 +13219,13 @@ export type Database = {
             columns: ["updatedBy"]
             isOneToOne: false
             referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "account_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -12186,6 +13327,13 @@ export type Database = {
             foreignKeyName: "documentLabels_userId_fkey"
             columns: ["userId"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documentLabels_userId_fkey"
+            columns: ["userId"]
+            isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
           },
@@ -12234,6 +13382,13 @@ export type Database = {
             foreignKeyName: "document_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "document_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
           },
@@ -12255,10 +13410,25 @@ export type Database = {
             foreignKeyName: "document_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "document_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
           },
         ]
+      }
+      employees: {
+        Row: {
+          avatarUrl: string | null
+          id: string | null
+          name: string | null
+        }
+        Relationships: []
       }
       employeeSummary: {
         Row: {
@@ -12315,6 +13485,13 @@ export type Database = {
             columns: ["memberUserId"]
             isOneToOne: false
             referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "membership_memberUserId_fkey"
+            columns: ["memberUserId"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -12405,6 +13582,13 @@ export type Database = {
             foreignKeyName: "partner_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
           },
@@ -12434,6 +13618,13 @@ export type Database = {
             columns: ["updatedBy"]
             isOneToOne: false
             referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -12529,6 +13720,13 @@ export type Database = {
             columns: ["createdBy"]
             isOneToOne: false
             referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseInvoice_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -12654,6 +13852,13 @@ export type Database = {
             foreignKeyName: "purchaseInvoice_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseInvoice_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
           },
@@ -12765,6 +13970,13 @@ export type Database = {
             foreignKeyName: "purchaseOrderLine_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseOrderLine_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
           },
@@ -12850,6 +14062,13 @@ export type Database = {
             columns: ["updatedBy"]
             isOneToOne: false
             referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseOrderLine_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -12960,6 +14179,13 @@ export type Database = {
             foreignKeyName: "purchaseOrder_closedBy_fkey"
             columns: ["closedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseOrder_closedBy_fkey"
+            columns: ["closedBy"]
+            isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
           },
@@ -12975,6 +14201,13 @@ export type Database = {
             columns: ["createdBy"]
             isOneToOne: false
             referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseOrder_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -13045,6 +14278,13 @@ export type Database = {
             columns: ["updatedBy"]
             isOneToOne: false
             referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseOrder_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -13132,6 +14372,13 @@ export type Database = {
             foreignKeyName: "quote_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quote_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
           },
@@ -13202,6 +14449,13 @@ export type Database = {
             foreignKeyName: "quote_ownerId_fkey"
             columns: ["ownerId"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quote_ownerId_fkey"
+            columns: ["ownerId"]
+            isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
           },
@@ -13247,6 +14501,13 @@ export type Database = {
             columns: ["createdBy"]
             isOneToOne: false
             referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "receipt_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -13324,6 +14585,13 @@ export type Database = {
             columns: ["updatedBy"]
             isOneToOne: false
             referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "receipt_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
@@ -13428,6 +14696,13 @@ export type Database = {
             foreignKeyName: "requestForQuote_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "requestForQuote_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
           },
@@ -13490,6 +14765,13 @@ export type Database = {
             foreignKeyName: "service_approvedBy_fkey"
             columns: ["approvedBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_approvedBy_fkey"
+            columns: ["approvedBy"]
+            isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
           },
@@ -13543,6 +14825,13 @@ export type Database = {
             foreignKeyName: "shifts_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shifts_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
           },
@@ -13579,6 +14868,13 @@ export type Database = {
             columns: ["updatedBy"]
             isOneToOne: false
             referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shifts_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {

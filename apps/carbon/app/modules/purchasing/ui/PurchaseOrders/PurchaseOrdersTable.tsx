@@ -157,17 +157,17 @@ const PurchaseOrdersTable = memo(
           cell: (item) => item.getValue(),
         },
         {
-          acessorKey: "shippingMethodName",
+          accessorKey: "shippingMethodName",
           header: "Shipping Method",
           cell: (item) => item.getValue(),
         },
         {
-          acessorKey: "shippingTermName",
+          accessorKey: "shippingTermName",
           header: "Shipping Term",
           cell: (item) => <Enumerable value={item.getValue<string>()} />,
         },
         {
-          acessorKey: "paymentTermName",
+          accessorKey: "paymentTermName",
           header: "Payment Method",
           cell: (item) => <Enumerable value={item.getValue<string>()} />,
         },
