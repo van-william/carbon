@@ -30,7 +30,7 @@ export function DataTablePagination<TData>({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="secondary">
-            {table.getState().pagination.pageSize}/page
+            {table.getState().pagination.pageSize} rows
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-48">

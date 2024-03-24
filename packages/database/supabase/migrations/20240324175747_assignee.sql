@@ -45,20 +45,15 @@ CREATE OR REPLACE VIEW "contractors" WITH(SECURITY_INVOKER=true) AS
   WHERE p."active" = true
   GROUP BY p.id, p.active, p."hoursPerWeek", p."customFields", s.id, c.id, s.name, c."firstName", c."lastName", c."email";
 
--- DROP VIEW "customers";
--- CREATE OR REPLACE VIEW "customers" AS 
---   SELECT 
---     c.id,
---     c.name,
---     c."customerTypeId",
---     ct.name AS "type",
---     c."customerStatusId",
---     cs.name AS "status",
---     c."customFields"
---     -- so.count AS "orderCount"
---   FROM "customer" c
---   LEFT JOIN "customerType" ct ON ct.id = c."customerTypeId"
---   LEFT JOIN "customerStatus" cs ON cs.id = c."customerStatusId";
+DROP VIEW "customers";
+CREATE OR REPLACE VIEW "customers" AS 
+  SELECT 
+    c.*,
+    ct.name AS "type",
+    cs.name AS "status"
+  FROM "customer" c
+  LEFT JOIN "customerType" ct ON ct.id = c."customerTypeId"
+  LEFT JOIN "customerStatus" cs ON cs.id = c."customerStatusId";
 
 -- DROP VIEW "documents";
 -- CREATE OR REPLACE VIEW "documents" WITH(SECURITY_INVOKER=true) AS 

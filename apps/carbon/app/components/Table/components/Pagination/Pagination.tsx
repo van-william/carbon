@@ -49,7 +49,7 @@ const Pagination = (props: PaginationProps) => {
     >
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="secondary">{pageSize}/page</Button>
+          <Button variant="secondary">{pageSize} rows</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-48">
           <DropdownMenuLabel>Results per page</DropdownMenuLabel>

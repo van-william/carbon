@@ -8,11 +8,13 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
+  Enumerable,
   HStack,
   VStack,
 } from "@carbon/react";
 
 import { useParams } from "@remix-run/react";
+import { EmployeeAvatar } from "~/components";
 import { useRouteData } from "~/hooks";
 import type {
   CustomerDetail,
@@ -34,6 +36,14 @@ const CustomerHeader = () => {
     paymentTerms: ListItem[];
   }>(path.to.customerRoot);
 
+  const customerStatus = sharedCustomerData?.customerStatuses?.find(
+    (status) => status.id === routeData?.customer?.customerStatusId
+  )?.name;
+
+  const customerType = sharedCustomerData?.customerTypes?.find(
+    (type) => type.id === routeData?.customer?.customerTypeId
+  )?.name;
+
   return (
     <VStack>
       <Card>
@@ -50,28 +60,33 @@ const CustomerHeader = () => {
         <CardContent>
           <CardAttributes>
             <CardAttribute>
+              <CardAttributeLabel>Account Manager</CardAttributeLabel>
+              <CardAttributeValue>
+                <EmployeeAvatar
+                  employeeId={routeData?.customer?.accountManagerId ?? null}
+                />
+              </CardAttributeValue>
+            </CardAttribute>
+            <CardAttribute>
+              <CardAttributeLabel>Assignee</CardAttributeLabel>
+              <CardAttributeValue>
+                <EmployeeAvatar
+                  employeeId={routeData?.customer?.assignee ?? null}
+                />
+              </CardAttributeValue>
+            </CardAttribute>
+            <CardAttribute>
               <CardAttributeLabel>Type</CardAttributeLabel>
               <CardAttributeValue>
-                {sharedCustomerData?.customerTypes?.find(
-                  (type) => type.id === routeData?.customer?.customerTypeId
-                )?.name ?? "-"}
+                {customerType ? <Enumerable value={customerType!} /> : "-"}
               </CardAttributeValue>
             </CardAttribute>
             <CardAttribute>
               <CardAttributeLabel>Status</CardAttributeLabel>
               <CardAttributeValue>
-                {sharedCustomerData?.customerStatuses?.find(
-                  (status) =>
-                    status.id === routeData?.customer?.customerStatusId
-                )?.name ?? "-"}
+                {customerStatus ? <Enumerable value={customerStatus!} /> : "-"}
               </CardAttributeValue>
             </CardAttribute>
-            {/* <CardAttribute>
-              <CardAttributeLabel>Payment Terms</CardAttributeLabel>
-              <CardAttributeValue>
-               
-              </CardAttributeValue>
-            </CardAttribute> */}
           </CardAttributes>
         </CardContent>
       </Card>

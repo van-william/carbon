@@ -593,7 +593,10 @@ export async function upsertCustomer(
   }
   return client
     .from("customer")
-    .update(sanitize(customer))
+    .update({
+      ...sanitize(customer),
+      updatedAt: today(getLocalTimeZone()).toString(),
+    })
     .eq("id", customer.id)
     .select("id")
     .single();
