@@ -188,7 +188,8 @@ export async function getPartSuppliers(
       `
       id, supplier(id, name),
       supplierPartId, supplierUnitOfMeasureCode,
-      minimumOrderQuantity, conversionFactor
+      minimumOrderQuantity, conversionFactor,
+      customFields
     `
     )
     .eq("active", true)
@@ -267,7 +268,7 @@ export async function getServiceSuppliers(
 ) {
   return client
     .from("serviceSupplier")
-    .select(`id, supplier(id, name), supplierServiceId`)
+    .select(`id, supplier(id, name), customFields, supplierServiceId`)
     .eq("active", true)
     .eq("serviceId", id);
 }

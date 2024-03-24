@@ -7,6 +7,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Hyperlink, New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import { shippingCarrierType, type ShippingMethod } from "~/modules/inventory";
+import { useCustomColumns } from "~/hooks/useCustomColumns";
 import { path } from "~/utils/path";
 
 type ShippingMethodsTableProps = {
@@ -24,8 +25,11 @@ const ShippingMethodsTable = memo(
 
     const rows = useMemo(() => data, [data]);
 
+    const customColumns =
+      useCustomColumns<(typeof data)[number]>("shippingMethod");
+
     const columns = useMemo<ColumnDef<(typeof data)[number]>[]>(() => {
-      const result: ColumnDef<(typeof rows)[number]>[] = [
+      let result: ColumnDef<(typeof rows)[number]>[] = [
         {
           accessorKey: "name",
           header: "Name",
@@ -59,6 +63,7 @@ const ShippingMethodsTable = memo(
           cell: (item) => item.getValue(),
         },
       ];
+      result = [...result, ...customColumns];
 
       return hasAccounting
         ? result.concat([
@@ -70,7 +75,7 @@ const ShippingMethodsTable = memo(
           ])
         : result;
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [permissions]);
+    }, [permissions, customColumns]);
 
     const renderContextMenu = useCallback(
       (row: (typeof data)[number]) => {

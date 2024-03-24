@@ -5,6 +5,7 @@ import { memo, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { Hyperlink, New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
+import { useCustomColumns } from "~/hooks/useCustomColumns";
 import { serviceType, type Service } from "~/modules/parts";
 import type { ListItem } from "~/types";
 import { path } from "~/utils/path";
@@ -21,8 +22,9 @@ const ServicesTable = memo(
     const [params] = useUrlParams();
     const permissions = usePermissions();
 
+    const customColumns = useCustomColumns<Service>("service");
     const columns = useMemo<ColumnDef<Service>[]>(() => {
-      return [
+      const defaultColumns: ColumnDef<Service>[] = [
         {
           accessorKey: "id",
           header: "Service ID",
@@ -72,8 +74,9 @@ const ServicesTable = memo(
           },
         },
       ];
+      return [...defaultColumns, ...customColumns];
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [params]);
+    }, [params, customColumns]);
 
     const renderContextMenu = useMemo(() => {
       // eslint-disable-next-line react/display-name

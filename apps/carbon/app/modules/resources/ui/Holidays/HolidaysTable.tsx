@@ -6,6 +6,7 @@ import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Hyperlink, New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
+import { useCustomColumns } from "~/hooks/useCustomColumns";
 import type { Holiday } from "~/modules/resources";
 import { path } from "~/utils/path";
 
@@ -20,8 +21,12 @@ const HolidaysTable = memo(({ data, count, years }: HolidaysTableProps) => {
   const permissions = usePermissions();
   const [params] = useUrlParams();
 
+
+  const customColumns = useCustomColumns<(typeof data)[number]>("holiday");
+
   const columns = useMemo<ColumnDef<(typeof data)[number]>[]>(() => {
     return [
+
       {
         accessorKey: "name",
         header: "Holiday",
@@ -51,7 +56,9 @@ const HolidaysTable = memo(({ data, count, years }: HolidaysTableProps) => {
         cell: (item) => item.getValue(),
       },
     ];
-  }, [years]);
+    return [...defaultColumns, ...customColumns];
+  }, [customColumns, years]);
+
 
   const renderContextMenu = useCallback(
     (row: (typeof data)[number]) => {

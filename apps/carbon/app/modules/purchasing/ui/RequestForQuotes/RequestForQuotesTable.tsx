@@ -7,6 +7,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Avatar, Hyperlink, Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
+import { useCustomColumns } from "~/hooks/useCustomColumns";
 import {
   requestForQuoteStatusType,
   type RequestForQuote,
@@ -51,8 +52,9 @@ const RequestForQuotesTable = memo(
       useState<RequestForQuote | null>(null);
     const deleteRequestForQuoteModal = useDisclosure();
 
+    const customColumns = useCustomColumns<RequestForQuote>("requestForQuote");
     const columns = useMemo<ColumnDef<RequestForQuote>[]>(() => {
-      return [
+      const defaultColumns: ColumnDef<RequestForQuote>[] = [
         {
           accessorKey: "requestForQuoteId",
           header: "RFQ Number",
@@ -201,7 +203,9 @@ const RequestForQuotesTable = memo(
           cell: (item) => item.getValue(),
         },
       ];
-    }, [fetcher, parts, suppliers]);
+      return [...defaultColumns, ...customColumns];
+    }, [fetcher, parts, suppliers, customColumns]);
+
 
     const defaultColumnVisibility = {
       partIds: false,

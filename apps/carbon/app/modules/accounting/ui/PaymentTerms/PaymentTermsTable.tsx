@@ -10,6 +10,7 @@ import {
   paymentTermsCalculationMethod,
   type PaymentTerm,
 } from "~/modules/accounting";
+import { useCustomColumns } from "~/hooks/useCustomColumns";
 import { path } from "~/utils/path";
 
 type PaymentTermsTableProps = {
@@ -21,9 +22,10 @@ const PaymentTermsTable = memo(({ data, count }: PaymentTermsTableProps) => {
   const [params] = useUrlParams();
   const navigate = useNavigate();
   const permissions = usePermissions();
+  const customColumns = useCustomColumns<PaymentTerm>("paymentTerm");
 
   const columns = useMemo<ColumnDef<PaymentTerm>[]>(() => {
-    return [
+    const defaultColumns: ColumnDef<PaymentTerm>[] = [
       {
         accessorKey: "name",
         header: "Name",
@@ -63,7 +65,9 @@ const PaymentTermsTable = memo(({ data, count }: PaymentTermsTableProps) => {
         },
       },
     ];
-  }, [params]);
+    return [...defaultColumns, ...customColumns];
+  }, [params, customColumns]);
+
 
   const renderContextMenu = useCallback(
     (row: PaymentTerm) => {

@@ -6,6 +6,7 @@ import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
+import { useCustomColumns } from "~/hooks/useCustomColumns";
 import type { PartGroup } from "~/modules/parts";
 import { path } from "~/utils/path";
 
@@ -20,9 +21,10 @@ const PartGroupsTable = memo(({ data, count }: PartGroupsTableProps) => {
   const permissions = usePermissions();
 
   const rows = useMemo(() => data, [data]);
+  const customColumns = useCustomColumns<PartGroup>("partGroup");
 
-  const columns = useMemo<ColumnDef<(typeof rows)[number]>[]>(
-    () => [
+  const columns = useMemo<ColumnDef<(typeof rows)[number]>[]>(() => {
+    const defaultColumns: ColumnDef<(typeof rows)[number]>[] = [
       {
         accessorKey: "name",
         header: "Name",
@@ -43,9 +45,9 @@ const PartGroupsTable = memo(({ data, count }: PartGroupsTableProps) => {
         header: "Description",
         cell: (item) => item.getValue(),
       },
-    ],
-    [navigate, params]
-  );
+    ];
+    return [...defaultColumns, ...customColumns];
+  }, [navigate, params, customColumns]);
 
   const renderContextMenu = useCallback(
     (row: (typeof rows)[number]) => {

@@ -7,6 +7,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Hyperlink, New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Shift, ShiftLocation } from "~/modules/resources";
+import { useCustomColumns } from "~/hooks/useCustomColumns";
 import { path } from "~/utils/path";
 
 type ShiftsTableProps = {
@@ -38,8 +39,10 @@ const ShiftsTable = memo(({ data, count, locations }: ShiftsTableProps) => {
     ));
   }, []);
 
+  const customColumns = useCustomColumns<Shift>("shift");
+
   const columns = useMemo<ColumnDef<Shift>[]>(() => {
-    return [
+    const defaultColumns: ColumnDef<Shift>[] = [
       {
         accessorKey: "name",
         header: "Shift",
@@ -78,7 +81,9 @@ const ShiftsTable = memo(({ data, count, locations }: ShiftsTableProps) => {
         cell: ({ row }) => renderDays(row.original),
       },
     ];
-  }, [locations, renderDays]);
+
+    return [...defaultColumns, ...customColumns];
+  }, [locations, renderDays, customColumns]);
 
   const renderContextMenu = useCallback(
     (row: Shift) => {

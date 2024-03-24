@@ -6,6 +6,7 @@ import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import { Hyperlink, New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
+import { useCustomColumns } from "~/hooks/useCustomColumns";
 import type { Currency } from "~/modules/accounting";
 import { path } from "~/utils/path";
 
@@ -18,9 +19,10 @@ const CurrenciesTable = memo(({ data, count }: CurrenciesTableProps) => {
   const [params] = useUrlParams();
   const navigate = useNavigate();
   const permissions = usePermissions();
+  const customColumns = useCustomColumns<Currency>("currency");
 
   const columns = useMemo<ColumnDef<Currency>[]>(() => {
-    return [
+    const defaultColumns: ColumnDef<Currency>[] = [
       {
         accessorKey: "name",
         header: "Name",
@@ -50,7 +52,10 @@ const CurrenciesTable = memo(({ data, count }: CurrenciesTableProps) => {
         cell: ({ row }) => <Checkbox isChecked={row.original.isBaseCurrency} />,
       },
     ];
-  }, []);
+    return [...defaultColumns, ...customColumns];
+  }, [customColumns ]);
+
+
 
   const renderContextMenu = useCallback(
     (row: Currency) => {

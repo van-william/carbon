@@ -15,6 +15,7 @@ import { MdCallReceived } from "react-icons/md";
 import { Avatar, Hyperlink, New, Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions } from "~/hooks";
+import { useCustomColumns } from "~/hooks/useCustomColumns";
 import type { PurchaseOrder } from "~/modules/purchasing";
 import {
   PurchasingStatus,
@@ -60,8 +61,10 @@ const PurchaseOrdersTable = memo(
 
     const { edit, receive } = usePurchaseOrder();
 
+    const customColumns = useCustomColumns<PurchaseOrder>("purchaseOrder");
+
     const columns = useMemo<ColumnDef<PurchaseOrder>[]>(() => {
-      return [
+      const defaultColumns: ColumnDef<PurchaseOrder>[] = [
         {
           accessorKey: "purchaseOrderId",
           header: "PO Number",
@@ -218,7 +221,9 @@ const PurchaseOrdersTable = memo(
           cell: (item) => item.getValue(),
         },
       ];
-    }, [fetcher, suppliers]);
+
+      return [...defaultColumns, ...customColumns];
+    }, [fetcher, suppliers, customColumns]);
 
     const renderContextMenu = useMemo(() => {
       // eslint-disable-next-line react/display-name

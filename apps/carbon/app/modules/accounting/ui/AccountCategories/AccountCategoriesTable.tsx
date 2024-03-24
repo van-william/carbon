@@ -19,6 +19,7 @@ import {
   incomeBalanceTypes,
   type AccountCategory,
 } from "~/modules/accounting";
+import { useCustomColumns } from "~/hooks/useCustomColumns";
 import { path } from "~/utils/path";
 
 type AccountCategoriesTableProps = {
@@ -46,8 +47,10 @@ const AccountCategoriesTable = memo(
       deleteModal.onClose();
     };
 
+    const customColumns = useCustomColumns<AccountCategory>("accountCategory");
+
     const columns = useMemo<ColumnDef<(typeof data)[number]>[]>(() => {
-      return [
+      const defaultColumns: ColumnDef<(typeof data)[number]>[] = [
         {
           accessorKey: "category",
           header: "Category",
@@ -104,7 +107,10 @@ const AccountCategoriesTable = memo(
           ),
         },
       ];
-    }, [params]);
+
+      return [...defaultColumns, ...customColumns];
+    }, [params, customColumns]);
+
 
     const renderContextMenu = useCallback(
       (row: (typeof data)[number]) => {

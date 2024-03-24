@@ -16,6 +16,7 @@ import { usePermissions } from "~/hooks";
 import type { Quotation } from "~/modules/sales";
 import { quoteStatusType } from "~/modules/sales";
 import { useCustomers, useParts } from "~/stores";
+import { useCustomColumns } from "~/hooks/useCustomColumns";
 import { favoriteSchema } from "~/types/validators";
 import { path } from "~/utils/path";
 import { QuotationStatus } from "../Quotation";
@@ -54,8 +55,9 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
       ),
     [data, optimisticFavorite]
   );
+  const customColumns = useCustomColumns<Quotation>("quote");
   const columns = useMemo<ColumnDef<Quotation>[]>(() => {
-    return [
+    const defaultColumns: ColumnDef<Quotation>[] = [
       {
         accessorKey: "quoteId",
         header: "Quote Number",
@@ -221,7 +223,9 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
         cell: (item) => item.getValue(),
       },
     ];
-  }, [customers, fetcher, parts]);
+
+    return [...defaultColumns, ...customColumns];
+  }, [customers, fetcher, parts, customColumns]);
 
   const renderContextMenu = useMemo(() => {
     // eslint-disable-next-line react/display-name

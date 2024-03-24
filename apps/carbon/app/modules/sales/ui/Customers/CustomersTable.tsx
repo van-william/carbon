@@ -5,6 +5,7 @@ import { memo, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { Hyperlink, New, Table } from "~/components";
 import { usePermissions } from "~/hooks";
+import { useCustomColumns } from "~/hooks/useCustomColumns";
 import type { Customer, CustomerStatus, CustomerType } from "~/modules/sales";
 import { path } from "~/utils/path";
 
@@ -20,8 +21,9 @@ const CustomersTable = memo(
     const navigate = useNavigate();
     const permissions = usePermissions();
 
+    const customColumns = useCustomColumns<Customer>("customer");
     const columns = useMemo<ColumnDef<Customer>[]>(() => {
-      return [
+      const defaultColumns: ColumnDef<Customer>[] = [
         {
           accessorKey: "name",
           header: "Name",
@@ -75,7 +77,9 @@ const CustomersTable = memo(
         //   ),
         // },
       ];
-    }, [customerStatuses, customerTypes]);
+
+      return [...defaultColumns, ...customColumns];
+    }, [customerStatuses, customerTypes, customColumns]);
 
     const renderContextMenu = useMemo(
       // eslint-disable-next-line react/display-name

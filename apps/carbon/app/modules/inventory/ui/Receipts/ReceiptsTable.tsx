@@ -21,6 +21,7 @@ import {
 } from "~/modules/inventory";
 import { useSuppliers } from "~/stores";
 import type { ListItem } from "~/types";
+import { useCustomColumns } from "~/hooks/useCustomColumns";
 import { path } from "~/utils/path";
 
 type ReceiptsTableProps = {
@@ -38,6 +39,7 @@ const ReceiptsTable = memo(({ data, count, locations }: ReceiptsTableProps) => {
 
   const rows = useMemo(() => data, [data]);
   const [suppliers] = useSuppliers();
+  const customColumns = useCustomColumns<Receipt>("receipt");
 
   const columns = useMemo<ColumnDef<Receipt>[]>(() => {
     const result: ColumnDef<(typeof rows)[number]>[] = [
@@ -193,8 +195,9 @@ const ReceiptsTable = memo(({ data, count, locations }: ReceiptsTableProps) => {
       },
     ];
 
-    return result;
-  }, [locations, suppliers]);
+    return [...result,...customColumns];
+  }, [locations, suppliers, customColumns]);
+
 
   const renderContextMenu = useCallback(
     (row: Receipt) => {

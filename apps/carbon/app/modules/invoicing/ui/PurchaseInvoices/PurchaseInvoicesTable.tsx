@@ -8,6 +8,7 @@ import { IoMdTrash } from "react-icons/io";
 import { Avatar, Hyperlink, New, Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions, useRealtime } from "~/hooks";
+import { useCustomColumns } from "~/hooks/useCustomColumns";
 import type { PurchaseInvoice } from "~/modules/invoicing";
 import {
   PurchaseInvoicingStatus,
@@ -36,9 +37,10 @@ const PurchaseInvoicesTable = memo(
     const closePurchaseInvoiceModal = useDisclosure();
 
     const [suppliers] = useSuppliers();
+    const customColumns = useCustomColumns<PurchaseInvoice>("purchaseInvoice");
 
     const columns = useMemo<ColumnDef<PurchaseInvoice>[]>(() => {
-      return [
+      const defaultColumns: ColumnDef<PurchaseInvoice>[] = [
         {
           accessorKey: "invoiceId",
           header: "Invoice Number",
@@ -126,7 +128,10 @@ const PurchaseInvoicesTable = memo(
           cell: (item) => formatDate(item.getValue<string>()),
         },
       ];
-    }, [suppliers]);
+
+      return [...defaultColumns, ...customColumns];
+    }, [customColumns, suppliers]);
+
 
     const renderContextMenu = useMemo(() => {
       // eslint-disable-next-line react/display-name

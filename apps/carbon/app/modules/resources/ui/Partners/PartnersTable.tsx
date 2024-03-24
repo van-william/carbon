@@ -8,6 +8,7 @@ import { Hyperlink, New, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Ability, Partner } from "~/modules/resources";
 import { useSuppliers } from "~/stores";
+import { useCustomColumns } from "~/hooks/useCustomColumns";
 import { path } from "~/utils/path";
 
 type PartnersTableProps = {
@@ -22,8 +23,9 @@ const PartnersTable = memo(({ data, count, abilities }: PartnersTableProps) => {
   const [params] = useUrlParams();
   const [suppliers] = useSuppliers();
 
+  const customColumns = useCustomColumns<Partner>("partner");
   const columns = useMemo<ColumnDef<Partner>[]>(() => {
-    return [
+    const defaultColumns: ColumnDef<Partner>[] = [
       {
         accessorKey: "supplierName",
         header: "Supplier",
@@ -75,7 +77,9 @@ const PartnersTable = memo(({ data, count, abilities }: PartnersTableProps) => {
         cell: (item) => item.getValue(),
       },
     ];
-  }, [abilities, params, suppliers]);
+
+    return [...defaultColumns, ...customColumns];
+  }, [params, customColumns, suppliers, abilities]);
 
   const renderContextMenu = useCallback(
     (row: Partner) => {

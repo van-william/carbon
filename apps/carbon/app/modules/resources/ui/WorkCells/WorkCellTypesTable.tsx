@@ -15,6 +15,7 @@ import { IoMdTrash } from "react-icons/io";
 import { New, Table } from "~/components";
 import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions, useUrlParams } from "~/hooks";
+import { useCustomColumns } from "~/hooks/useCustomColumns";
 import type { WorkCellType } from "~/modules/resources";
 import { path } from "~/utils/path";
 
@@ -40,8 +41,9 @@ const WorkCellTypesTable = memo(({ data, count }: WorkCellTypesTableProps) => {
     deleteModal.onClose();
   };
 
+  const customColumns = useCustomColumns<WorkCellType>("workCellType");
   const columns = useMemo<ColumnDef<WorkCellType>[]>(() => {
-    return [
+    const defaultColumns: ColumnDef<WorkCellType>[] = [
       {
         accessorKey: "name",
         header: "Work Cell Type",
@@ -92,8 +94,9 @@ const WorkCellTypesTable = memo(({ data, count }: WorkCellTypesTableProps) => {
         ),
       },
     ];
+    return [...defaultColumns, ...customColumns];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params]);
+  }, [params, customColumns]);
 
   const renderContextMenu = useCallback<(row: WorkCellType) => JSX.Element>(
     (row) => (

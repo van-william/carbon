@@ -6,6 +6,7 @@ import { MdMoreHoriz } from "react-icons/md";
 import { Hyperlink } from "~/components";
 import Grid from "~/components/Grid";
 import { useRealtime } from "~/hooks";
+import { useCustomColumns } from "~/hooks/useCustomColumns";
 import type { Chart } from "~/modules/accounting";
 
 type ChartOfAccountsTableProps = {
@@ -15,8 +16,10 @@ type ChartOfAccountsTableProps = {
 const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
   useRealtime("journal");
 
+  const customColumns = useCustomColumns<Chart>("journal");
+  
   const columns = useMemo<ColumnDef<Chart>[]>(() => {
-    return [
+    const defaultColumns: ColumnDef<Chart>[] = [
       {
         accessorKey: "number",
         header: "Number",
@@ -106,7 +109,7 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
         cell: (item) => <Enumerable value={item.getValue<string>()} />,
       },
       {
-        acessorKey: "totaling",
+        accessorKey: "totaling",
         header: "Totaling",
         cell: ({ row }) => row.original.totaling ?? "",
       },
@@ -126,7 +129,9 @@ const ChartOfAccountsTable = memo(({ data }: ChartOfAccountsTableProps) => {
         cell: (item) => <Checkbox isChecked={item.getValue<boolean>()} />,
       },
     ];
-  }, []);
+
+    return [...defaultColumns, ...customColumns];
+  }, [customColumns]);
 
   return <Grid<Chart> data={data} columns={columns} withSimpleSorting />;
 });
