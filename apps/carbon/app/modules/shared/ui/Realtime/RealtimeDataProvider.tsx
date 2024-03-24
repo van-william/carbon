@@ -30,7 +30,8 @@ const RealtimeDataProvider = ({ children }: { children: React.ReactNode }) => {
         if (data && !hydratedFromServer) setSuppliers(data as ListItem[], true);
       });
       idb.getItem("people").then((data) => {
-        if (data && !hydratedFromServer) setPeople(data as ListItem[], true);
+        // @ts-ignore
+        if (data && !hydratedFromServer) setPeople(data, true);
       });
     }
 
@@ -57,6 +58,7 @@ const RealtimeDataProvider = ({ children }: { children: React.ReactNode }) => {
     setParts(parts.data ?? []);
     setSuppliers(suppliers.data ?? []);
     setCustomers(customers.data ?? []);
+    // @ts-ignore
     setPeople(people.data ?? []);
   };
 
@@ -227,7 +229,8 @@ const RealtimeDataProvider = ({ children }: { children: React.ReactNode }) => {
             .select("id, name, avatarUrl")
             .order("name");
           if (data) {
-            setPeople(data ?? []);
+            // @ts-ignore
+            setPeople(data);
           }
         }
       )

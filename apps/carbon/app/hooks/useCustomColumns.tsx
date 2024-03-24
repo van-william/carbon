@@ -1,8 +1,10 @@
 import type { Json } from "@carbon/database";
+import { Checkbox, Enumerable, HStack } from "@carbon/react";
 import type { ColumnDef } from "@tanstack/react-table";
+import { Avatar } from "~/components";
 import { DataType } from "~/modules/shared";
+import { usePeople } from "~/stores";
 import { useCustomFieldsSchema } from "./useCustomFieldsSchema";
-import { Checkbox, Enumerable } from "@carbon/react";
 
 export function useCustomColumns<T extends { customFields: Json }>(
   table: string
@@ -11,6 +13,7 @@ export function useCustomColumns<T extends { customFields: Json }>(
   const schema = customFieldsSchemas?.[table];
 
   const customColumns: ColumnDef<T>[] = [];
+  const [people] = usePeople();
 
   schema?.forEach((field) => {
     customColumns.push({
@@ -48,13 +51,30 @@ export function useCustomColumns<T extends { customFields: Json }>(
               ? item.row.original?.customFields[field.id]
               : null;
           case DataType.User:
-            return null; /*<UserSelect
-                    type="employee"
-                    usersOnly
-                    isMulti={false}
-                    readOnly={true}
-                    value={item.row.original.customFields[field.id]}
-                  />*/
+            if (
+              isObject(item.row.original.customFields) &&
+              field.id in item.row.original.customFields
+            ) {
+              const personId = item.row.original?.customFields[
+                field.id
+              ] as string;
+              const person = people.find((person) => person.id === personId);
+              if (!person) return null;
+
+              return (
+                <HStack>
+                  <Avatar
+                    size="sm"
+                    name={person.name}
+                    path={person.avatarUrl}
+                  />
+                  <p>{person.name}</p>
+                </HStack>
+              );
+            } else {
+              return null;
+            }
+
           default:
             return null;
         }
