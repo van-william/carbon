@@ -1,10 +1,33 @@
-import type { UserProps } from "./User";
-import User from "./User";
+import { useMemo } from "react";
+import { usePeople } from "~/stores";
+import type { ComboboxProps } from "./Combobox";
+import CreatableCombobox from "./CreatableCombobox";
 
-export type EmployeesProps = UserProps;
+type EmployeeSelectProps = Omit<ComboboxProps, "options"> & {};
 
-const Employee = (props: EmployeesProps) => (
-  <User {...props} usersOnly type="employee" />
-);
+const Employee = (props: EmployeeSelectProps) => {
+  const [people] = usePeople();
+
+  const options = useMemo(
+    () =>
+      people.map((part) => ({
+        value: part.id,
+        label: part.name,
+      })) ?? [],
+    [people]
+  );
+
+  return (
+    <>
+      <CreatableCombobox
+        options={options}
+        {...props}
+        label={props?.label ?? "Employee"}
+      />
+    </>
+  );
+};
+
+Employee.displayName = "Employee";
 
 export default Employee;
