@@ -4,9 +4,11 @@ import type { Result } from "~/types";
 export function error(error: any, message = "Request failed"): Result {
   if (error) logger.error({ error, message });
 
+  const details = "message" in error ? (error.message as string) : undefined;
+
   return {
     success: false,
-    message,
+    message: details ? `${message}: ${details}` : message,
   };
 }
 

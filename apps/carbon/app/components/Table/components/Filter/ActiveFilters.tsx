@@ -118,8 +118,6 @@ const ActiveFilter = ({ filter, operator, value }: ActiveFilterProps) => {
     }
   };
 
-  console.log({ options });
-
   return (
     <HStack spacing={0}>
       <Button className="rounded-r-none" size="sm" variant="secondary">
