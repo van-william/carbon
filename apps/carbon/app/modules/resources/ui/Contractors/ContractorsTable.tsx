@@ -4,11 +4,17 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import { Hyperlink, New, Table } from "~/components";
+import {
+  EmployeeAvatar,
+  Hyperlink,
+  New,
+  SupplierAvatar,
+  Table,
+} from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import { useCustomColumns } from "~/hooks/useCustomColumns";
 import type { Ability, Contractor } from "~/modules/resources";
-import { useSuppliers } from "~/stores";
+import { usePeople, useSuppliers } from "~/stores";
 import { path } from "~/utils/path";
 
 type ContractorsTableProps = {
@@ -22,6 +28,8 @@ const ContractorsTable = memo(
     const navigate = useNavigate();
     const permissions = usePermissions();
     const [params] = useUrlParams();
+
+    const [people] = usePeople();
     const [suppliers] = useSuppliers();
 
     const customColumns = useCustomColumns<Contractor>("contractor");
@@ -48,21 +56,16 @@ const ContractorsTable = memo(
           ),
         },
         {
-          accessorKey: "supplierName",
+          id: "supplierId",
           header: "Supplier",
           cell: ({ row }) => (
-            <HStack>
-              <Avatar size="sm" name={row.original.supplierName ?? ""} />
-              <Hyperlink to={path.to.supplier(row.original.supplierId!)}>
-                {row.original.supplierName}
-              </Hyperlink>
-            </HStack>
+            <SupplierAvatar supplierId={row.original.supplierId} />
           ),
           meta: {
             filter: {
               type: "static",
               options: suppliers.map((supplier) => ({
-                value: supplier.name,
+                value: supplier.id,
                 label: supplier.name,
               })),
             },
@@ -70,7 +73,7 @@ const ContractorsTable = memo(
         },
 
         {
-          accessorKey: "abilityIds",
+          id: "abilityIds",
           header: "Abilities",
           cell: ({ row }) => {
             if (!row.original.abilityIds) {
@@ -107,10 +110,26 @@ const ContractorsTable = memo(
           header: "Hours per Week",
           cell: (item) => item.getValue(),
         },
+        {
+          id: "assignee",
+          header: "Assignee",
+          cell: ({ row }) => (
+            <EmployeeAvatar employeeId={row.original.assignee} />
+          ),
+          meta: {
+            filter: {
+              type: "static",
+              options: people.map((employee) => ({
+                value: employee.id,
+                label: employee.name,
+              })),
+            },
+          },
+        },
       ];
 
       return [...defaultColumns, ...customColumns];
-    }, [abilities, params, suppliers, customColumns]);
+    }, [suppliers, abilities, people, customColumns, params]);
 
     const renderContextMenu = useCallback(
       (row: Contractor) => {

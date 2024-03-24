@@ -50,13 +50,13 @@ export async function action({ request }: ActionFunctionArgs) {
     return validationError(validation.error);
   }
 
-  const { id, hoursPerWeek, abilities } = validation.data;
+  const { id, supplierId, ...data } = validation.data;
   if (!id) throw notFound("Contractor ID was not found");
 
   const updateContractor = await upsertContractor(client, {
     id,
-    hoursPerWeek,
-    abilities: abilities ?? [],
+    ...data,
+    abilities: data.abilities ?? [],
     customFields: setCustomFields(formData),
     updatedBy: userId,
   });
@@ -85,6 +85,7 @@ export default function ContractorRoute() {
     supplierId: contractor.supplierId ?? "",
     hoursPerWeek: contractor.hoursPerWeek ?? 0,
     abilities: contractor.abilityIds ?? ([] as string[]),
+    assignee: contractor.assignee ?? "",
     ...getCustomFields(contractor.customFields),
   };
 

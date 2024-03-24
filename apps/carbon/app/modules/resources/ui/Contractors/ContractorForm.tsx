@@ -18,6 +18,7 @@ import type { z } from "zod";
 import {
   Abilities,
   CustomFormFields,
+  Employee,
   Number,
   Submit,
   Supplier,
@@ -93,6 +94,7 @@ const ContractorForm = ({ initialValues }: ContractorFormProps) => {
                 minValue={0}
                 maxValue={10000}
               />
+              <Employee name="assignee" label="Assignee" type="assignee" />
               <CustomFormFields table="contractor" />
             </VStack>
           </DrawerBody>
