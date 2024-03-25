@@ -4,6 +4,7 @@ import Avatar from "./Avatar";
 
 const SupplierAvatar = ({ supplierId }: { supplierId: string | null }) => {
   const [suppliers] = useSuppliers();
+  console.log({ supplierId });
   if (!supplierId) return null;
 
   const supplier = suppliers.find((s) => s.id === supplierId) ?? {

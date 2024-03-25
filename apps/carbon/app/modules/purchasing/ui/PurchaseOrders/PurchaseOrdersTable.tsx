@@ -118,10 +118,10 @@ const PurchaseOrdersTable = memo(
           ),
         },
         {
-          accessorKey: "supplierId",
+          id: "supplierId",
           header: "Supplier",
-          cell: (item) => {
-            return <SupplierAvatar supplierId={item.getValue<string>()} />;
+          cell: ({ row }) => {
+            return <SupplierAvatar supplierId={row.original.supplierId} />;
           },
           meta: {
             filter: {

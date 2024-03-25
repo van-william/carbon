@@ -6585,6 +6585,7 @@ export type Database = {
       }
       purchaseInvoice: {
         Row: {
+          assignee: string | null
           balance: number
           createdAt: string
           createdBy: string
@@ -6612,6 +6613,7 @@ export type Database = {
           updatedBy: string | null
         }
         Insert: {
+          assignee?: string | null
           balance?: number
           createdAt?: string
           createdBy: string
@@ -6639,6 +6641,7 @@ export type Database = {
           updatedBy?: string | null
         }
         Update: {
+          assignee?: string | null
           balance?: number
           createdAt?: string
           createdBy?: string
@@ -6666,6 +6669,34 @@ export type Database = {
           updatedBy?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "purchaseInvoice_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseInvoice_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseInvoice_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseInvoice_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
+          },
           {
             foreignKeyName: "purchaseInvoice_createdBy_fkey"
             columns: ["createdBy"]
@@ -14050,12 +14081,10 @@ export type Database = {
       }
       purchaseInvoices: {
         Row: {
+          assignee: string | null
           balance: number | null
-          contactName: string | null
           createdAt: string | null
           createdBy: string | null
-          createdByAvatar: string | null
-          createdByFullName: string | null
           currencyCode: string | null
           customFields: Json | null
           dateDue: string | null
@@ -14064,25 +14093,49 @@ export type Database = {
           exchangeRate: number | null
           id: string | null
           invoiceId: string | null
-          invoiceSupplierContactId: string | null
           invoiceSupplierId: string | null
-          invoiceSupplierLocationId: string | null
           paymentTermId: string | null
+          paymentTermName: string | null
           postingDate: string | null
           status: Database["public"]["Enums"]["purchaseInvoiceStatus"] | null
           subtotal: number | null
           supplierId: string | null
-          supplierName: string | null
           supplierReference: string | null
           totalAmount: number | null
           totalDiscount: number | null
           totalTax: number | null
           updatedAt: string | null
           updatedBy: string | null
-          updatedByAvatar: string | null
-          updatedByFullName: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "purchaseInvoice_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseInvoice_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseInvoice_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseInvoice_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
+          },
           {
             foreignKeyName: "purchaseInvoice_createdBy_fkey"
             columns: ["createdBy"]
@@ -14119,13 +14172,6 @@ export type Database = {
             referencedColumns: ["code"]
           },
           {
-            foreignKeyName: "purchaseInvoice_invoiceSupplierContactId_fkey"
-            columns: ["invoiceSupplierContactId"]
-            isOneToOne: false
-            referencedRelation: "supplierContact"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "purchaseInvoice_invoiceSupplierId_fkey"
             columns: ["invoiceSupplierId"]
             isOneToOne: false
@@ -14158,13 +14204,6 @@ export type Database = {
             columns: ["invoiceSupplierId"]
             isOneToOne: false
             referencedRelation: "suppliers"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "purchaseInvoice_invoiceSupplierLocationId_fkey"
-            columns: ["invoiceSupplierLocationId"]
-            isOneToOne: false
-            referencedRelation: "supplierLocation"
             referencedColumns: ["id"]
           },
           {

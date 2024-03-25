@@ -1,7 +1,7 @@
 ALTER TABLE "customer" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 ALTER TABLE "part" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 ALTER TABLE "purchaseOrder" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
--- ALTER TABLE "purchaseInvoice" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
+ALTER TABLE "purchaseInvoice" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 -- ALTER TABLE "quote" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 -- ALTER TABLE "receipt" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 -- ALTER TABLE "requestForQuote" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
@@ -55,49 +55,39 @@ CREATE OR REPLACE VIEW "purchaseOrders" WITH(SECURITY_INVOKER=true) AS
   LEFT JOIN "paymentTerm" pt ON pt."id" = pp."paymentTermId"
   LEFT JOIN "location" l ON l."id" = pd."locationId";
 
--- DROP VIEW "purchaseInvoices";
--- CREATE OR REPLACE VIEW "purchaseInvoices" WITH(SECURITY_INVOKER=true) AS 
---   SELECT 
---     pi."id",
---     pi."invoiceId",
---     pi."supplierId",
---     pi."supplierReference",
---     pi."invoiceSupplierId",
---     pi."invoiceSupplierLocationId",
---     pi."invoiceSupplierContactId",
---     pi."postingDate",
---     pi."dateIssued",
---     pi."dateDue",
---     pi."datePaid",
---     pi."paymentTermId",
---     pi."currencyCode",
---     pi."exchangeRate",
---     pi."subtotal",
---     pi."totalDiscount",
---     pi."totalAmount",
---     pi."totalTax",
---     pi."balance",
---     pi."createdBy",
---     pi."createdAt",
---     pi."updatedBy",
---     pi."updatedAt",
---     pi."customFields",
---     CASE
---       WHEN pi."dateDue" < CURRENT_DATE AND pi."status" = 'Submitted' THEN 'Overdue'
---       ELSE pi."status"
---     END AS status,
---     s."name" AS "supplierName",
---     c."fullName" AS "contactName",
---     u."avatarUrl" AS "createdByAvatar",
---     u."fullName" AS "createdByFullName",
---     u2."avatarUrl" AS "updatedByAvatar",
---     u2."fullName" AS "updatedByFullName"
---   FROM "purchaseInvoice" pi
---     LEFT JOIN "supplier" s ON s.id = pi."supplierId"
---     LEFT JOIN "supplierContact" sc ON sc.id = pi."invoiceSupplierContactId"
---     LEFT JOIN "contact" c ON c.id = sc."contactId"
---     LEFT JOIN "user" u ON u."id" = pi."createdBy"
---     LEFT JOIN "user" u2 ON u2."id" = pi."updatedBy";
+DROP VIEW "purchaseInvoices";
+CREATE OR REPLACE VIEW "purchaseInvoices" WITH(SECURITY_INVOKER=true) AS 
+  SELECT 
+    pi."id",
+    pi."invoiceId",
+    pi."supplierId",
+    pi."supplierReference",
+    pi."invoiceSupplierId",
+    pi."postingDate",
+    pi."dateIssued",
+    pi."dateDue",
+    pi."datePaid",
+    pi."paymentTermId",
+    pi."currencyCode",
+    pi."exchangeRate",
+    pi."subtotal",
+    pi."totalDiscount",
+    pi."totalAmount",
+    pi."totalTax",
+    pi."balance",
+    pi."assignee",
+    pi."createdBy",
+    pi."createdAt",
+    pi."updatedBy",
+    pi."updatedAt",
+    pi."customFields",
+    CASE
+      WHEN pi."dateDue" < CURRENT_DATE AND pi."status" = 'Submitted' THEN 'Overdue'
+      ELSE pi."status"
+    END AS status,
+    pt."name" AS "paymentTermName"
+  FROM "purchaseInvoice" pi
+  LEFT JOIN "paymentTerm" pt ON pt."id" = pi."paymentTermId";
 
 -- DROP VIEW "quotes";
 -- CREATE OR REPLACE VIEW "quotes" WITH(SECURITY_INVOKER=true) AS
