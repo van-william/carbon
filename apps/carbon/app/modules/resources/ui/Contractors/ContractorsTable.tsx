@@ -4,17 +4,11 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useMemo } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
-import {
-  EmployeeAvatar,
-  Hyperlink,
-  New,
-  SupplierAvatar,
-  Table,
-} from "~/components";
+import { Hyperlink, New, SupplierAvatar, Table } from "~/components";
 import { usePermissions, useUrlParams } from "~/hooks";
 import { useCustomColumns } from "~/hooks/useCustomColumns";
 import type { Ability, Contractor } from "~/modules/resources";
-import { usePeople, useSuppliers } from "~/stores";
+import { useSuppliers } from "~/stores";
 import { path } from "~/utils/path";
 
 type ContractorsTableProps = {
@@ -29,7 +23,6 @@ const ContractorsTable = memo(
     const permissions = usePermissions();
     const [params] = useUrlParams();
 
-    const [people] = usePeople();
     const [suppliers] = useSuppliers();
 
     const customColumns = useCustomColumns<Contractor>("contractor");
@@ -110,26 +103,10 @@ const ContractorsTable = memo(
           header: "Hours per Week",
           cell: (item) => item.getValue(),
         },
-        {
-          id: "assignee",
-          header: "Assignee",
-          cell: ({ row }) => (
-            <EmployeeAvatar employeeId={row.original.assignee} />
-          ),
-          meta: {
-            filter: {
-              type: "static",
-              options: people.map((employee) => ({
-                value: employee.id,
-                label: employee.name,
-              })),
-            },
-          },
-        },
       ];
 
       return [...defaultColumns, ...customColumns];
-    }, [suppliers, abilities, people, customColumns, params]);
+    }, [suppliers, abilities, customColumns, params]);
 
     const renderContextMenu = useCallback(
       (row: Contractor) => {

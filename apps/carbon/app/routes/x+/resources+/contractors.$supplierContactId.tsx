@@ -85,7 +85,6 @@ export default function ContractorRoute() {
     supplierId: contractor.supplierId ?? "",
     hoursPerWeek: contractor.hoursPerWeek ?? 0,
     abilities: contractor.abilityIds ?? ([] as string[]),
-    assignee: contractor.assignee ?? "",
     ...getCustomFields(contractor.customFields),
   };
 

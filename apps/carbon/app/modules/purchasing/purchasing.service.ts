@@ -614,7 +614,10 @@ export async function upsertSupplier(
   }
   return client
     .from("supplier")
-    .update(sanitize(supplier))
+    .update({
+      ...sanitize(supplier),
+      updatedAt: today(getLocalTimeZone()).toString(),
+    })
     .eq("id", supplier.id)
     .select("id")
     .single();

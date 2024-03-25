@@ -1,9 +1,6 @@
--- ALTER TABLE "account" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
-ALTER TABLE "contractor" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 ALTER TABLE "customer" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 ALTER TABLE "part" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
--- ALTER TABLE "partner" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
--- ALTER TABLE "purchaseOrder" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
+ALTER TABLE "purchaseOrder" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 -- ALTER TABLE "purchaseInvoice" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 -- ALTER TABLE "quote" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 -- ALTER TABLE "receipt" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
@@ -11,42 +8,8 @@ ALTER TABLE "part" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE
 -- ALTER TABLE "service" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 ALTER TABLE "supplier" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 
--- DROP VIEW "accounts";
--- CREATE OR REPLACE VIEW "accounts" WITH(SECURITY_INVOKER=true) AS
---   SELECT 
---     "account".*,
---     (SELECT "category" FROM "accountCategory" WHERE "accountCategory"."id" = "account"."accountCategoryId") AS "accountCategory",
---     (SELECT "name" FROM "accountSubcategory" WHERE "accountSubcategory"."id" = "account"."accountSubcategoryId") AS "accountSubCategory"  
---   FROM "account"
--- ;
-
-DROP VIEW "contractors";
-CREATE OR REPLACE VIEW "contractors" WITH(SECURITY_INVOKER=true) AS
-  SELECT 
-    p.id AS "supplierContactId", 
-    p."active", 
-    p."hoursPerWeek", 
-    p."customFields",
-    p."assignee",
-    s.id AS "supplierId",
-    c."firstName",
-    c."lastName",
-    c."email",
-    array_agg(pa."abilityId") AS "abilityIds"
-  FROM "contractor" p 
-    INNER JOIN "supplierContact" sc 
-      ON sc.id = p.id
-    INNER JOIN "supplier" s
-      ON s.id = sc."supplierId"
-    INNER JOIN "contact" c 
-      ON c.id = sc."contactId"
-    LEFT JOIN "contractorAbility" pa
-      ON pa."contractorId" = p.id
-  WHERE p."active" = true
-  GROUP BY p.id, p.active, p."hoursPerWeek", p."customFields", s.id, c.id, s.name, c."firstName", c."lastName", c."email";
-
 DROP VIEW "customers";
-CREATE OR REPLACE VIEW "customers" AS 
+CREATE OR REPLACE VIEW "customers" WITH(SECURITY_INVOKER=true) AS 
   SELECT 
     c.*,
     ct.name AS "type",
@@ -54,42 +17,6 @@ CREATE OR REPLACE VIEW "customers" AS
   FROM "customer" c
   LEFT JOIN "customerType" ct ON ct.id = c."customerTypeId"
   LEFT JOIN "customerStatus" cs ON cs.id = c."customerStatusId";
-
--- DROP VIEW "documents";
--- CREATE OR REPLACE VIEW "documents" WITH(SECURITY_INVOKER=true) AS 
---   SELECT
---     d.*,
---     u."avatarUrl" AS "createdByAvatar",
---     u."fullName" AS "createdByFullName",
---     u2."avatarUrl" AS "updatedByAvatar",
---     u2."fullName" AS "updatedByFullName",
---     ARRAY(SELECT dl.label FROM "documentLabel" dl WHERE dl."documentId" = d.id AND dl."userId" = auth.uid()::text) AS labels,
---     EXISTS(SELECT 1 FROM "documentFavorite" df WHERE df."documentId" = d.id AND df."userId" = auth.uid()::text) AS favorite,
---     (SELECT MAX("createdAt") FROM "documentTransaction" dt WHERE dt."documentId" = d.id) AS "lastActivityAt"
---   FROM "document" d
---   LEFT JOIN "user" u ON u.id = d."createdBy"
---   LEFT JOIN "user" u2 ON u2.id = d."updatedBy";
-
--- DROP VIEW "partners";
--- CREATE OR REPLACE VIEW "partners" WITH(SECURITY_INVOKER=true) AS
---   SELECT 
---     p.*,
---     p.id AS "supplierLocationId", 
---     a2.name AS "abilityName",
---     s.id AS "supplierId", 
---     s.name AS "supplierName", 
---     a.city,
---     a.state
---   FROM "partner" p 
---     INNER JOIN "supplierLocation" sl 
---       ON sl.id = p.id
---     INNER JOIN "supplier" s
---       ON s.id = sl."supplierId"
---     INNER JOIN "address" a 
---       ON a.id = sl."addressId"
---     INNER JOIN "ability" a2
---       ON a2.id = p."abilityId"
---   WHERE p."active" = true;
 
 DROP VIEW "parts";
 CREATE OR REPLACE VIEW "parts" WITH(SECURITY_INVOKER=true) AS 
@@ -107,37 +34,26 @@ CREATE OR REPLACE VIEW "parts" WITH(SECURITY_INVOKER=true) AS
     GROUP BY "partId"
   )  ps ON ps."partId" = p.id;
   
--- DROP VIEW "purchaseOrders";
--- CREATE OR REPLACE VIEW "purchaseOrders" WITH(SECURITY_INVOKER=true) AS
---   SELECT
---     p.*,
---     sm."name" AS "shippingMethodName",
---     st."name" AS "shippingTermName",
---     pt."name" AS "paymentTermName",
---     pd."receiptRequestedDate",
---     pd."receiptPromisedDate",
---     pd."dropShipment",
---     l."id" AS "locationId",
---     l."name" AS "locationName",
---     s."name" AS "supplierName",
---     u."avatarUrl" AS "createdByAvatar",
---     u."fullName" AS "createdByFullName",
---     u2."avatarUrl" AS "updatedByAvatar",
---     u2."fullName" AS "updatedByFullName",
---     u3."avatarUrl" AS "closedByAvatar",
---     u3."fullName" AS "closedByFullName",
---     EXISTS(SELECT 1 FROM "purchaseOrderFavorite" pf WHERE pf."purchaseOrderId" = p.id AND pf."userId" = auth.uid()::text) AS favorite
---   FROM "purchaseOrder" p
---   LEFT JOIN "purchaseOrderDelivery" pd ON pd."id" = p."id"
---   LEFT JOIN "shippingMethod" sm ON sm."id" = pd."shippingMethodId"
---   LEFT JOIN "shippingTerm" st ON st."id" = pd."shippingTermId"
---   LEFT JOIN "purchaseOrderPayment" pp ON pp."id" = p."id"
---   LEFT JOIN "paymentTerm" pt ON pt."id" = pp."paymentTermId"
---   LEFT JOIN "location" l ON l."id" = pd."locationId"
---   LEFT JOIN "supplier" s ON s."id" = p."supplierId"
---   LEFT JOIN "user" u ON u."id" = p."createdBy"
---   LEFT JOIN "user" u2 ON u2."id" = p."updatedBy"
---   LEFT JOIN "user" u3 ON u3."id" = p."closedBy";
+DROP VIEW "purchaseOrders";
+CREATE OR REPLACE VIEW "purchaseOrders" WITH(SECURITY_INVOKER=true) AS
+  SELECT
+    p.*,
+    sm."name" AS "shippingMethodName",
+    st."name" AS "shippingTermName",
+    pt."name" AS "paymentTermName",
+    pd."receiptRequestedDate",
+    pd."receiptPromisedDate",
+    pd."dropShipment",
+    l."id" AS "locationId",
+    l."name" AS "locationName",
+    EXISTS(SELECT 1 FROM "purchaseOrderFavorite" pf WHERE pf."purchaseOrderId" = p.id AND pf."userId" = auth.uid()::text) AS favorite
+  FROM "purchaseOrder" p
+  LEFT JOIN "purchaseOrderDelivery" pd ON pd."id" = p."id"
+  LEFT JOIN "shippingMethod" sm ON sm."id" = pd."shippingMethodId"
+  LEFT JOIN "shippingTerm" st ON st."id" = pd."shippingTermId"
+  LEFT JOIN "purchaseOrderPayment" pp ON pp."id" = p."id"
+  LEFT JOIN "paymentTerm" pt ON pt."id" = pp."paymentTermId"
+  LEFT JOIN "location" l ON l."id" = pd."locationId";
 
 -- DROP VIEW "purchaseInvoices";
 -- CREATE OR REPLACE VIEW "purchaseInvoices" WITH(SECURITY_INVOKER=true) AS 
@@ -357,7 +273,7 @@ CREATE OR REPLACE VIEW "parts" WITH(SECURITY_INVOKER=true) AS
 --     pg.name;
 
 DROP VIEW "suppliers";
-CREATE OR REPLACE VIEW "suppliers" AS 
+CREATE OR REPLACE VIEW "suppliers" WITH(SECURITY_INVOKER=true) AS 
   SELECT 
     s.*,
     st.name AS "type",    

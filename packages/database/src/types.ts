@@ -1512,7 +1512,6 @@ export type Database = {
       contractor: {
         Row: {
           active: boolean
-          assignee: string | null
           createdAt: string
           createdBy: string
           customFields: Json | null
@@ -1523,7 +1522,6 @@ export type Database = {
         }
         Insert: {
           active?: boolean
-          assignee?: string | null
           createdAt?: string
           createdBy: string
           customFields?: Json | null
@@ -1534,7 +1532,6 @@ export type Database = {
         }
         Update: {
           active?: boolean
-          assignee?: string | null
           createdAt?: string
           createdBy?: string
           customFields?: Json | null
@@ -1544,34 +1541,6 @@ export type Database = {
           updatedBy?: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "contractor_assignee_fkey"
-            columns: ["assignee"]
-            isOneToOne: false
-            referencedRelation: "employees"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "contractor_assignee_fkey"
-            columns: ["assignee"]
-            isOneToOne: false
-            referencedRelation: "employeeSummary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "contractor_assignee_fkey"
-            columns: ["assignee"]
-            isOneToOne: false
-            referencedRelation: "user"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "contractor_assignee_fkey"
-            columns: ["assignee"]
-            isOneToOne: false
-            referencedRelation: "userDefaults"
-            referencedColumns: ["userId"]
-          },
           {
             foreignKeyName: "contractor_createdBy_fkey"
             columns: ["createdBy"]
@@ -7289,6 +7258,7 @@ export type Database = {
       }
       purchaseOrder: {
         Row: {
+          assignee: string | null
           closedAt: string | null
           closedBy: string | null
           createdAt: string
@@ -7309,6 +7279,7 @@ export type Database = {
           updatedBy: string | null
         }
         Insert: {
+          assignee?: string | null
           closedAt?: string | null
           closedBy?: string | null
           createdAt?: string
@@ -7329,6 +7300,7 @@ export type Database = {
           updatedBy?: string | null
         }
         Update: {
+          assignee?: string | null
           closedAt?: string | null
           closedBy?: string | null
           createdAt?: string
@@ -7349,6 +7321,34 @@ export type Database = {
           updatedBy?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "purchaseOrder_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseOrder_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseOrder_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseOrder_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
+          },
           {
             foreignKeyName: "purchaseOrder_closedBy_fkey"
             columns: ["closedBy"]
@@ -13365,7 +13365,6 @@ export type Database = {
         Row: {
           abilityIds: string[] | null
           active: boolean | null
-          assignee: string | null
           customFields: Json | null
           email: string | null
           firstName: string | null
@@ -13373,36 +13372,9 @@ export type Database = {
           lastName: string | null
           supplierContactId: string | null
           supplierId: string | null
+          supplierName: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "contractor_assignee_fkey"
-            columns: ["assignee"]
-            isOneToOne: false
-            referencedRelation: "user"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "contractor_assignee_fkey"
-            columns: ["assignee"]
-            isOneToOne: false
-            referencedRelation: "employeeSummary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "contractor_assignee_fkey"
-            columns: ["assignee"]
-            isOneToOne: false
-            referencedRelation: "employees"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "contractor_assignee_fkey"
-            columns: ["assignee"]
-            isOneToOne: false
-            referencedRelation: "userDefaults"
-            referencedColumns: ["userId"]
-          },
           {
             foreignKeyName: "contractor_id_fkey"
             columns: ["supplierContactId"]
@@ -13866,14 +13838,14 @@ export type Database = {
           },
           {
             foreignKeyName: "partner_id_fkey"
-            columns: ["supplierLocationId"]
+            columns: ["id"]
             isOneToOne: false
             referencedRelation: "supplierLocation"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "partner_id_fkey"
-            columns: ["id"]
+            columns: ["supplierLocationId"]
             isOneToOne: false
             referencedRelation: "supplierLocation"
             referencedColumns: ["id"]
@@ -14528,14 +14500,11 @@ export type Database = {
       }
       purchaseOrders: {
         Row: {
+          assignee: string | null
           closedAt: string | null
           closedBy: string | null
-          closedByAvatar: string | null
-          closedByFullName: string | null
           createdAt: string | null
           createdBy: string | null
-          createdByAvatar: string | null
-          createdByFullName: string | null
           customFields: Json | null
           dropShipment: boolean | null
           favorite: boolean | null
@@ -14555,15 +14524,40 @@ export type Database = {
           supplierContactId: string | null
           supplierId: string | null
           supplierLocationId: string | null
-          supplierName: string | null
           supplierReference: string | null
           type: Database["public"]["Enums"]["purchaseOrderType"] | null
           updatedAt: string | null
           updatedBy: string | null
-          updatedByAvatar: string | null
-          updatedByFullName: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "purchaseOrder_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseOrder_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseOrder_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseOrder_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
+          },
           {
             foreignKeyName: "purchaseOrder_closedBy_fkey"
             columns: ["closedBy"]

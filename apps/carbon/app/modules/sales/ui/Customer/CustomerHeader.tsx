@@ -64,7 +64,7 @@ const CustomerHeader = () => {
           <Assign
             id={customerId}
             table="customer"
-            value={routeData?.customer?.assignee ?? ""}
+            value={assignee ?? undefined}
           />
         </Menubar>
       )}
