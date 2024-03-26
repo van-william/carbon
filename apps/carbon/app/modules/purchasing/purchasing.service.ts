@@ -913,7 +913,10 @@ export async function upsertRequestForQuote(
   } else {
     return client
       .from("requestForQuote")
-      .update(sanitize(requestForQuote))
+      .update({
+        ...sanitize(requestForQuote),
+        updatedAt: today(getLocalTimeZone()).toString(),
+      })
       .eq("id", requestForQuote.id);
   }
 }

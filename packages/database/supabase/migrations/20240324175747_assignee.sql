@@ -4,7 +4,7 @@ ALTER TABLE "purchaseOrder" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") 
 ALTER TABLE "purchaseInvoice" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 ALTER TABLE "quote" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 ALTER TABLE "receipt" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
--- ALTER TABLE "requestForQuote" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
+ALTER TABLE "requestForQuote" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 ALTER TABLE "service" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 ALTER TABLE "supplier" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 
@@ -117,56 +117,33 @@ CREATE OR REPLACE VIEW "receipts" WITH(SECURITY_INVOKER=true) AS
   LEFT JOIN "location" l
     ON l.id = r."locationId";
 
--- DROP VIEW "requestForQuotes";
--- CREATE OR REPLACE VIEW "requestForQuotes" WITH(SECURITY_INVOKER=true) AS
---   SELECT 
---   r."id",
---   r."requestForQuoteId",
---   r."name",
---   r."status",
---   r."notes",
---   r."receiptDate",
---   r."expirationDate",
---   r."locationId",
---   r."customFields",
---   r."createdAt",
---   r."createdBy",
---   uc."fullName" AS "createdByFullName",
---   uc."avatarUrl" AS "createdByAvatar",
---   uu."fullName" AS "updatedByFullName",
---   uu."avatarUrl" AS "updatedByAvatar",
---   l."name" AS "locationName",
---   array_agg(rs."supplierId") AS "supplierIds",
---   array_agg(rl."partId") AS "partIds",
---   EXISTS(SELECT 1 FROM "requestForQuoteFavorite" pf WHERE pf."requestForQuoteId" = r.id AND pf."userId" = auth.uid()::text) AS favorite
--- FROM "requestForQuote" r
--- LEFT JOIN "location" l
---   ON l.id = r."locationId"
--- LEFT JOIN "requestForQuoteSupplier" rs
---   ON rs."requestForQuoteId" = r.id
--- LEFT JOIN "requestForQuoteLine" rl
---   ON rl."requestForQuoteId" = r.id
--- LEFT JOIN "user" uc
---   ON uc.id = r."createdBy"
--- LEFT JOIN "user" uu
---   ON uu.id = r."updatedBy"
--- GROUP BY
---   r."id",
---   r."requestForQuoteId",
---   r."name",
---   r."status",
---   r."notes",
---   r."receiptDate",
---   r."expirationDate",
---   r."locationId",
---   r."customFields",
---   r."createdAt",
---   r."createdBy",
---   uc."fullName",
---   uc."avatarUrl",
---   uu."fullName",
---   uu."avatarUrl",
---   l."name";
+DROP VIEW "requestForQuotes";
+CREATE OR REPLACE VIEW "requestForQuotes" WITH(SECURITY_INVOKER=true) AS
+  SELECT 
+  r.*,
+  l."name" AS "locationName",
+  rs."supplierIds",
+  rp."partIds",
+  EXISTS(SELECT 1 FROM "requestForQuoteFavorite" pf WHERE pf."requestForQuoteId" = r.id AND pf."userId" = auth.uid()::text) AS favorite
+FROM "requestForQuote" r
+LEFT JOIN "location" l
+  ON l.id = r."locationId"
+LEFT JOIN (
+  SELECT
+    "requestForQuoteId",
+    array_agg(rs."supplierId") AS "supplierIds"
+  FROM "requestForQuoteSupplier" rs
+  GROUP BY "requestForQuoteId"
+) rs
+  ON rs."requestForQuoteId" = r.id
+LEFT JOIN (
+  SELECT
+    "requestForQuoteId",
+    array_agg(rp."partId") AS "partIds"
+  FROM "requestForQuoteLine" rp
+  GROUP BY "requestForQuoteId"
+) rp
+  ON rp."requestForQuoteId" = r.id;
 
 DROP VIEW "services";
 CREATE OR REPLACE VIEW "services" WITH(SECURITY_INVOKER=true) AS

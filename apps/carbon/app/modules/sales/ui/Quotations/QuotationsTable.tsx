@@ -135,7 +135,7 @@ const QuotationsTable = memo(({ data, count }: QuotationsTableProps) => {
         },
       },
       {
-        accessorKey: "partIds",
+        id: "partIds",
         header: "Parts",
         cell: (item) => item.getValue<string[]>()?.length ?? 0,
         meta: {

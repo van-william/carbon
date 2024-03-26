@@ -9798,6 +9798,7 @@ export type Database = {
       }
       requestForQuote: {
         Row: {
+          assignee: string | null
           createdAt: string | null
           createdBy: string
           customFields: Json | null
@@ -9814,6 +9815,7 @@ export type Database = {
           updatedBy: string | null
         }
         Insert: {
+          assignee?: string | null
           createdAt?: string | null
           createdBy: string
           customFields?: Json | null
@@ -9830,6 +9832,7 @@ export type Database = {
           updatedBy?: string | null
         }
         Update: {
+          assignee?: string | null
           createdAt?: string | null
           createdBy?: string
           customFields?: Json | null
@@ -9846,6 +9849,34 @@ export type Database = {
           updatedBy?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "requestForQuote_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "requestForQuote_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "requestForQuote_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "requestForQuote_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
+          },
           {
             foreignKeyName: "requestForQuote_createdBy_fkey"
             columns: ["createdBy"]
@@ -15203,10 +15234,9 @@ export type Database = {
       }
       requestForQuotes: {
         Row: {
+          assignee: string | null
           createdAt: string | null
           createdBy: string | null
-          createdByAvatar: string | null
-          createdByFullName: string | null
           customFields: Json | null
           expirationDate: string | null
           favorite: boolean | null
@@ -15218,12 +15248,41 @@ export type Database = {
           partIds: string[] | null
           receiptDate: string | null
           requestForQuoteId: string | null
+          revisionId: number | null
           status: Database["public"]["Enums"]["requestForQuoteStatus"] | null
           supplierIds: string[] | null
-          updatedByAvatar: string | null
-          updatedByFullName: string | null
+          updatedAt: string | null
+          updatedBy: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "requestForQuote_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "requestForQuote_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "requestForQuote_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "requestForQuote_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
+          },
           {
             foreignKeyName: "requestForQuote_createdBy_fkey"
             columns: ["createdBy"]
@@ -15272,6 +15331,34 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "purchaseOrders"
             referencedColumns: ["locationId"]
+          },
+          {
+            foreignKeyName: "requestForQuote_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "requestForQuote_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "requestForQuote_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "requestForQuote_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
           },
         ]
       }
