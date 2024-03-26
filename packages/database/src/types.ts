@@ -10550,6 +10550,7 @@ export type Database = {
           active: boolean
           approved: boolean
           approvedBy: string | null
+          assignee: string | null
           blocked: boolean
           createdAt: string
           createdBy: string
@@ -10568,6 +10569,7 @@ export type Database = {
           active?: boolean
           approved?: boolean
           approvedBy?: string | null
+          assignee?: string | null
           blocked?: boolean
           createdAt?: string
           createdBy: string
@@ -10586,6 +10588,7 @@ export type Database = {
           active?: boolean
           approved?: boolean
           approvedBy?: string | null
+          assignee?: string | null
           blocked?: boolean
           createdAt?: string
           createdBy?: string
@@ -10625,6 +10628,34 @@ export type Database = {
           {
             foreignKeyName: "service_approvedBy_fkey"
             columns: ["approvedBy"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "service_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_assignee_fkey"
+            columns: ["assignee"]
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
@@ -15249,7 +15280,10 @@ export type Database = {
           active: boolean | null
           approved: boolean | null
           approvedBy: string | null
+          assignee: string | null
           blocked: boolean | null
+          createdAt: string | null
+          createdBy: string | null
           customFields: Json | null
           description: string | null
           fromDate: string | null
@@ -15260,6 +15294,8 @@ export type Database = {
           serviceType: Database["public"]["Enums"]["serviceType"] | null
           supplierIds: string[] | null
           toDate: string | null
+          updatedAt: string | null
+          updatedBy: string | null
         }
         Relationships: [
           {
@@ -15291,11 +15327,95 @@ export type Database = {
             referencedColumns: ["userId"]
           },
           {
+            foreignKeyName: "service_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "service_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
+          },
+          {
             foreignKeyName: "service_partGroupId_fkey"
             columns: ["partGroupId"]
             isOneToOne: false
             referencedRelation: "partGroup"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
           },
         ]
       }

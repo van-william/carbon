@@ -101,6 +101,22 @@ const PartsTable = memo(({ data, count, partGroups }: PartsTableProps) => {
               { value: "false", label: "Inactive" },
             ],
           },
+          pluralHeader: "Active Statuses",
+        },
+      },
+      {
+        accessorKey: "blocked",
+        header: "Blocked",
+        cell: (item) => <Checkbox isChecked={item.getValue<boolean>()} />,
+        meta: {
+          filter: {
+            type: "static",
+            options: [
+              { value: "true", label: "Blocked" },
+              { value: "false", label: "Not Blocked" },
+            ],
+          },
+          pluralHeader: "Blocked Statuses",
         },
       },
       {

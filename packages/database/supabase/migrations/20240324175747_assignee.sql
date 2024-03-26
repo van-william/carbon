@@ -5,7 +5,7 @@ ALTER TABLE "purchaseInvoice" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id"
 ALTER TABLE "quote" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 ALTER TABLE "receipt" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 -- ALTER TABLE "requestForQuote" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
--- ALTER TABLE "service" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
+ALTER TABLE "service" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 ALTER TABLE "supplier" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 
 DROP VIEW "customers";
@@ -168,40 +168,22 @@ CREATE OR REPLACE VIEW "receipts" WITH(SECURITY_INVOKER=true) AS
 --   uu."avatarUrl",
 --   l."name";
 
--- DROP VIEW "services";
--- CREATE OR REPLACE VIEW "services" WITH(SECURITY_INVOKER=true) AS
---   SELECT
---     s."id",
---     s."name",
---     s."description",
---     s."blocked",
---     s."partGroupId",
---     s."serviceType",
---     s."active",
---     s."approved",
---     s."approvedBy",
---     s."fromDate",
---     s."toDate",
---     s."customFields",
---     pg.name AS "partGroup",
---     array_agg(ss."supplierId") AS "supplierIds"
---   FROM "service" s
---   LEFT JOIN "partGroup" pg ON pg.id = s."partGroupId"
---   LEFT JOIN "serviceSupplier" ss ON ss."serviceId" = s.id
---   GROUP BY 
---     s."id",
---     s."name",
---     s."description",
---     s."blocked",
---     s."partGroupId",
---     s."serviceType",
---     s."active",
---     s."approved",
---     s."approvedBy",
---     s."fromDate",
---     s."toDate",
---     s."customFields",
---     pg.name;
+DROP VIEW "services";
+CREATE OR REPLACE VIEW "services" WITH(SECURITY_INVOKER=true) AS
+  SELECT
+    s.*,
+    pg.name AS "partGroup",
+    ss."supplierIds"
+  FROM "service" s
+  LEFT JOIN "partGroup" pg ON pg.id = s."partGroupId"
+  LEFT JOIN (
+    SELECT 
+      "serviceId",
+      array_agg(ss."supplierId") AS "supplierIds"
+    FROM "serviceSupplier" ss
+    GROUP BY "serviceId"
+  )  ss ON ss."serviceId" = s.id;
+  
 
 DROP VIEW "suppliers";
 CREATE OR REPLACE VIEW "suppliers" WITH(SECURITY_INVOKER=true) AS 

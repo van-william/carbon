@@ -540,7 +540,13 @@ export async function upsertService(
   if ("createdBy" in service) {
     return client.from("service").insert(service).select("*").single();
   }
-  return client.from("service").update(sanitize(service)).eq("id", service.id);
+  return client
+    .from("service")
+    .update({
+      ...sanitize(service),
+      updatedAt: today(getLocalTimeZone()).toString(),
+    })
+    .eq("id", service.id);
 }
 
 export async function upsertServiceSupplier(
