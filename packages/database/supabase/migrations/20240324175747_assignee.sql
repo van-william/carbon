@@ -2,8 +2,8 @@ ALTER TABLE "customer" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DE
 ALTER TABLE "part" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 ALTER TABLE "purchaseOrder" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 ALTER TABLE "purchaseInvoice" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
--- ALTER TABLE "quote" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
--- ALTER TABLE "receipt" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
+ALTER TABLE "quote" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
+ALTER TABLE "receipt" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 -- ALTER TABLE "requestForQuote" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 -- ALTER TABLE "service" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
 ALTER TABLE "supplier" ADD COLUMN "assignee" TEXT REFERENCES "user" ("id") ON DELETE SET NULL;
@@ -89,92 +89,33 @@ CREATE OR REPLACE VIEW "purchaseInvoices" WITH(SECURITY_INVOKER=true) AS
   FROM "purchaseInvoice" pi
   LEFT JOIN "paymentTerm" pt ON pt."id" = pi."paymentTermId";
 
--- DROP VIEW "quotes";
--- CREATE OR REPLACE VIEW "quotes" WITH(SECURITY_INVOKER=true) AS
---   SELECT 
---   q."id",
---   q."quoteId",
---   q."customerId",
---   q."customerLocationId",
---   q."customerContactId",
---   q."name",
---   q."status",
---   q."notes",
---   q."quoteDate",
---   q."expirationDate",
---   q."customerReference",
---   q."locationId",
---   q."createdAt",
---   q."createdBy",
---   q."ownerId",
---   q."customFields",
---   uo."fullName" AS "ownerFullName",
---   uo."avatarUrl" AS "ownerAvatar",
---   c."name" AS "customerName",
---   uc."fullName" AS "createdByFullName",
---   uc."avatarUrl" AS "createdByAvatar",
---   uu."fullName" AS "updatedByFullName",
---   uu."avatarUrl" AS "updatedByAvatar",
---   l."name" AS "locationName",
---   array_agg(ql."partId") AS "partIds",
---   EXISTS(SELECT 1 FROM "quoteFavorite" pf WHERE pf."quoteId" = q.id AND pf."userId" = auth.uid()::text) AS favorite
--- FROM "quote" q
--- LEFT JOIN "customer" c
---   ON c.id = q."customerId"
--- LEFT JOIN "location" l
---   ON l.id = q."locationId"
--- LEFT JOIN "quoteLine" ql
---   ON ql."quoteId" = q.id
--- LEFT JOIN "user" uo
---   ON uo.id = q."ownerId"
--- LEFT JOIN "user" uc
---   ON uc.id = q."createdBy"
--- LEFT JOIN "user" uu
---   ON uu.id = q."updatedBy"
--- GROUP BY
---   q."id",
---   q."quoteId",
---   q."customerId",
---   q."customerLocationId",
---   q."customerContactId",
---   q."name",
---   q."status",
---   q."notes",
---   q."quoteDate",
---   q."expirationDate",
---   q."customerReference",
---   q."locationId",
---   q."createdAt",
---   q."createdBy",
---   q."customFields",
---   c."name",
---   uo."fullName",
---   uo."avatarUrl",
---   uc."fullName",
---   uc."avatarUrl",
---   uu."fullName",
---   uu."avatarUrl",
---   l."name";
+DROP VIEW "quotes";
+ALTER TABLE "quote" DROP COLUMN "ownerId";
+CREATE OR REPLACE VIEW "quotes" WITH(SECURITY_INVOKER=true) AS
+  SELECT 
+  q.*,
+  l."name" AS "locationName",
+  ql."partIds",
+  EXISTS(SELECT 1 FROM "quoteFavorite" pf WHERE pf."quoteId" = q.id AND pf."userId" = auth.uid()::text) AS favorite
+  FROM "quote" q
+  LEFT JOIN (
+    SELECT 
+      "quoteId",
+      array_agg("partId") AS "partIds"
+    FROM "quoteLine"
+    GROUP BY "quoteId"
+  ) ql ON ql."quoteId" = q.id
+  LEFT JOIN "location" l
+    ON l.id = q."locationId";
 
--- DROP VIEW "receipts";
--- CREATE OR REPLACE VIEW "receipts" WITH(SECURITY_INVOKER=true) AS
---   SELECT 
---     r.*,
---     cb."fullName" as "createdByFullName",
---     cb."avatarUrl" as "createdByAvatar",
---     ub."fullName" as "updatedByFullName",
---     ub."avatarUrl" as "updatedByAvatar",
---     l."name" as "locationName",
---     s."name" as "supplierName"
---   FROM "receipt" r
---   LEFT JOIN "user" cb
---     ON cb.id = r."createdBy"
---   LEFT JOIN "user" ub
---     ON ub.id = r."updatedBy"
---   LEFT JOIN "location" l
---     ON l.id = r."locationId"
---   LEFT JOIN "supplier" s
---     ON s.id = r."supplierId";
+DROP VIEW "receipts";
+CREATE OR REPLACE VIEW "receipts" WITH(SECURITY_INVOKER=true) AS
+  SELECT 
+    r.*,
+    l."name" as "locationName"
+  FROM "receipt" r
+  LEFT JOIN "location" l
+    ON l.id = r."locationId";
 
 -- DROP VIEW "requestForQuotes";
 -- CREATE OR REPLACE VIEW "requestForQuotes" WITH(SECURITY_INVOKER=true) AS

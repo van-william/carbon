@@ -8386,6 +8386,7 @@ export type Database = {
       }
       quote: {
         Row: {
+          assignee: string | null
           createdAt: string
           createdBy: string
           customerContactId: string | null
@@ -8398,7 +8399,6 @@ export type Database = {
           locationId: string | null
           name: string
           notes: string | null
-          ownerId: string
           quoteDate: string | null
           quoteId: string
           revisionId: number
@@ -8407,6 +8407,7 @@ export type Database = {
           updatedBy: string | null
         }
         Insert: {
+          assignee?: string | null
           createdAt?: string
           createdBy: string
           customerContactId?: string | null
@@ -8419,7 +8420,6 @@ export type Database = {
           locationId?: string | null
           name: string
           notes?: string | null
-          ownerId: string
           quoteDate?: string | null
           quoteId: string
           revisionId?: number
@@ -8428,6 +8428,7 @@ export type Database = {
           updatedBy?: string | null
         }
         Update: {
+          assignee?: string | null
           createdAt?: string
           createdBy?: string
           customerContactId?: string | null
@@ -8440,7 +8441,6 @@ export type Database = {
           locationId?: string | null
           name?: string
           notes?: string | null
-          ownerId?: string
           quoteDate?: string | null
           quoteId?: string
           revisionId?: number
@@ -8449,6 +8449,34 @@ export type Database = {
           updatedBy?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "quote_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quote_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quote_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quote_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
+          },
           {
             foreignKeyName: "quote_createdBy_fkey"
             columns: ["createdBy"]
@@ -8525,34 +8553,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "purchaseOrders"
             referencedColumns: ["locationId"]
-          },
-          {
-            foreignKeyName: "quote_ownerId_fkey"
-            columns: ["ownerId"]
-            isOneToOne: false
-            referencedRelation: "employees"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "quote_ownerId_fkey"
-            columns: ["ownerId"]
-            isOneToOne: false
-            referencedRelation: "employeeSummary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "quote_ownerId_fkey"
-            columns: ["ownerId"]
-            isOneToOne: false
-            referencedRelation: "user"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "quote_ownerId_fkey"
-            columns: ["ownerId"]
-            isOneToOne: false
-            referencedRelation: "userDefaults"
-            referencedColumns: ["userId"]
           },
           {
             foreignKeyName: "quote_updatedBy_fkey"
@@ -9410,6 +9410,7 @@ export type Database = {
       }
       receipt: {
         Row: {
+          assignee: string | null
           createdAt: string
           createdBy: string
           customFields: Json | null
@@ -9430,6 +9431,7 @@ export type Database = {
           updatedBy: string | null
         }
         Insert: {
+          assignee?: string | null
           createdAt?: string
           createdBy: string
           customFields?: Json | null
@@ -9450,6 +9452,7 @@ export type Database = {
           updatedBy?: string | null
         }
         Update: {
+          assignee?: string | null
           createdAt?: string
           createdBy?: string
           customFields?: Json | null
@@ -9470,6 +9473,34 @@ export type Database = {
           updatedBy?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "receipt_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "receipt_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "receipt_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "receipt_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
+          },
           {
             foreignKeyName: "receipt_createdBy_fkey"
             columns: ["createdBy"]
@@ -14762,14 +14793,12 @@ export type Database = {
       }
       quotes: {
         Row: {
+          assignee: string | null
           createdAt: string | null
           createdBy: string | null
-          createdByAvatar: string | null
-          createdByFullName: string | null
           customerContactId: string | null
           customerId: string | null
           customerLocationId: string | null
-          customerName: string | null
           customerReference: string | null
           customFields: Json | null
           expirationDate: string | null
@@ -14779,17 +14808,43 @@ export type Database = {
           locationName: string | null
           name: string | null
           notes: string | null
-          ownerAvatar: string | null
-          ownerFullName: string | null
-          ownerId: string | null
           partIds: string[] | null
           quoteDate: string | null
           quoteId: string | null
+          revisionId: number | null
           status: Database["public"]["Enums"]["quoteStatus"] | null
-          updatedByAvatar: string | null
-          updatedByFullName: string | null
+          updatedAt: string | null
+          updatedBy: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "quote_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quote_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quote_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quote_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
+          },
           {
             foreignKeyName: "quote_createdBy_fkey"
             columns: ["createdBy"]
@@ -14868,29 +14923,29 @@ export type Database = {
             referencedColumns: ["locationId"]
           },
           {
-            foreignKeyName: "quote_ownerId_fkey"
-            columns: ["ownerId"]
+            foreignKeyName: "quote_updatedBy_fkey"
+            columns: ["updatedBy"]
             isOneToOne: false
             referencedRelation: "user"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "quote_ownerId_fkey"
-            columns: ["ownerId"]
+            foreignKeyName: "quote_updatedBy_fkey"
+            columns: ["updatedBy"]
             isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "quote_ownerId_fkey"
-            columns: ["ownerId"]
+            foreignKeyName: "quote_updatedBy_fkey"
+            columns: ["updatedBy"]
             isOneToOne: false
             referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "quote_ownerId_fkey"
-            columns: ["ownerId"]
+            foreignKeyName: "quote_updatedBy_fkey"
+            columns: ["updatedBy"]
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
@@ -14899,10 +14954,9 @@ export type Database = {
       }
       receipts: {
         Row: {
+          assignee: string | null
           createdAt: string | null
           createdBy: string | null
-          createdByAvatar: string | null
-          createdByFullName: string | null
           customFields: Json | null
           externalDocumentId: string | null
           id: string | null
@@ -14918,13 +14972,38 @@ export type Database = {
           sourceDocumentReadableId: string | null
           status: Database["public"]["Enums"]["receiptStatus"] | null
           supplierId: string | null
-          supplierName: string | null
           updatedAt: string | null
           updatedBy: string | null
-          updatedByAvatar: string | null
-          updatedByFullName: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "receipt_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "receipt_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "receipt_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "receipt_assignee_fkey"
+            columns: ["assignee"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
+          },
           {
             foreignKeyName: "receipt_createdBy_fkey"
             columns: ["createdBy"]

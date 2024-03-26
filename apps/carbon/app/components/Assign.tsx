@@ -14,6 +14,7 @@ import { useFetcher, useFetchers } from "@remix-run/react";
 import type { ComponentPropsWithoutRef } from "react";
 import { forwardRef, useMemo, useState } from "react";
 import { RxCheck } from "react-icons/rx";
+import { useUser } from "~/hooks";
 import { usePeople } from "~/stores";
 import { path } from "~/utils/path";
 
@@ -38,6 +39,7 @@ const Assign = forwardRef<HTMLButtonElement, ComboboxProps>(
     const [open, setOpen] = useState(false);
     const [people] = usePeople();
     const fetcher = useFetcher();
+    const user = useUser();
 
     const handleChange = (value: string) => {
       const formData = new FormData();
@@ -53,13 +55,20 @@ const Assign = forwardRef<HTMLButtonElement, ComboboxProps>(
 
     const options = useMemo(() => {
       const base =
-        people.map((part) => ({
-          value: part.id,
-          label: part.name,
-        })) ?? [];
+        people
+          .filter((person) => person.id !== user.id)
+          .map((person) => ({
+            value: person.id,
+            label: person.name,
+          })) ?? [];
 
-      return [{ value: "", label: "Unassigned" }, ...base];
-    }, [people]);
+      return [
+        { value: "", label: "Unassigned" },
+        { value: user.id, label: `${user.firstName} ${user.lastName}` },
+        ...base,
+      ];
+    }, [people, user]);
+
     return (
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>

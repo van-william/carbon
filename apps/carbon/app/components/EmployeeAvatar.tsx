@@ -1,8 +1,17 @@
+import type { AvatarProps } from "@carbon/react";
 import { HStack } from "@carbon/react";
 import { usePeople } from "~/stores";
 import Avatar from "./Avatar";
 
-const EmployeeAvatar = ({ employeeId }: { employeeId: string | null }) => {
+type EmployeeAvatarProps = AvatarProps & {
+  employeeId: string | null;
+};
+
+const EmployeeAvatar = ({
+  employeeId,
+  size,
+  ...props
+}: EmployeeAvatarProps) => {
   const [people] = usePeople();
   if (!employeeId) return null;
 
@@ -11,7 +20,7 @@ const EmployeeAvatar = ({ employeeId }: { employeeId: string | null }) => {
   if (!person && people.length > 0) {
     return (
       <HStack>
-        <Avatar size="sm" />
+        <Avatar size={"xs"} {...props} />
         <span className="text-muted-foreground">Deactivated user</span>
       </HStack>
     );
@@ -22,9 +31,9 @@ const EmployeeAvatar = ({ employeeId }: { employeeId: string | null }) => {
   }
 
   return (
-    <HStack>
+    <HStack className="truncate">
       <Avatar
-        size="sm"
+        size={size ?? "xs"}
         src={person.avatarUrl ?? undefined}
         name={person?.name ?? ""}
       />

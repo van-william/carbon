@@ -1,4 +1,5 @@
 import {
+  HStack,
   Heading,
   Menubar,
   MenubarItem,
@@ -11,6 +12,12 @@ import { json, redirect } from "@remix-run/node";
 import type { ShouldRevalidateFunction } from "@remix-run/react";
 import { Outlet, useLoaderData, useParams } from "@remix-run/react";
 import { useEffect, useRef } from "react";
+import {
+  Assign,
+  CustomerAvatar,
+  EmployeeAvatar,
+  useOptimisticAssignment,
+} from "~/components";
 import { CollapsibleSidebar } from "~/components/Layout";
 import { useSupabase } from "~/lib/supabase";
 import { getLocationsList } from "~/modules/resources";
@@ -31,6 +38,7 @@ import QuotationReleaseModal from "~/modules/sales/ui/Quotation/QuotationRelease
 
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session.server";
+import { useCustomers } from "~/stores";
 import type { Handle } from "~/utils/handle";
 import { path } from "~/utils/path";
 import { error } from "~/utils/result";
@@ -152,19 +160,53 @@ export default function QuotationRoute() {
     },
   });
 
+  const [customers] = useCustomers();
+  const customer = customers.find((s) => s.id === quotation?.customerId) ?? {
+    name: "",
+    id: "",
+  };
+
+  const optimisticAssignment = useOptimisticAssignment({
+    id: id,
+    table: "quote",
+  });
+  const assignee =
+    optimisticAssignment !== undefined
+      ? optimisticAssignment
+      : quotation?.assignee;
+
   return (
     <div className="grid grid-cols-[auto_1fr] w-full">
       <CollapsibleSidebar width={260}>
-        <VStack className="border-b border-border p-4" spacing={1}>
+        <VStack className="border-b border-border p-2" spacing={1}>
           <Heading size="h3" noOfLines={1}>
             {quote.quote?.quoteId}
           </Heading>
-          {quote.quote && <QuotationStatus status={quote.quote?.status} />}
+        </VStack>
+        <VStack className="border-b border-border p-2 text-sm">
+          <HStack className="justify-between w-full">
+            <span className="text-xs text-muted-foreground">Status</span>
+            {quote.quote && <QuotationStatus status={quote.quote?.status} />}
+          </HStack>
+        </VStack>
+        <VStack className="border-b border-border p-2 text-sm">
+          <HStack className="justify-between w-full">
+            <span className="text-xs text-muted-foreground">Customer</span>
+            <CustomerAvatar customerId={customer.id} />
+          </HStack>
+        </VStack>
+        <VStack className="border-b border-border p-2 text-sm">
+          <HStack className="justify-between w-full">
+            <span className="text-xs text-muted-foreground">Assignee</span>
+            {assignee && <EmployeeAvatar employeeId={assignee} />}
+          </HStack>
         </VStack>
         <QuotationExplorer />
       </CollapsibleSidebar>
+
       <VStack className="p-2">
         <Menubar>
+          <Assign id={id} table="quote" value={assignee ?? undefined} />
           <MenubarItem asChild>
             <a target="_blank" href={path.to.file.quote(id)} rel="noreferrer">
               Preview
