@@ -935,7 +935,11 @@ export async function upsertSupplierStatus(
       })
 ) {
   if ("createdBy" in supplierStatus) {
-    return client.from("supplierStatus").insert([supplierStatus]);
+    return client
+      .from("supplierStatus")
+      .insert([supplierStatus])
+      .select("id")
+      .single();
   } else {
     return client
       .from("supplierStatus")
@@ -958,7 +962,11 @@ export async function upsertSupplierType(
       })
 ) {
   if ("createdBy" in supplierType) {
-    return client.from("supplierType").insert([supplierType]);
+    return client
+      .from("supplierType")
+      .insert([supplierType])
+      .select("id")
+      .single();
   } else {
     return client
       .from("supplierType")
