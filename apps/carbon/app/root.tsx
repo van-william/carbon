@@ -48,7 +48,8 @@ export const meta: MetaFunction = () => {
       title: "Carbon ERP",
     },
     {
-      viewport: "width=device-width",
+      name: "viewport",
+      content: "width=device-width",
     },
   ];
 };

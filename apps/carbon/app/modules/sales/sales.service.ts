@@ -593,7 +593,10 @@ export async function upsertCustomer(
   }
   return client
     .from("customer")
-    .update(sanitize(customer))
+    .update({
+      ...sanitize(customer),
+      updatedAt: today(getLocalTimeZone()).toString(),
+    })
     .eq("id", customer.id)
     .select("id")
     .single();
@@ -765,7 +768,13 @@ export async function upsertQuote(
   if ("createdBy" in quote) {
     return client.from("quote").insert([quote]).select("id, quoteId");
   } else {
-    return client.from("quote").update(sanitize(quote)).eq("id", quote.id);
+    return client
+      .from("quote")
+      .update({
+        ...sanitize(quote),
+        updatedAt: today(getLocalTimeZone()).toString(),
+      })
+      .eq("id", quote.id);
   }
 }
 

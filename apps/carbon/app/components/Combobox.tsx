@@ -65,7 +65,7 @@ const Combobox = forwardRef<HTMLButtonElement, ComboboxProps>(
               {value ? (
                 options.find((option) => option.value === value)?.label
               ) : (
-                <span className="text-muted-foreground">
+                <span className="!text-muted-foreground">
                   {placeholder ?? "Select"}
                 </span>
               )}
