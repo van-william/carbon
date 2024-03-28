@@ -543,7 +543,7 @@ const QuotationExplorer = () => {
           </Tooltip>
         </HStack>
       </VStack>
-      <VStack className="min-h-[calc(100vh-210px)] p-2 w-full">
+      <VStack className="h-full w-full p-2">
         <div className="w-full h-full overflow-auto" role="tree">
           {renderBillOfMaterial(tree)}
         </div>

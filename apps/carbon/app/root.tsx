@@ -116,7 +116,7 @@ function Document({
         <title>{title}</title>
         <Links />
       </head>
-      <body className="bg-background">
+      <body className="h-full bg-background">
         {children}
         <ScrollRestoration />
         <Scripts />

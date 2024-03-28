@@ -9,7 +9,6 @@ import {
 } from "@carbon/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import type { ShouldRevalidateFunction } from "@remix-run/react";
 import { Outlet, useLoaderData, useParams } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import {
@@ -18,7 +17,6 @@ import {
   EmployeeAvatar,
   useOptimisticAssignment,
 } from "~/components";
-import { CollapsibleSidebar } from "~/components/Layout";
 import { useSupabase } from "~/lib/supabase";
 import { getLocationsList } from "~/modules/resources";
 import {
@@ -46,21 +44,6 @@ import { error } from "~/utils/result";
 export const handle: Handle = {
   breadcrumb: "Quotations",
   to: path.to.quotes,
-};
-
-// TODO: remove this
-export const shouldRevalidate: ShouldRevalidateFunction = ({
-  currentUrl,
-  currentParams,
-  nextUrl,
-}) => {
-  // we don't want to revalidate if we're making an update to the quote line quantities
-  // because it'll cause an infinite loop
-  return !(
-    currentUrl.pathname === nextUrl.pathname &&
-    "lineId" in currentParams &&
-    currentUrl.pathname.includes("details")
-  );
 };
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -177,9 +160,12 @@ export default function QuotationRoute() {
       : quotation?.assignee;
 
   return (
-    <div className="grid grid-cols-[auto_1fr] w-full">
-      <CollapsibleSidebar width={280}>
-        <VStack className="border-b border-border px-4 py-2" spacing={1}>
+    <div className="flex h-[calc(100vh-49px)]">
+      <VStack className="w-96 h-full z-40 overflow-y-scroll bg-card border-r border-border">
+        <VStack
+          className="bg-card border-b border-border px-4 py-2 sticky top-0 z-50"
+          spacing={1}
+        >
           <HStack className="justify-between w-full">
             <Heading size="h4" noOfLines={1}>
               {quote.quote?.quoteId}
@@ -200,25 +186,36 @@ export default function QuotationRoute() {
           </HStack>
         </VStack>
         <QuotationExplorer />
-      </CollapsibleSidebar>
-
-      <VStack className="px-4 py-2">
-        <Menubar>
-          <Assign id={id} table="quote" value={assignee ?? undefined} />
-          <MenubarItem asChild>
-            <a target="_blank" href={path.to.file.quote(id)} rel="noreferrer">
-              Preview
-            </a>
-          </MenubarItem>
-          <MenubarItem
-            onClick={releaseDisclosure.onOpen}
-            // isDisabled={isReleased}
-          >
-            Release
-          </MenubarItem>
-        </Menubar>
-        <Outlet />
       </VStack>
+
+      <div className="flex w-full h-full">
+        <div className="w-full h-full flex-1 overflow-hidden">
+          <VStack
+            spacing={4}
+            className="h-full w-full overflow-x-hidden flex-1 p-4"
+          >
+            <Menubar>
+              <Assign id={id} table="quote" value={assignee ?? undefined} />
+              <MenubarItem asChild>
+                <a
+                  target="_blank"
+                  href={path.to.file.quote(id)}
+                  rel="noreferrer"
+                >
+                  Preview
+                </a>
+              </MenubarItem>
+              <MenubarItem
+                onClick={releaseDisclosure.onOpen}
+                // isDisabled={isReleased}
+              >
+                Release
+              </MenubarItem>
+            </Menubar>
+            <Outlet />
+          </VStack>
+        </div>
+      </div>
       {releaseDisclosure.isOpen && (
         <QuotationReleaseModal
           quotation={quotation}

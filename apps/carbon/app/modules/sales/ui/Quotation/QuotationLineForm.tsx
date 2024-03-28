@@ -217,6 +217,7 @@ const QuotationLineForm = ({ initialValues }: QuotationLineFormProps) => {
                 }))}
                 className={cn(!isEditing && "sr-only")}
               />
+
               <CustomFormFields table="quoteLine" />
             </div>
           </VStack>

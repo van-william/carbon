@@ -4,7 +4,6 @@ import {
   HStack,
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
   VStack,
   useKeyboardShortcuts,
@@ -37,42 +36,40 @@ const DetailSidebar = ({ links }: DetailSidebarProps) => {
   );
 
   return (
-    <TooltipProvider>
-      <VStack className="overflow-y-auto h-full" spacing={1}>
-        {links.map((route) => {
-          const isActive = matches.some(
-            (match) =>
-              (match.pathname.includes(route.to) && route.to !== "") ||
-              (match.id.includes(".index") && route.to === "")
-          );
+    <VStack className="overflow-y-auto h-full" spacing={1}>
+      {links.map((route) => {
+        const isActive = matches.some(
+          (match) =>
+            (match.pathname.includes(route.to) && route.to !== "") ||
+            (match.id.includes(".index") && route.to === "")
+        );
 
-          return (
-            <Tooltip key={route.name}>
-              <TooltipTrigger className="w-full">
-                <Button
-                  asChild
-                  variant={isActive ? "primary" : "ghost"}
-                  className="w-full justify-start"
-                >
-                  <Link to={route.to} prefetch="intent">
-                    {route.icon && <route.icon className="mr-2" />}
-                    <span>{route.name}</span>
-                    {route.count !== undefined && (
-                      <Count count={route.count} className="ml-auto" />
-                    )}
-                  </Link>
-                </Button>
-              </TooltipTrigger>
-              {route.shortcut && (
-                <TooltipContent side="right">
-                  <HStack>{prettifyKeyboardShortcut(route.shortcut)}</HStack>
-                </TooltipContent>
-              )}
-            </Tooltip>
-          );
-        })}
-      </VStack>
-    </TooltipProvider>
+        return (
+          <Tooltip key={route.name}>
+            <TooltipTrigger className="w-full">
+              <Button
+                asChild
+                variant={isActive ? "primary" : "ghost"}
+                className="w-full justify-start"
+              >
+                <Link to={route.to} prefetch="intent">
+                  {route.icon && <route.icon className="mr-2" />}
+                  <span>{route.name}</span>
+                  {route.count !== undefined && (
+                    <Count count={route.count} className="ml-auto" />
+                  )}
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            {route.shortcut && (
+              <TooltipContent side="right">
+                <HStack>{prettifyKeyboardShortcut(route.shortcut)}</HStack>
+              </TooltipContent>
+            )}
+          </Tooltip>
+        );
+      })}
+    </VStack>
   );
 };
 
