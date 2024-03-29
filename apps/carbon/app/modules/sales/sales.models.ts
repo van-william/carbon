@@ -121,6 +121,15 @@ export const quotationOperationValidator = z.object({
   overheadRate: zfd.numeric(z.number().min(0)),
 });
 
+export const quotationPricingValidator = z.object({
+  quantity: zfd.numeric(z.number()),
+  unitCost: zfd.numeric(z.number()),
+  leadTime: zfd.numeric(z.number().int().nonnegative()),
+  discountPercent: zfd.numeric(z.number().nonnegative()),
+  markupPercent: zfd.numeric(z.number().nonnegative()),
+  extendedPrice: zfd.numeric(z.number()),
+});
+
 export const quotationLineValidator = z.object({
   id: zfd.text(z.string().optional()),
   quoteId: z.string(),

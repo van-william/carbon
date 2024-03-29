@@ -2,15 +2,11 @@ import type { Database } from "@carbon/database";
 import { StyleSheet, Text, View } from "@react-pdf/renderer";
 
 import type { PDF } from "../types";
-import { QuoteSummary, Template, QuoteHeader } from "./components";
-import { getExtendedPrice, getUnitCost } from "../utils/quote";
+import { QuoteHeader, QuoteSummary, Template } from "./components";
 
 interface QuotePDFProps extends PDF {
   quote: Database["public"]["Views"]["quotes"]["Row"];
   quoteLines: Database["public"]["Tables"]["quoteLine"]["Row"][];
-  quoteLineQuantities:
-    | Database["public"]["Tables"]["quoteLineQuantity"]["Row"][]
-    | null;
   quoteCustomerDetails: Database["public"]["Views"]["quoteCustomerDetails"]["Row"];
 }
 
@@ -19,7 +15,6 @@ const QuotePDF = ({
   meta,
   quote,
   quoteLines,
-  quoteLineQuantities,
   quoteCustomerDetails,
   title = "Quote",
 }: QuotePDFProps) => {
@@ -63,7 +58,7 @@ const QuotePDF = ({
                 <Text style={{ fontSize: 9, opacity: 0.8 }}>{line.partId}</Text>
               </View>
               <View style={styles.quantityTable}>
-                {quoteLineQuantities &&
+                {/* {quoteLineQuantities &&
                   quoteLineQuantities.map((quantity) =>
                     quantity.quoteLineId === line.id ? (
                       <View style={styles.quantityRow} key={quantity.id}>
@@ -81,7 +76,7 @@ const QuotePDF = ({
                         </View>
                       </View>
                     ) : null
-                  )}
+                  )} */}
               </View>
             </View>
           ))}

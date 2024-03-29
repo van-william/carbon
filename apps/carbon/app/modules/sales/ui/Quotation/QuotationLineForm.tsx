@@ -151,6 +151,7 @@ const QuotationLineForm = ({ initialValues }: QuotationLineFormProps) => {
           </CardAction>
         </HStack>
         <CardContent>
+          <Hidden name="intent" value="line" />
           <Hidden name="id" />
           <Hidden name="quoteId" />
           <Hidden name="unitOfMeasureCode" value={partData?.uom} />

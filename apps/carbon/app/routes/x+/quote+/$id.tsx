@@ -30,7 +30,6 @@ import {
   getQuoteMaterials,
   getQuoteOperations,
   useQuotation,
-  useQuotationLinePriceEffectsUpdate,
 } from "~/modules/sales";
 import QuotationReleaseModal from "~/modules/sales/ui/Quotation/QuotationReleaseModal";
 
@@ -112,11 +111,9 @@ export default function QuotationRoute() {
   const releaseDisclosure = useDisclosure();
 
   const [quote, setQuote] = useQuotation();
-  useQuotationLinePriceEffectsUpdate();
 
   useEffect(() => {
     setQuote({
-      client: supabase,
       quote: quotation,
       lines: quotationLines,
       assemblies: quotationAssemblies,

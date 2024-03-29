@@ -8939,135 +8939,132 @@ export type Database = {
           },
         ]
       }
-      quoteLineQuantity: {
+      quoteLinePrice: {
         Row: {
-          additionalCost: number
           createdAt: string
           createdBy: string
-          discountPercentage: number
-          extendedCost: number
+          discountPercent: number
+          extendedPrice: number
           id: string
-          laborCost: number
           leadTime: number
-          markupPercentage: number
-          materialCost: number
-          overheadCost: number
-          productionHours: number
+          markupPercent: number
           quantity: number
           quoteId: string
           quoteLineId: string
-          scrapPercentage: number
-          setupHours: number
-          unitCostBase: number
-          unitTaxAmount: number
+          unitCost: number
           updatedAt: string | null
           updatedBy: string | null
         }
         Insert: {
-          additionalCost?: number
           createdAt?: string
           createdBy: string
-          discountPercentage?: number
-          extendedCost?: number
+          discountPercent?: number
+          extendedPrice?: number
           id?: string
-          laborCost?: number
           leadTime?: number
-          markupPercentage?: number
-          materialCost?: number
-          overheadCost?: number
-          productionHours?: number
+          markupPercent?: number
           quantity?: number
           quoteId: string
           quoteLineId: string
-          scrapPercentage?: number
-          setupHours?: number
-          unitCostBase?: number
-          unitTaxAmount?: number
+          unitCost?: number
           updatedAt?: string | null
           updatedBy?: string | null
         }
         Update: {
-          additionalCost?: number
           createdAt?: string
           createdBy?: string
-          discountPercentage?: number
-          extendedCost?: number
+          discountPercent?: number
+          extendedPrice?: number
           id?: string
-          laborCost?: number
           leadTime?: number
-          markupPercentage?: number
-          materialCost?: number
-          overheadCost?: number
-          productionHours?: number
+          markupPercent?: number
           quantity?: number
           quoteId?: string
           quoteLineId?: string
-          scrapPercentage?: number
-          setupHours?: number
-          unitCostBase?: number
-          unitTaxAmount?: number
+          unitCost?: number
           updatedAt?: string | null
           updatedBy?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "quoteLineQuantity_createdBy_fkey"
+            foreignKeyName: "quoteLinePrice_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
             referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "quoteLineQuantity_createdBy_fkey"
+            foreignKeyName: "quoteLinePrice_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "quoteLineQuantity_createdBy_fkey"
+            foreignKeyName: "quoteLinePrice_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
             referencedRelation: "user"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "quoteLineQuantity_createdBy_fkey"
+            foreignKeyName: "quoteLinePrice_createdBy_fkey"
             columns: ["createdBy"]
             isOneToOne: false
             referencedRelation: "userDefaults"
             referencedColumns: ["userId"]
           },
           {
-            foreignKeyName: "quoteLineQuantity_quoteLineId_fkey"
+            foreignKeyName: "quoteLinePrice_quoteId_fkey"
+            columns: ["quoteId"]
+            isOneToOne: false
+            referencedRelation: "quote"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteLinePrice_quoteId_fkey"
+            columns: ["quoteId"]
+            isOneToOne: false
+            referencedRelation: "quoteCustomerDetails"
+            referencedColumns: ["quoteId"]
+          },
+          {
+            foreignKeyName: "quoteLinePrice_quoteId_fkey"
+            columns: ["quoteId"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteLinePrice_quoteLineId_fkey"
             columns: ["quoteLineId"]
             isOneToOne: false
             referencedRelation: "quoteLine"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "quoteLineQuantity_updatedBy_fkey"
+            foreignKeyName: "quoteLinePrice_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
             referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "quoteLineQuantity_updatedBy_fkey"
+            foreignKeyName: "quoteLinePrice_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
             referencedRelation: "employeeSummary"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "quoteLineQuantity_updatedBy_fkey"
+            foreignKeyName: "quoteLinePrice_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
             referencedRelation: "user"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "quoteLineQuantity_updatedBy_fkey"
+            foreignKeyName: "quoteLinePrice_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
             referencedRelation: "userDefaults"
