@@ -9,8 +9,9 @@ import {
   useKeyboardShortcuts,
 } from "@carbon/react";
 import { prettifyKeyboardShortcut } from "@carbon/utils";
-import { Link, useMatches, useNavigate } from "@remix-run/react";
+import { Link, useNavigate } from "@remix-run/react";
 import type { IconType } from "react-icons";
+import { useOptimisticLocation } from "~/hooks";
 
 type DetailSidebarProps = {
   links: {
@@ -23,8 +24,8 @@ type DetailSidebarProps = {
 };
 
 const DetailSidebar = ({ links }: DetailSidebarProps) => {
-  const matches = useMatches();
   const navigate = useNavigate();
+  const location = useOptimisticLocation();
 
   useKeyboardShortcuts(
     links.reduce<Record<string, () => void>>((acc, link) => {
@@ -38,11 +39,7 @@ const DetailSidebar = ({ links }: DetailSidebarProps) => {
   return (
     <VStack className="overflow-y-auto h-full" spacing={1}>
       {links.map((route) => {
-        const isActive = matches.some(
-          (match) =>
-            (match.pathname.includes(route.to) && route.to !== "") ||
-            (match.id.includes(".index") && route.to === "")
-        );
+        const isActive = route.to === location.pathname;
 
         return (
           <Tooltip key={route.name}>

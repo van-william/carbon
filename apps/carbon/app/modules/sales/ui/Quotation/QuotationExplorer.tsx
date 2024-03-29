@@ -28,6 +28,7 @@ import { HiOutlineCube } from "react-icons/hi";
 import { IoMdAdd } from "react-icons/io";
 import { LuClock } from "react-icons/lu";
 import { RxCheck, RxChevronDown } from "react-icons/rx";
+import { useOptimisticLocation } from "~/hooks";
 import type { BillOfMaterialNode } from "~/modules/shared";
 import { path } from "~/utils/path";
 import type {
@@ -233,7 +234,7 @@ const QuotationExplorerItem = (
 };
 
 const QuotationExplorer = () => {
-  const { pathname, search } = useLocation();
+  const { pathname, search } = useOptimisticLocation();
 
   const params = useParams();
   if (!params.id) throw new Error("id not found");
