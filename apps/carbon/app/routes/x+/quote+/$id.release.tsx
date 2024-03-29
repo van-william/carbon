@@ -38,7 +38,7 @@ export async function action(args: ActionFunctionArgs) {
 
   const release = await releaseQuote(client, id, userId);
   if (release.error) {
-    return redirect(
+    throw redirect(
       path.to.quote(id),
       await flash(request, error(release.error, "Failed to release quote"))
     );
@@ -46,7 +46,7 @@ export async function action(args: ActionFunctionArgs) {
 
   const quote = await getQuote(client, id);
   if (quote.error) {
-    return redirect(
+    throw redirect(
       path.to.quote(id),
       await flash(request, error(quote.error, "Failed to get quote"))
     );
@@ -70,13 +70,13 @@ export async function action(args: ActionFunctionArgs) {
       });
 
     if (fileUpload.error) {
-      return redirect(
+      throw redirect(
         path.to.quote(id),
         await flash(request, error(fileUpload.error, "Failed to upload file"))
       );
     }
   } catch (err) {
-    return redirect(
+    throw redirect(
       path.to.quote(id),
       await flash(request, error(err, "Failed to generate PDF"))
     );
@@ -146,7 +146,7 @@ export async function action(args: ActionFunctionArgs) {
           },
         });
       } catch (err) {
-        return redirect(
+        throw redirect(
           path.to.quote(id),
           await flash(request, error(err, "Failed to send email"))
         );
@@ -160,7 +160,7 @@ export async function action(args: ActionFunctionArgs) {
       throw new Error("Invalid notification type");
   }
 
-  return redirect(
+  throw redirect(
     path.to.quote(id),
     await flash(request, success("Quote released"))
   );

@@ -55,7 +55,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const requiresOnboarding = !company.data?.name;
   if (requiresOnboarding) {
-    return redirect(path.to.onboarding.root);
+    throw redirect(path.to.onboarding.root);
   }
 
   return json({

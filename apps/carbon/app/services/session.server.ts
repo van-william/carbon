@@ -56,7 +56,7 @@ export async function createAuthSession({
   authSession: AuthSession;
   redirectTo: string;
 }) {
-  return redirect(safeRedirect(redirectTo), {
+  throw redirect(safeRedirect(redirectTo), {
     headers: {
       "Set-Cookie": await commitAuthSession(request, {
         authSession,
@@ -92,7 +92,7 @@ export async function commitAuthSession(
 export async function destroyAuthSession(request: Request) {
   const session = await getSession(request);
 
-  return redirect(path.to.login, {
+  throw redirect(path.to.login, {
     headers: {
       "Set-Cookie": await sessionStorage.destroySession(session),
     },

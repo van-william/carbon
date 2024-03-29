@@ -38,7 +38,7 @@ export async function action(args: ActionFunctionArgs) {
 
   const release = await releasePurchaseOrder(client, orderId, userId);
   if (release.error) {
-    return redirect(
+    throw redirect(
       path.to.purchaseOrder(orderId),
       await flash(
         request,
@@ -49,7 +49,7 @@ export async function action(args: ActionFunctionArgs) {
 
   const purchaseOrder = await getPurchaseOrder(client, orderId);
   if (purchaseOrder.error) {
-    return redirect(
+    throw redirect(
       path.to.purchaseOrder(orderId),
       await flash(
         request,
@@ -76,13 +76,13 @@ export async function action(args: ActionFunctionArgs) {
       });
 
     if (fileUpload.error) {
-      return redirect(
+      throw redirect(
         path.to.purchaseOrder(orderId),
         await flash(request, error(fileUpload.error, "Failed to upload file"))
       );
     }
   } catch (err) {
-    return redirect(
+    throw redirect(
       path.to.purchaseOrder(orderId),
       await flash(request, error(err, "Failed to generate PDF"))
     );
@@ -162,7 +162,7 @@ export async function action(args: ActionFunctionArgs) {
           },
         });
       } catch (err) {
-        return redirect(
+        throw redirect(
           path.to.purchaseOrder(orderId),
           await flash(request, error(err, "Failed to send email"))
         );
@@ -176,7 +176,7 @@ export async function action(args: ActionFunctionArgs) {
       throw new Error("Invalid notification type");
   }
 
-  return redirect(
+  throw redirect(
     path.to.purchaseOrderExternalDocuments(orderId),
     await flash(request, success("Purchase order released"))
   );

@@ -71,7 +71,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     });
 
     if (updateQuotationLine.error) {
-      return redirect(
+      throw redirect(
         path.to.quoteLine(quoteId, lineId),
         await flash(
           request,
@@ -96,7 +96,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     });
 
     if (updateLinePrice.error) {
-      return redirect(
+      throw redirect(
         path.to.quoteLine(quoteId, lineId),
         await flash(
           request,
@@ -106,7 +106,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     }
   }
 
-  return redirect(path.to.quoteLine(quoteId, lineId));
+  throw redirect(path.to.quoteLine(quoteId, lineId));
 }
 
 export default function EditQuotationLineRoute() {

@@ -40,7 +40,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
 
   if (createQuotationLine.error) {
-    return redirect(
+    throw redirect(
       path.to.quote(quoteId),
       await flash(
         request,
@@ -59,7 +59,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     createdBy: userId,
   });
 
-  return redirect(path.to.quoteLine(quoteId, quoteLineId));
+  throw redirect(path.to.quoteLine(quoteId, quoteLineId));
 }
 
 export default function NewQuotationLineRoute() {
