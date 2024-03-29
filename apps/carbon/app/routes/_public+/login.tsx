@@ -4,7 +4,6 @@ import {
   validationError,
   validator,
 } from "@carbon/remix-validated-form";
-import posthog from "posthog-js";
 import type {
   ActionFunctionArgs,
   LoaderFunctionArgs,
@@ -12,6 +11,7 @@ import type {
 } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Link, useActionData, useSearchParams } from "@remix-run/react";
+import posthog from "posthog-js";
 import { LuAlertCircle } from "react-icons/lu";
 
 import { Hidden, Input, Password, Submit } from "~/components/Form";
@@ -21,7 +21,7 @@ import {
   verifyAuthSession,
 } from "~/services/auth";
 import { createAuthSession, getAuthSession } from "~/services/session.server";
-import type { FormActionData, Result } from "~/types";
+import type { Result } from "~/types";
 import { assertIsPost } from "~/utils/http";
 import { path } from "~/utils/path";
 import { error } from "~/utils/result";
@@ -39,7 +39,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return null;
 }
 
-export async function action({ request }: ActionFunctionArgs): FormActionData {
+export async function action({ request }: ActionFunctionArgs) {
   assertIsPost(request);
   const validation = await validator(loginValidator).validate(
     await request.formData()
@@ -61,7 +61,7 @@ export async function action({ request }: ActionFunctionArgs): FormActionData {
     });
   }
 
-  return createAuthSession({
+  createAuthSession({
     request,
     authSession,
     redirectTo: redirectTo || path.to.authenticatedRoot,
