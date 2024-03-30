@@ -42,6 +42,7 @@ USING (
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
 );
 
+DELETE * FROM storage.objects WHERE bucket_id = 'purchasing-internal';
 DELETE FROM storage.buckets WHERE id = 'purchasing-internal';
 
 
@@ -107,6 +108,7 @@ USING (
     )
 );
 
+DELETE * FROM storage.objects WHERE bucket_id = 'purchasing-external';
 DELETE FROM storage.buckets WHERE id = 'purchasing-external';
 
 -- Internal purchasing documents view

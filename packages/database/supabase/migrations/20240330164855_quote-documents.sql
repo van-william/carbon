@@ -42,6 +42,7 @@ USING (
     AND (get_my_claim('role'::text)) = '"employee"'::jsonb
 );
 
+DELETE * FROM storage.objects WHERE bucket_id = 'quote-internal';
 DELETE FROM storage.buckets WHERE id = 'quote-internal';
 
 
@@ -107,6 +108,7 @@ USING (
     )
 );
 
+DELETE * FROM storage.objects WHERE bucket_id = 'quote-external';
 DELETE FROM storage.buckets WHERE id = 'quote-external';
 
 -- Internal quote documents view
