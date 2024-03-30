@@ -100,10 +100,10 @@ const NavigationIconLink = forwardRef<
       "flex items-center rounded-md",
       "group-data-[state=collapsed]:justify-center",
       "group-data-[state=expanded]:-space-x-2",
-      "hover:bg-primary/10 active:",
+      "hover:bg-secondary active:",
       `${
         isActive
-          ? "!bg-primary !text-primary-foreground shadow-sm hover:text-primary-foreground"
+          ? "dark:bg-primary/10 bg-primary/20 text-primary shadow-sm hover:text-primary hover:bg-primary/20 "
           : "hover:text-foreground"
       }`,
       "group/item",
@@ -125,7 +125,7 @@ const NavigationIconLink = forwardRef<
         <span
           aria-hidden={isOpen || undefined}
           className={cn(
-            "min-w-[128px] text-sm font-medium",
+            "min-w-[128px] text-sm",
             "absolute left-7 group-data-[state=expanded]:left-12",
             "opacity-0 group-data-[state=expanded]:opacity-100"
           )}

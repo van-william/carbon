@@ -4,7 +4,7 @@ import { upsertDocument } from "~/modules/documents";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session.server";
 import { assertIsPost } from "~/utils/http";
-import { path } from "~/utils/path";
+import { path, requestReferrer } from "~/utils/path";
 import { error, success } from "~/utils/result";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -14,16 +14,27 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const documentPath = formData.get("path");
   const name = formData.get("name");
+  const sourceDocument = formData.get("sourceDocument");
+  const sourceDocumentId = formData.get("sourceDocumentId");
 
   if (typeof documentPath !== "string") throw new Error("Invalid path");
   if (typeof name !== "string") throw new Error("Invalid name");
 
   const size = Number(formData.get("size"));
 
+  let source = {};
+  if (sourceDocument && sourceDocumentId) {
+    source = {
+      sourceDocument,
+      sourceDocumentId,
+    };
+  }
+
   const createDocument = await upsertDocument(client, {
     path: documentPath,
     name,
     size,
+    ...source,
     readGroups: [userId],
     writeGroups: [userId],
     createdBy: userId,
@@ -39,7 +50,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   throw redirect(
-    path.to.documents,
+    requestReferrer(request) ?? path.to.documents,
     await flash(request, success(`Successfully uploaded ${name}`))
   );
 }

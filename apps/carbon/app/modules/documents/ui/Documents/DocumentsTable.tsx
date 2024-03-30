@@ -7,30 +7,41 @@ import {
   CommandItem,
   Enumerable,
   HStack,
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
+  Heading,
   MenuIcon,
   MenuItem,
   Popover,
   PopoverContent,
   PopoverTrigger,
+  VStack,
   cn,
   useDisclosure,
 } from "@carbon/react";
-import { convertKbToString, filterEmpty } from "@carbon/utils";
-import { useRevalidator } from "@remix-run/react";
+import { convertKbToString, filterEmpty, formatDate } from "@carbon/utils";
+import { Link, useRevalidator } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { BsFillPenFill, BsPin, BsPinFill } from "react-icons/bs";
 import { IoMdAdd, IoMdTrash } from "react-icons/io";
+import { LuExternalLink } from "react-icons/lu";
 import { RxCheck } from "react-icons/rx";
 import { VscOpenPreview } from "react-icons/vsc";
-import { Avatar, Hyperlink, Table } from "~/components";
+import {
+  DocumentPreview,
+  EmployeeAvatar,
+  Hyperlink,
+  Table,
+} from "~/components";
 import { Confirm, ConfirmDelete } from "~/components/Modals";
+import { useFilters } from "~/components/Table/components/Filter/useFilters";
 import { usePermissions, useUrlParams } from "~/hooks";
 import type { Document, DocumentLabel } from "~/modules/documents";
-import { DocumentIcon, documentTypes } from "~/modules/documents";
+import {
+  DocumentIcon,
+  documentSourceTypes,
+  documentTypes,
+} from "~/modules/documents";
+import { usePeople } from "~/stores";
 import { path } from "~/utils/path";
 import DocumentCreateForm from "./DocumentCreateForm";
 import { useDocument } from "./useDocument";
@@ -67,6 +78,8 @@ const DocumentsTable = memo(
       setLabel,
     } = useDocument();
 
+    const { hasFilters } = useFilters();
+    const [people] = usePeople();
     const deleteDocumentModal = useDisclosure();
 
     const [selectedDocument, setSelectedDocument] = useState<Document | null>(
@@ -94,7 +107,7 @@ const DocumentsTable = memo(
           const index = prev.findIndex((item) => item.id === row.id);
           const updated = [...prev];
           const labelIndex = updated[index].labels?.findIndex(
-            (item) => item === label
+            (item: string) => item === label
           );
           if (labelIndex) {
             updated[index].labels?.splice(labelIndex, 1);
@@ -165,38 +178,20 @@ const DocumentsTable = memo(
                 />
               )}
               <DocumentIcon type={row.original.type!} />
-              <Hyperlink onClick={() => download(row.original)}>
+              <Hyperlink
+                onClick={() => download(row.original)}
+                className="max-w-[260px] truncate"
+              >
                 {row.original.type &&
                 ["Image", "PDF"].includes(row.original.type) ? (
-                  <HoverCard>
-                    <HoverCardTrigger>{row.original.name}</HoverCardTrigger>
-                    {row.original.type === "PDF" ? (
-                      <HoverCardContent className="w-[425px] h-[550px] overflow-hidden p-0">
-                        <iframe
-                          seamless
-                          title={row.original.path!}
-                          width="425"
-                          height="550"
-                          src={path.to.file.previewFile(
-                            `private/${row.original.path}`
-                          )}
-                        />
-                      </HoverCardContent>
-                    ) : (
-                      <HoverCardContent className="w-[400px] h-[400px] overflow-hidden p-0">
-                        <iframe
-                          seamless
-                          title={row.original.path!}
-                          width="400"
-                          height="400"
-                          src={path.to.file.previewImage(
-                            "private",
-                            row.original.path!
-                          )}
-                        />
-                      </HoverCardContent>
-                    )}
-                  </HoverCard>
+                  <DocumentPreview
+                    bucket="private"
+                    pathToFile={row.original.path!}
+                    // @ts-ignore
+                    type={row.original.type}
+                  >
+                    {row.original.name}
+                  </DocumentPreview>
                 ) : (
                   <>{row.original.name}</>
                 )}
@@ -205,11 +200,42 @@ const DocumentsTable = memo(
           ),
         },
         {
+          accessorKey: "sourceDocument",
+          header: "Source Document",
+          cell: ({ row }) =>
+            row.original.sourceDocument &&
+            row.original.sourceDocumentId && (
+              <HStack className="group" spacing={1}>
+                <Enumerable value={row.original.sourceDocument} />{" "}
+                <Link
+                  className="group-hover:opacity-100 opacity-0 transition-opacity duration-200 w-4 h-4 text-foreground"
+                  to={getDocumentLocation(
+                    row.original
+                      .sourceDocument as (typeof documentSourceTypes)[number],
+                    row.original.sourceDocumentId
+                  )}
+                  prefetch="intent"
+                >
+                  <LuExternalLink />
+                </Link>
+              </HStack>
+            ),
+          meta: {
+            filter: {
+              type: "static",
+              options: documentSourceTypes?.map((type) => ({
+                value: type,
+                label: <Enumerable value={type} />,
+              })),
+            },
+          },
+        },
+        {
           id: "labels",
           header: "Labels",
           cell: ({ row }) => (
             <HStack spacing={1}>
-              {row.original.labels?.map((label) => (
+              {row.original.labels?.map((label: string) => (
                 <Badge
                   key={label}
                   variant="secondary"
@@ -299,42 +325,46 @@ const DocumentsTable = memo(
           },
         },
         {
-          accessorKey: "createdByFullName",
+          id: "createdBy",
           header: "Created By",
-          cell: ({ row }) => {
-            return (
-              <HStack>
-                <Avatar
-                  size="sm"
-                  path={row.original.createdByAvatar ?? undefined}
-                />
-                <span>{row.original.createdByFullName}</span>
-              </HStack>
-            );
+          cell: ({ row }) => (
+            <EmployeeAvatar employeeId={row.original.createdBy} />
+          ),
+          meta: {
+            filter: {
+              type: "static",
+              options: people.map((employee) => ({
+                value: employee.id,
+                label: employee.name,
+              })),
+            },
           },
         },
-
         {
           accessorKey: "createdAt",
           header: "Created At",
-          cell: (item) => item.getValue(),
+          cell: (item) => formatDate(item.getValue<string>()),
         },
         {
-          accessorKey: "updatedByFullName",
+          id: "updatedBy",
           header: "Updated By",
-          cell: ({ row }) => {
-            return row.original.updatedByFullName ? (
-              <HStack>
-                <Avatar size="sm" path={row.original.updatedByAvatar ?? null} />
-                <span>{row.original.updatedByFullName}</span>
-              </HStack>
-            ) : null;
+          cell: ({ row }) => (
+            <EmployeeAvatar employeeId={row.original.updatedBy} />
+          ),
+          meta: {
+            filter: {
+              type: "static",
+              options: people.map((employee) => ({
+                value: employee.id,
+                label: employee.name,
+              })),
+            },
           },
         },
         {
           accessorKey: "updatedAt",
-          header: "Updated At",
-          cell: (item) => item.getValue(),
+          header: "Created At",
+          cell: (item) => formatDate(item.getValue<string>()),
         },
       ];
     }, [
@@ -344,6 +374,7 @@ const DocumentsTable = memo(
       onDeleteLabel,
       onFavorite,
       onLabel,
+      people,
       revalidator,
       setLabel,
     ]);
@@ -440,19 +471,33 @@ const DocumentsTable = memo(
 
     return (
       <>
-        <Table<Document>
-          actions={actions}
-          count={count}
-          columns={columns}
-          data={rows}
-          defaultColumnVisibility={defaultColumnVisibility}
-          primaryAction={
-            permissions.can("create", "documents") && <DocumentCreateForm />
-          }
-          withColumnOrdering
-          // withSelectableRows
-          renderContextMenu={renderContextMenu}
-        />
+        {count === 0 && !hasFilters ? (
+          <HStack className="w-full h-screen flex items-start justify-center">
+            <VStack className="border rounded-md shadow-md w-96 mt-20">
+              <div className="w-full flex flex-col gap-4 items-center justify-center py-8 bg-gradient-to-bl from-card to-background rounded-lg text-center group ring-4 ring-transparent hover:ring-white/10">
+                <Heading size="h2">No Files Yet</Heading>
+                <p className="text-muted-foreground text-base font-light">
+                  Start by uploading your first file
+                </p>
+                <DocumentCreateForm />
+              </div>
+            </VStack>
+          </HStack>
+        ) : (
+          <Table<Document>
+            actions={actions}
+            count={count}
+            columns={columns}
+            data={rows}
+            defaultColumnVisibility={defaultColumnVisibility}
+            primaryAction={
+              permissions.can("create", "documents") && <DocumentCreateForm />
+            }
+            withColumnOrdering
+            // withSelectableRows
+            renderContextMenu={renderContextMenu}
+          />
+        )}
 
         {selectedDocument &&
           selectedDocument.id &&
@@ -561,3 +606,17 @@ const CreatableCommand = ({
 DocumentsTable.displayName = "DocumentsTable";
 
 export default DocumentsTable;
+
+function getDocumentLocation(
+  sourceDocument: (typeof documentSourceTypes)[number],
+  sourceDocumentId: string
+) {
+  switch (sourceDocument) {
+    case "Purchase Order":
+      return path.to.purchaseOrder(sourceDocumentId);
+    case "Quote":
+      return path.to.quote(sourceDocumentId);
+    default:
+      return "#";
+  }
+}

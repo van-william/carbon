@@ -6,16 +6,11 @@ import { useSupabase } from "~/lib/supabase";
 import type { PurchaseOrderAttachment } from "~/modules/purchasing/types";
 
 type Props = {
-  attachments: PurchaseOrderAttachment[];
   isExternal: boolean;
   orderId: string;
 };
 
-export const usePurchaseOrderDocuments = ({
-  attachments,
-  isExternal,
-  orderId,
-}: Props) => {
+export const usePurchaseOrderDocuments = ({ isExternal, orderId }: Props) => {
   const fetcher = useFetcher();
   const permissions = usePermissions();
   const { supabase } = useSupabase();
@@ -27,28 +22,37 @@ export const usePurchaseOrderDocuments = ({
     [fetcher]
   );
 
+  const getPath = useCallback(
+    (attachment: PurchaseOrderAttachment) => {
+      return `purchasing/${isExternal ? "external" : "internal"}/${orderId}/${
+        attachment.name
+      }`;
+    },
+    [isExternal, orderId]
+  );
+
   const deleteAttachment = useCallback(
     async (attachment: PurchaseOrderAttachment) => {
-      const result = await supabase?.storage
-        .from(isExternal ? "purchasing-external" : "purchasing-internal")
-        .remove([`${orderId}/${attachment.name}`]);
+      const fileDelete = await supabase?.storage
+        .from("private")
+        .remove([getPath(attachment)]);
 
-      if (!result || result.error) {
-        toast.error(result?.error?.message || "Error deleting file");
+      if (!fileDelete || fileDelete.error) {
+        toast.error(fileDelete?.error?.message || "Error deleting file");
         return;
       }
 
       toast.success("File deleted successfully");
       refresh();
     },
-    [supabase, orderId, isExternal, refresh]
+    [supabase, getPath, refresh]
   );
 
   const download = useCallback(
     async (attachment: PurchaseOrderAttachment) => {
       const result = await supabase?.storage
-        .from(isExternal ? "purchasing-external" : "purchasing-internal")
-        .download(`${orderId}/${attachment.name}`);
+        .from("private")
+        .download(getPath(attachment));
 
       if (!result || result.error) {
         toast.error(result?.error?.message || "Error downloading file");
@@ -67,50 +71,13 @@ export const usePurchaseOrderDocuments = ({
         document.body.removeChild(a);
       }, 0);
     },
-    [supabase, orderId, isExternal]
-  );
-
-  // const getAvatarPath = useCallback(
-  //   (userId: string) => {
-  //     return usersMap[userId]?.avatarUrl;
-  //   },
-  //   [usersMap]
-  // );
-
-  // const getFullName = useCallback(
-  //   (userId: string) => {
-  //     return usersMap[userId]?.fullName;
-  //   },
-  //   [usersMap]
-  // );
-
-  const isImage = useCallback((fileType: string) => {
-    return ["png", "jpg", "jpeg", "gif", "svg", "avif"].includes(fileType);
-  }, []);
-
-  const makePreview = useCallback(
-    async (attachment: PurchaseOrderAttachment) => {
-      const result = await supabase?.storage
-        .from(isExternal ? "purchasing-external" : "purchasing-internal")
-        .download(`${orderId}/${attachment.name}`);
-
-      if (!result || result.error) {
-        toast.error(result?.error?.message || "Error previewing file");
-        return null;
-      }
-
-      return window.URL.createObjectURL(result.data);
-    },
-    [isExternal, orderId, supabase?.storage]
+    [supabase?.storage, getPath]
   );
 
   return {
     canDelete,
     deleteAttachment,
     download,
-    // getAvatarPath,
-    // getFullName,
-    isImage,
-    makePreview,
+    getPath,
   };
 };

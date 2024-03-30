@@ -109,18 +109,22 @@ export async function deleteSupplierType(
   return client.from("supplierType").delete().eq("id", supplierTypeId);
 }
 
-export async function getExternalDocuments(
+export async function getPurchaseOrderExternalDocuments(
   client: SupabaseClient<Database>,
   purchaseOrderId: string
 ) {
-  return client.storage.from("purchasing-external").list(purchaseOrderId);
+  return client.storage
+    .from("private")
+    .list(`purchasing/external/${purchaseOrderId}`);
 }
 
-export async function getInternalDocuments(
+export async function getPurchaseOrderInternalDocuments(
   client: SupabaseClient<Database>,
   purchaseOrderId: string
 ) {
-  return client.storage.from("purchasing-internal").list(purchaseOrderId);
+  return client.storage
+    .from("private")
+    .list(`purchasing/internal/${purchaseOrderId}`);
 }
 
 export async function getPurchaseOrder(
