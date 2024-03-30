@@ -8695,6 +8695,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "quoteAssembly_quoteLineId_fkey"
+            columns: ["quoteLineId"]
+            isOneToOne: false
+            referencedRelation: "quoteLines"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "quoteAssembly_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
@@ -9043,6 +9050,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "quoteLinePrice_quoteLineId_fkey"
+            columns: ["quoteLineId"]
+            isOneToOne: false
+            referencedRelation: "quoteLines"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "quoteLinePrice_updatedBy_fkey"
             columns: ["updatedBy"]
             isOneToOne: false
@@ -9197,6 +9211,13 @@ export type Database = {
             columns: ["quoteLineId"]
             isOneToOne: false
             referencedRelation: "quoteLine"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteMaterial_quoteLineId_fkey"
+            columns: ["quoteLineId"]
+            isOneToOne: false
+            referencedRelation: "quoteLines"
             referencedColumns: ["id"]
           },
           {
@@ -9366,6 +9387,13 @@ export type Database = {
             columns: ["quoteLineId"]
             isOneToOne: false
             referencedRelation: "quoteLine"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteOperation_quoteLineId_fkey"
+            columns: ["quoteLineId"]
+            isOneToOne: false
+            referencedRelation: "quoteLines"
             referencedColumns: ["id"]
           },
           {
@@ -14847,6 +14875,130 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "country"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      quoteLines: {
+        Row: {
+          createdBy: string | null
+          customerPartId: string | null
+          customerPartRevision: string | null
+          customFields: Json | null
+          description: string | null
+          id: string | null
+          partId: string | null
+          pricingDiscountPercent: number | null
+          pricingExtendedPrice: number | null
+          pricingLeadTime: number | null
+          pricingMarkupPercent: number | null
+          pricingQuantity: number | null
+          pricingUnitCost: number | null
+          quoteId: string | null
+          quoteRevisionId: number | null
+          replenishmentSystem: string | null
+          status: Database["public"]["Enums"]["quoteLineStatus"] | null
+          unitOfMeasureCode: string | null
+          updatedAt: string | null
+          updatedBy: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quoteLine_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteLine_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteLine_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteLine_createdBy_fkey"
+            columns: ["createdBy"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
+          },
+          {
+            foreignKeyName: "quoteLine_partId_fkey"
+            columns: ["partId"]
+            isOneToOne: false
+            referencedRelation: "part"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteLine_partId_fkey"
+            columns: ["partId"]
+            isOneToOne: false
+            referencedRelation: "partQuantities"
+            referencedColumns: ["partId"]
+          },
+          {
+            foreignKeyName: "quoteLine_partId_fkey"
+            columns: ["partId"]
+            isOneToOne: false
+            referencedRelation: "parts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteLine_quoteId_fkey"
+            columns: ["quoteId"]
+            isOneToOne: false
+            referencedRelation: "quote"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteLine_quoteId_fkey"
+            columns: ["quoteId"]
+            isOneToOne: false
+            referencedRelation: "quoteCustomerDetails"
+            referencedColumns: ["quoteId"]
+          },
+          {
+            foreignKeyName: "quoteLine_quoteId_fkey"
+            columns: ["quoteId"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteLine_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteLine_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employeeSummary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteLine_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quoteLine_updatedBy_fkey"
+            columns: ["updatedBy"]
+            isOneToOne: false
+            referencedRelation: "userDefaults"
+            referencedColumns: ["userId"]
           },
         ]
       }

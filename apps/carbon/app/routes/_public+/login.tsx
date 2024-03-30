@@ -20,9 +20,9 @@ import {
   signInWithEmail,
   verifyAuthSession,
 } from "~/services/auth";
-import { createAuthSession, getAuthSession } from "~/services/session.server";
+import { commitAuthSession, getAuthSession } from "~/services/session.server";
 import type { Result } from "~/types";
-import { assertIsPost } from "~/utils/http";
+import { assertIsPost, safeRedirect } from "~/utils/http";
 import { path } from "~/utils/path";
 import { error } from "~/utils/result";
 
@@ -61,10 +61,13 @@ export async function action({ request }: ActionFunctionArgs) {
     });
   }
 
-  createAuthSession({
-    request,
-    authSession,
-    redirectTo: redirectTo || path.to.authenticatedRoot,
+  throw redirect(safeRedirect(redirectTo), {
+    headers: {
+      "Set-Cookie": await commitAuthSession(request, {
+        authSession,
+        flashErrorMessage: null,
+      }),
+    },
   });
 }
 

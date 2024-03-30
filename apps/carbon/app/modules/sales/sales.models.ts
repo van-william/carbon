@@ -77,6 +77,7 @@ export const quotationValidator = z.object({
   customerContactId: zfd.text(z.string().optional()),
   customerReference: zfd.text(z.string().optional()),
   locationId: zfd.text(z.string().optional()),
+  status: z.enum(quoteStatusType).optional(),
   notes: zfd.text(z.string().optional()),
   expirationDate: zfd.text(z.string().optional()),
 });

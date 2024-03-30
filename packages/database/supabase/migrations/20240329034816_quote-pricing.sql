@@ -22,3 +22,16 @@ CREATE TABLE "quoteLinePrice" (
   CONSTRAINT "quoteLinePrice_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT "quoteLinePrice_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
+
+CREATE OR REPLACE VIEW "quoteLines" WITH(SECURITY_INVOKER=true) AS (
+  SELECT
+    ql.*,
+    qlp."quantity" AS "pricingQuantity",
+    qlp."unitCost" AS "pricingUnitCost",
+    qlp."leadTime" AS "pricingLeadTime",
+    qlp."discountPercent" AS "pricingDiscountPercent",
+    qlp."markupPercent" AS "pricingMarkupPercent",
+    qlp."extendedPrice" AS "pricingExtendedPrice"
+  FROM "quoteLine" ql
+  LEFT JOIN "quoteLinePrice" qlp ON ql."id" = qlp."quoteLineId"
+);

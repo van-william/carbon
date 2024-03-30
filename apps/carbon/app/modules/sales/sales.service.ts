@@ -349,7 +349,7 @@ export async function getQuoteLines(
   client: SupabaseClient<Database>,
   quoteId: string
 ) {
-  return client.from("quoteLine").select("*").eq("quoteId", quoteId);
+  return client.from("quoteLines").select("*").eq("quoteId", quoteId);
 }
 
 export async function getQuoteCustomerDetails(
@@ -565,14 +565,28 @@ export async function releaseQuote(
   quoteId: string,
   usedId: string
 ) {
-  return client
+  const quoteUpdate = await client
     .from("quote")
     .update({
       status: "Open",
+      quoteDate: today(getLocalTimeZone()).toString(),
       updatedAt: today(getLocalTimeZone()).toString(),
       updatedBy: usedId,
     })
     .eq("id", quoteId);
+
+  if (quoteUpdate.error) {
+    return quoteUpdate;
+  }
+
+  return client
+    .from("quoteLine")
+    .update({
+      status: "Complete",
+      updatedAt: today(getLocalTimeZone()).toString(),
+      updatedBy: usedId,
+    })
+    .eq("quoteId", quoteId);
 }
 
 export async function upsertCustomer(

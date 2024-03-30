@@ -133,6 +133,8 @@ export default function QuotationRoute() {
   const { id } = useParams();
   if (!id) throw new Error("id not found");
 
+  const isReleased = !["Draft"].includes(quote.quote?.status ?? "");
+
   const buttonRef = useRef<HTMLButtonElement>(null);
   useKeyboardShortcuts({
     l: (event: KeyboardEvent) => {
@@ -204,7 +206,7 @@ export default function QuotationRoute() {
               </MenubarItem>
               <MenubarItem
                 onClick={releaseDisclosure.onOpen}
-                // isDisabled={isReleased}
+                isDisabled={isReleased}
               >
                 Release
               </MenubarItem>
