@@ -6,6 +6,8 @@ import {
   CardTitle,
 } from "@carbon/react";
 import { ValidatedForm } from "@carbon/remix-validated-form";
+import { useParams } from "@remix-run/react";
+import { useState } from "react";
 import type { z } from "zod";
 import {
   Boolean,
@@ -16,8 +18,10 @@ import {
   Supplier,
   UnitOfMeasure,
 } from "~/components/Form";
-import { usePermissions } from "~/hooks";
+import { usePermissions, useRouteData } from "~/hooks";
+import type { PartSummary } from "~/modules/parts";
 import { partPurchasingValidator } from "~/modules/parts";
+import { path } from "~/utils/path";
 
 type PartPurchasingFormProps = {
   initialValues: z.infer<typeof partPurchasingValidator>;
@@ -25,6 +29,17 @@ type PartPurchasingFormProps = {
 
 const PartPurchasingForm = ({ initialValues }: PartPurchasingFormProps) => {
   const permissions = usePermissions();
+  const { partId } = useParams();
+  if (!partId) throw new Error("partId not found");
+
+  const routeData = useRouteData<{ partSummary: PartSummary }>(
+    path.to.part(partId)
+  );
+
+  const inventoryCode = routeData?.partSummary?.unitOfMeasureCode;
+  const [purchasingCode, setPurchasingCode] = useState<string | null>(
+    initialValues.purchasingUnitOfMeasureCode ?? null
+  );
 
   return (
     <ValidatedForm
@@ -44,8 +59,16 @@ const PartPurchasingForm = ({ initialValues }: PartPurchasingFormProps) => {
             <UnitOfMeasure
               name="purchasingUnitOfMeasureCode"
               label="Purchasing Unit of Measure"
+              onChange={(newValue) => {
+                if (newValue) setPurchasingCode(newValue.value);
+              }}
             />
-            <ConversionFactor name="conversionFactor" />
+            <ConversionFactor
+              name="conversionFactor"
+              isReadOnly={!purchasingCode || !inventoryCode}
+              purchasingCode={purchasingCode ?? undefined}
+              inventoryCode={inventoryCode}
+            />
             {/* <Number
               name="conversionFactor"
               label="Conversion Factor"

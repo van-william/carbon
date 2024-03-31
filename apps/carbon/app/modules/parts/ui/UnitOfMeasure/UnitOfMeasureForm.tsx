@@ -14,9 +14,15 @@ import {
 import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useFetcher } from "@remix-run/react";
 import type { PostgrestResponse } from "@supabase/supabase-js";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { z } from "zod";
-import { CustomFormFields, Hidden, Input, Submit } from "~/components/Form";
+import {
+  CustomFormFields,
+  Hidden,
+  Input,
+  InputControlled,
+  Submit,
+} from "~/components/Form";
 import { usePermissions } from "~/hooks";
 import { unitOfMeasureValidator } from "~/modules/parts";
 import { path } from "~/utils/path";
@@ -36,6 +42,7 @@ const UnitOfMeasureForm = ({
 }: UnitOfMeasureFormProps) => {
   const permissions = usePermissions();
   const fetcher = useFetcher<PostgrestResponse<{ id: string }>>();
+  const [code, setCode] = useState<string>(initialValues.code);
 
   useEffect(() => {
     if (type !== "modal") return;
@@ -82,9 +89,13 @@ const UnitOfMeasureForm = ({
               <Hidden name="type" value={type} />
               <VStack spacing={4}>
                 <Input name="name" label="Unit of Measure" />
-                <Input
+                <InputControlled
                   name="code"
                   label="Code"
+                  value={code}
+                  onChange={(value) =>
+                    setCode(value.toUpperCase().replace(/\s/g, ""))
+                  }
                   helperText="Unique, uppercase, without spaces"
                 />
                 <CustomFormFields table="unitOfMeasure" />

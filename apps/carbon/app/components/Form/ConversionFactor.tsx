@@ -22,16 +22,7 @@ import { useControlField, useField } from "@carbon/remix-validated-form";
 import { forwardRef, useMemo, useRef, useState } from "react";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 import { MdTranslate } from "react-icons/md";
-
-const inventoryUnit = {
-  code: "OZ",
-  name: "Ounce",
-};
-
-const purchaseUnit = {
-  code: "JR",
-  name: "Jar",
-};
+import { useUnitOfMeasureOptions } from "./UnitOfMeasure";
 
 enum ConversionDirection {
   PurchasedToInventory,
@@ -41,6 +32,8 @@ enum ConversionDirection {
 type ConversionFactorProps = {
   name: string;
   label?: string;
+  inventoryCode?: string;
+  purchasingCode?: string;
   isReadOnly?: boolean;
   isRequired?: boolean;
   helperText?: string;
@@ -56,6 +49,8 @@ const ConversionFactor = forwardRef<HTMLInputElement, ConversionFactorProps>(
       isReadOnly,
       helperText,
       onChange,
+      purchasingCode,
+      inventoryCode,
       ...rest
     },
     ref
@@ -84,21 +79,40 @@ const ConversionFactor = forwardRef<HTMLInputElement, ConversionFactorProps>(
       }
     };
 
+    const unitOfMeasureOptions = useUnitOfMeasureOptions();
+
     const description = useMemo(() => {
+      const purchaseUnit =
+        unitOfMeasureOptions.find((option) => option.value === purchasingCode)
+          ?.label ??
+        purchasingCode ??
+        "";
+
+      const inventoryUnit =
+        unitOfMeasureOptions.find((option) => option.value === inventoryCode)
+          ?.label ??
+        inventoryCode ??
+        "";
+
       const inverseOfConversion = 1 / conversionFactor;
-      if (purchaseUnit.code === inventoryUnit.code)
-        return `No conversion is required`;
+      if (purchasingCode === inventoryCode) return `No conversion is required`;
 
       if (conversionDirection === ConversionDirection.InventoryToPurchased) {
-        return `There are ${twoDecimals(
+        return `There ${conversionFactor === 1 ? "is" : "are"} ${twoDecimals(
           conversionFactor
-        )} ${purchaseUnit.name.toLocaleLowerCase()} in one ${inventoryUnit.name.toLocaleLowerCase()}`;
+        )} ${purchaseUnit.toLocaleLowerCase()} in one ${inventoryUnit.toLocaleLowerCase()}`;
       }
 
-      return `There are ${twoDecimals(
+      return `There ${conversionFactor === 1 ? "is" : "are"} ${twoDecimals(
         inverseOfConversion
-      )} ${inventoryUnit.name.toLocaleLowerCase()} in one ${purchaseUnit.name.toLocaleLowerCase()}`;
-    }, [conversionDirection, conversionFactor]);
+      )} ${inventoryUnit.toLocaleLowerCase()} in one ${purchaseUnit.toLocaleLowerCase()}`;
+    }, [
+      conversionDirection,
+      conversionFactor,
+      inventoryCode,
+      purchasingCode,
+      unitOfMeasureOptions,
+    ]);
 
     const onPurchaseUnitChange = (value: number) =>
       setConversionFactor(1 / value);
@@ -127,6 +141,7 @@ const ConversionFactor = forwardRef<HTMLInputElement, ConversionFactorProps>(
           }}
         >
           <CommandTrigger
+            disabled={isReadOnly}
             icon={<MdTranslate className="w-4 h-4 opacity-50" />}
             // ref={ref}
             onClick={() => setOpen(true)}
