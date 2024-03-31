@@ -14,7 +14,7 @@ import CreatableCombobox from "./CreatableCombobox";
 type UnitOfMeasureSelectProps = Omit<ComboboxProps, "options">;
 
 const UnitOfMeasure = (props: UnitOfMeasureSelectProps) => {
-  const options = useUnitOfMeasureOptions();
+  const options = useUnitOfMeasure();
 
   const newUnitOfMeasureModal = useDisclosure();
   const [created, setCreated] = useState<string>("");
@@ -54,7 +54,7 @@ UnitOfMeasure.displayName = "UnitOfMeasure";
 
 export default UnitOfMeasure;
 
-export const useUnitOfMeasureOptions = () => {
+export const useUnitOfMeasure = () => {
   const uomFetcher =
     useFetcher<Awaited<ReturnType<typeof getUnitOfMeasuresList>>>();
 

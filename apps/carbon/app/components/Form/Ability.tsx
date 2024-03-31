@@ -11,6 +11,18 @@ import Combobox from "./Combobox";
 type AbilitySelectProps = Omit<ComboboxProps, "options">;
 
 const Ability = (props: AbilitySelectProps) => {
+  const options = useAbilities();
+
+  return (
+    <Combobox options={options} {...props} label={props?.label ?? "Ability"} />
+  );
+};
+
+Ability.displayName = "Ability";
+
+export default Ability;
+
+export const useAbilities = () => {
   const abilityFetcher =
     useFetcher<Awaited<ReturnType<typeof getAbilitiesList>>>();
 
@@ -29,11 +41,5 @@ const Ability = (props: AbilitySelectProps) => {
     [abilityFetcher.data]
   );
 
-  return (
-    <Combobox options={options} {...props} label={props?.label ?? "Ability"} />
-  );
+  return options;
 };
-
-Ability.displayName = "Ability";
-
-export default Ability;

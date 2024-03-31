@@ -20,12 +20,11 @@ type SupplierLocationSelectProps = Omit<
 };
 
 const SupplierLocation = (props: SupplierLocationSelectProps) => {
-  const supplierLocationsFetcher =
-    useFetcher<Awaited<ReturnType<typeof getSupplierLocations>>>();
-
   const newLocationModal = useDisclosure();
   // const [created, setCreated] = useState<string>("");
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const supplierLocationsFetcher =
+    useFetcher<Awaited<ReturnType<typeof getSupplierLocations>>>();
 
   useEffect(() => {
     if (props?.supplier) {

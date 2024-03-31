@@ -10,27 +10,11 @@ import CreatableCombobox from "./CreatableCombobox";
 type DepartmentSelectProps = Omit<ComboboxProps, "options">;
 
 const Department = (props: DepartmentSelectProps) => {
-  const departmentFetcher =
-    useFetcher<Awaited<ReturnType<typeof getDepartmentsList>>>();
-
   const newDepartmentModal = useDisclosure();
   const [created, setCreated] = useState<string>("");
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  useMount(() => {
-    departmentFetcher.load(path.to.api.departments);
-  });
-
-  const options = useMemo(
-    () =>
-      departmentFetcher.data?.data
-        ? departmentFetcher.data?.data.map((c) => ({
-            value: c.id,
-            label: c.name,
-          }))
-        : [],
-    [departmentFetcher.data]
-  );
+  const options = useDepartments();
 
   return (
     <>
@@ -64,3 +48,25 @@ const Department = (props: DepartmentSelectProps) => {
 Department.displayName = "Department";
 
 export default Department;
+
+export const useDepartments = () => {
+  const departmentFetcher =
+    useFetcher<Awaited<ReturnType<typeof getDepartmentsList>>>();
+
+  useMount(() => {
+    departmentFetcher.load(path.to.api.departments);
+  });
+
+  const options = useMemo(
+    () =>
+      departmentFetcher.data?.data
+        ? departmentFetcher.data?.data.map((c) => ({
+            value: c.id,
+            label: c.name,
+          }))
+        : [],
+    [departmentFetcher.data]
+  );
+
+  return options;
+};

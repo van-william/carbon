@@ -11,6 +11,18 @@ type ServiceSelectProps = Omit<ComboboxProps, "options"> & {
 };
 
 const Service = ({ serviceType, ...props }: ServiceSelectProps) => {
+  const options = useServices(serviceType);
+
+  return (
+    <Combobox options={options} {...props} label={props?.label ?? "Service"} />
+  );
+};
+
+Service.displayName = "Service";
+
+export default Service;
+
+export const useServices = (serviceType: ServiceType) => {
   const servicesFetcher =
     useFetcher<Awaited<ReturnType<typeof getServicesList>>>();
 
@@ -30,11 +42,5 @@ const Service = ({ serviceType, ...props }: ServiceSelectProps) => {
     [servicesFetcher.data]
   );
 
-  return (
-    <Combobox options={options} {...props} label={props?.label ?? "Service"} />
-  );
+  return options;
 };
-
-Service.displayName = "Service";
-
-export default Service;

@@ -10,6 +10,18 @@ import Combobox from "./Combobox";
 type CurrencySelectProps = Omit<ComboboxProps, "options">;
 
 const Currency = ({ ...props }: CurrencySelectProps) => {
+  const options = useCurrencies();
+
+  return (
+    <Combobox {...props} options={options} label={props?.label ?? "Currency"} />
+  );
+};
+
+Currency.displayName = "Currency";
+
+export default Currency;
+
+const useCurrencies = () => {
   const currencyFetcher =
     useFetcher<Awaited<ReturnType<typeof getCurrenciesList>>>();
 
@@ -28,11 +40,5 @@ const Currency = ({ ...props }: CurrencySelectProps) => {
     [currencyFetcher.data]
   );
 
-  return (
-    <Combobox {...props} options={options} label={props?.label ?? "Currency"} />
-  );
+  return options;
 };
-
-Currency.displayName = "Currency";
-
-export default Currency;

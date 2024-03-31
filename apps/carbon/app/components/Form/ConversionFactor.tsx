@@ -19,10 +19,12 @@ import {
   VStack,
 } from "@carbon/react";
 import { useControlField, useField } from "@carbon/remix-validated-form";
+import { twoDecimals } from "@carbon/utils";
+import type { ElementRef } from "react";
 import { forwardRef, useMemo, useRef, useState } from "react";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 import { MdTranslate } from "react-icons/md";
-import { useUnitOfMeasureOptions } from "./UnitOfMeasure";
+import { useUnitOfMeasure } from "./UnitOfMeasure";
 
 enum ConversionDirection {
   PurchasedToInventory,
@@ -40,7 +42,10 @@ type ConversionFactorProps = {
   onChange?: (newValue: number) => void;
 };
 
-const ConversionFactor = forwardRef<HTMLInputElement, ConversionFactorProps>(
+const ConversionFactor = forwardRef<
+  ElementRef<typeof CommandTrigger>,
+  ConversionFactorProps
+>(
   (
     {
       name,
@@ -51,7 +56,6 @@ const ConversionFactor = forwardRef<HTMLInputElement, ConversionFactorProps>(
       onChange,
       purchasingCode,
       inventoryCode,
-      ...rest
     },
     ref
   ) => {
@@ -66,7 +70,7 @@ const ConversionFactor = forwardRef<HTMLInputElement, ConversionFactorProps>(
     );
 
     const [conversionDirection, setConversionDirection] = useState(
-      conversionFactor <= 1
+      conversionFactor > 1
         ? ConversionDirection.PurchasedToInventory
         : ConversionDirection.InventoryToPurchased
     );
@@ -79,7 +83,7 @@ const ConversionFactor = forwardRef<HTMLInputElement, ConversionFactorProps>(
       }
     };
 
-    const unitOfMeasureOptions = useUnitOfMeasureOptions();
+    const unitOfMeasureOptions = useUnitOfMeasure();
 
     const description = useMemo(() => {
       const purchaseUnit =
@@ -99,12 +103,12 @@ const ConversionFactor = forwardRef<HTMLInputElement, ConversionFactorProps>(
 
       if (conversionDirection === ConversionDirection.InventoryToPurchased) {
         return `There ${conversionFactor === 1 ? "is" : "are"} ${twoDecimals(
-          conversionFactor
+          inverseOfConversion
         )} ${purchaseUnit.toLocaleLowerCase()} in one ${inventoryUnit.toLocaleLowerCase()}`;
       }
 
       return `There ${conversionFactor === 1 ? "is" : "are"} ${twoDecimals(
-        inverseOfConversion
+        conversionFactor
       )} ${inventoryUnit.toLocaleLowerCase()} in one ${purchaseUnit.toLocaleLowerCase()}`;
     }, [
       conversionDirection,
@@ -114,10 +118,10 @@ const ConversionFactor = forwardRef<HTMLInputElement, ConversionFactorProps>(
       unitOfMeasureOptions,
     ]);
 
-    const onPurchaseUnitChange = (value: number) =>
-      setConversionFactor(1 / value);
+    const onPurchaseUnitChange = (value: number) => setConversionFactor(value);
 
-    const onInventoryUnitChange = (value: number) => setConversionFactor(value);
+    const onInventoryUnitChange = (value: number) =>
+      setConversionFactor(1 / value);
 
     const onConfirm = () => {
       setControlValue(conversionFactor);
@@ -143,18 +147,10 @@ const ConversionFactor = forwardRef<HTMLInputElement, ConversionFactorProps>(
           <CommandTrigger
             disabled={isReadOnly}
             icon={<MdTranslate className="w-4 h-4 opacity-50" />}
-            // ref={ref}
+            ref={ref}
             onClick={() => setOpen(true)}
-            // {...props}
           >
-            {/* {value ? (
-                options.find((option) => option.value === value)?.label
-              ) : (
-                <span className="!text-muted-foreground">
-                  {placeholder ?? "Select"}
-                </span>
-              )} */}
-            {twoDecimals(controlValue)}
+            {controlValue ? twoDecimals(controlValue) : "-"}
           </CommandTrigger>
 
           <ModalContent>
@@ -258,10 +254,3 @@ const ConversionFactor = forwardRef<HTMLInputElement, ConversionFactorProps>(
 ConversionFactor.displayName = "ConversionFactor";
 
 export default ConversionFactor;
-
-function twoDecimals(n: number) {
-  var log10 = n ? Math.floor(Math.log10(n)) : 0,
-    div = log10 < 0 ? Math.pow(10, 1 - log10) : 100;
-
-  return Math.round(n * div) / div;
-}

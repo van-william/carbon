@@ -10,27 +10,11 @@ import CreatableCombobox from "./CreatableCombobox";
 type EquipmentTypeSelectProps = Omit<ComboboxProps, "options">;
 
 const EquipmentType = (props: EquipmentTypeSelectProps) => {
-  const equipmentTypeFetcher =
-    useFetcher<Awaited<ReturnType<typeof getEquipmentTypesList>>>();
-
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const newEquipmentTypeModal = useDisclosure();
   const [created, setCreated] = useState<string>("");
-  const triggerRef = useRef<HTMLButtonElement>(null);
 
-  useMount(() => {
-    equipmentTypeFetcher.load(path.to.api.equipmentTypes);
-  });
-
-  const options = useMemo(
-    () =>
-      equipmentTypeFetcher.data?.data
-        ? equipmentTypeFetcher.data?.data.map((c) => ({
-            value: c.id,
-            label: c.name,
-          }))
-        : [],
-    [equipmentTypeFetcher.data]
-  );
+  const options = useEquipmentTypes();
 
   return (
     <>
@@ -62,7 +46,27 @@ const EquipmentType = (props: EquipmentTypeSelectProps) => {
     </>
   );
 };
-
+export default EquipmentType;
 EquipmentType.displayName = "EquipmentType";
 
-export default EquipmentType;
+const useEquipmentTypes = () => {
+  const equipmentTypeFetcher =
+    useFetcher<Awaited<ReturnType<typeof getEquipmentTypesList>>>();
+
+  useMount(() => {
+    equipmentTypeFetcher.load(path.to.api.equipmentTypes);
+  });
+
+  const options = useMemo(
+    () =>
+      equipmentTypeFetcher.data?.data
+        ? equipmentTypeFetcher.data?.data.map((c) => ({
+            value: c.id,
+            label: c.name,
+          }))
+        : [],
+    [equipmentTypeFetcher.data]
+  );
+
+  return options;
+};

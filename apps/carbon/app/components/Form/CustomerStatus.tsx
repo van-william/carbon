@@ -14,39 +14,11 @@ import CreatableCombobox from "./CreatableCombobox";
 type CustomerStatusSelectProps = Omit<ComboboxProps, "options">;
 
 const CustomerStatus = (props: CustomerStatusSelectProps) => {
-  const customerStatusFetcher =
-    useFetcher<Awaited<ReturnType<typeof getCustomerStatusesList>>>();
-
-  const sharedCustomerData = useRouteData<{
-    customerStatuses: CustomerStatusStatus[];
-  }>(path.to.customerRoot);
-
   const newCustomerStatusModal = useDisclosure();
   const [created, setCreated] = useState<string>("");
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  const hasCustomerData = sharedCustomerData?.customerStatuses;
-
-  useMount(() => {
-    if (!hasCustomerData)
-      customerStatusFetcher.load(path.to.api.customerStatuses);
-  });
-
-  const options = useMemo(() => {
-    const dataSource =
-      (hasCustomerData
-        ? sharedCustomerData.customerStatuses
-        : customerStatusFetcher.data?.data) ?? [];
-
-    return dataSource.map((c) => ({
-      value: c.id,
-      label: c.name,
-    }));
-  }, [
-    customerStatusFetcher.data?.data,
-    hasCustomerData,
-    sharedCustomerData?.customerStatuses,
-  ]);
+  const options = useCustomerStatuses();
 
   return (
     <>
@@ -80,3 +52,37 @@ const CustomerStatus = (props: CustomerStatusSelectProps) => {
 CustomerStatus.displayName = "CustomerStatus";
 
 export default CustomerStatus;
+
+export const useCustomerStatuses = () => {
+  const customerStatusFetcher =
+    useFetcher<Awaited<ReturnType<typeof getCustomerStatusesList>>>();
+
+  const sharedCustomerData = useRouteData<{
+    customerStatuses: CustomerStatusStatus[];
+  }>(path.to.customerRoot);
+
+  const hasCustomerData = sharedCustomerData?.customerStatuses;
+
+  useMount(() => {
+    if (!hasCustomerData)
+      customerStatusFetcher.load(path.to.api.customerStatuses);
+  });
+
+  const options = useMemo(() => {
+    const dataSource =
+      (hasCustomerData
+        ? sharedCustomerData.customerStatuses
+        : customerStatusFetcher.data?.data) ?? [];
+
+    return dataSource.map((c) => ({
+      value: c.id,
+      label: c.name,
+    }));
+  }, [
+    customerStatusFetcher.data?.data,
+    hasCustomerData,
+    sharedCustomerData?.customerStatuses,
+  ]);
+
+  return options;
+};

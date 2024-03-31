@@ -14,39 +14,11 @@ import CreatableCombobox from "./CreatableCombobox";
 type SupplierStatusSelectProps = Omit<ComboboxProps, "options">;
 
 const SupplierStatus = (props: SupplierStatusSelectProps) => {
-  const supplierStatusFetcher =
-    useFetcher<Awaited<ReturnType<typeof getSupplierStatusesList>>>();
-
-  const sharedSupplierData = useRouteData<{
-    supplierStatuses: SupplierStatusStatus[];
-  }>(path.to.supplierRoot);
-
   const newSupplierStatusModal = useDisclosure();
   const [created, setCreated] = useState<string>("");
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  const hasSupplierData = sharedSupplierData?.supplierStatuses;
-
-  useMount(() => {
-    if (!hasSupplierData)
-      supplierStatusFetcher.load(path.to.api.supplierStatuses);
-  });
-
-  const options = useMemo(() => {
-    const dataSource =
-      (hasSupplierData
-        ? sharedSupplierData.supplierStatuses
-        : supplierStatusFetcher.data?.data) ?? [];
-
-    return dataSource.map((c) => ({
-      value: c.id,
-      label: c.name,
-    }));
-  }, [
-    supplierStatusFetcher.data?.data,
-    hasSupplierData,
-    sharedSupplierData?.supplierStatuses,
-  ]);
+  const options = useSupplierStatuses();
 
   return (
     <>
@@ -80,3 +52,37 @@ const SupplierStatus = (props: SupplierStatusSelectProps) => {
 SupplierStatus.displayName = "SupplierStatus";
 
 export default SupplierStatus;
+
+export const useSupplierStatuses = () => {
+  const supplierStatusFetcher =
+    useFetcher<Awaited<ReturnType<typeof getSupplierStatusesList>>>();
+
+  const sharedSupplierData = useRouteData<{
+    supplierStatuses: SupplierStatusStatus[];
+  }>(path.to.supplierRoot);
+
+  const hasSupplierData = sharedSupplierData?.supplierStatuses;
+
+  useMount(() => {
+    if (!hasSupplierData)
+      supplierStatusFetcher.load(path.to.api.supplierStatuses);
+  });
+
+  const options = useMemo(() => {
+    const dataSource =
+      (hasSupplierData
+        ? sharedSupplierData.supplierStatuses
+        : supplierStatusFetcher.data?.data) ?? [];
+
+    return dataSource.map((c) => ({
+      value: c.id,
+      label: c.name,
+    }));
+  }, [
+    supplierStatusFetcher.data?.data,
+    hasSupplierData,
+    sharedSupplierData?.supplierStatuses,
+  ]);
+
+  return options;
+};

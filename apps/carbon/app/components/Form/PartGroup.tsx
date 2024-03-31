@@ -10,27 +10,11 @@ import CreatableCombobox from "./CreatableCombobox";
 type PartGroupSelectProps = Omit<ComboboxProps, "options">;
 
 const PartGroup = (props: PartGroupSelectProps) => {
-  const partGroupFetcher =
-    useFetcher<Awaited<ReturnType<typeof getPartGroupsList>>>();
-
   const newPartGroupModal = useDisclosure();
   const [created, setCreated] = useState<string>("");
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  useMount(() => {
-    partGroupFetcher.load(path.to.api.partGroups);
-  });
-
-  const options = useMemo(
-    () =>
-      partGroupFetcher.data?.data
-        ? partGroupFetcher.data?.data.map((c) => ({
-            value: c.id,
-            label: c.name,
-          }))
-        : [],
-    [partGroupFetcher.data]
-  );
+  const options = usePartGroups();
 
   return (
     <>
@@ -64,3 +48,25 @@ const PartGroup = (props: PartGroupSelectProps) => {
 PartGroup.displayName = "PartGroup";
 
 export default PartGroup;
+
+export const usePartGroups = () => {
+  const partGroupFetcher =
+    useFetcher<Awaited<ReturnType<typeof getPartGroupsList>>>();
+
+  useMount(() => {
+    partGroupFetcher.load(path.to.api.partGroups);
+  });
+
+  const options = useMemo(
+    () =>
+      partGroupFetcher.data?.data
+        ? partGroupFetcher.data?.data.map((c) => ({
+            value: c.id,
+            label: c.name,
+          }))
+        : [],
+    [partGroupFetcher.data]
+  );
+
+  return options;
+};
