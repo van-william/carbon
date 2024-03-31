@@ -249,10 +249,12 @@ export const multiSelectTriggerVariants = cva(
 
 interface CommandTriggerProps
   extends ComponentPropsWithoutRef<"button">,
-    VariantProps<typeof commandTriggerVariants> {}
+    VariantProps<typeof commandTriggerVariants> {
+  icon?: React.ReactNode;
+}
 
 const CommandTrigger = forwardRef<ElementRef<"button">, CommandTriggerProps>(
-  ({ size, className, children, ...props }, ref) => (
+  ({ size, className, children, icon, ...props }, ref) => (
     <button
       ref={ref}
       type="button"
@@ -265,8 +267,7 @@ const CommandTrigger = forwardRef<ElementRef<"button">, CommandTriggerProps>(
       {...props}
     >
       {children}
-
-      <RxMagnifyingGlass className="h-4 w-4 opacity-50" />
+      {icon ? icon : <RxMagnifyingGlass className="h-4 w-4 opacity-50" />}
     </button>
   )
 );

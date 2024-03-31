@@ -174,7 +174,7 @@ export function ErrorBoundary() {
             className="block max-w-[60px]"
           />
           <Heading size="h1">Something went wrong</Heading>
-          <p className="text-foreground">{message}</p>
+          <p className="text-muted-foreground">{message}</p>
           <Button onClick={() => (window.location.href = "/")}>
             Back Home
           </Button>
