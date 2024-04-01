@@ -174,7 +174,7 @@ const ConversionFactor = forwardRef<
                   <HStack className="w-full justify-around">
                     <VStack>
                       <NumberField
-                        value={1 / conversionFactor}
+                        value={conversionFactor}
                         onChange={onPurchaseUnitChange}
                       >
                         <NumberInputGroup className="relative">
@@ -216,7 +216,7 @@ const ConversionFactor = forwardRef<
                     </VStack>
                     <VStack>
                       <NumberField
-                        value={conversionFactor}
+                        value={1 / conversionFactor}
                         onChange={onInventoryUnitChange}
                       >
                         <NumberInputGroup className="relative">
