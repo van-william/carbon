@@ -102,7 +102,7 @@ export default function AuthenticatedRoute() {
                 <IconSidebar />
                 <div className="flex w-full h-full">
                   <div className="w-full h-full flex-1 overflow-hidden">
-                    <main className="h-full flex flex-col flex-1 w-full overflow-x-hidden">
+                    <main className="h-full flex flex-col flex-1 w-full overflow-x-hidden bg-muted">
                       <Topbar />
                       <main className="flex-1 overflow-y-auto max-h-[calc(100vh-49px)]">
                         <Outlet />
