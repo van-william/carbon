@@ -56,7 +56,7 @@ const QuotationExplorerItem = (
       return (
         <Button
           leftIcon={<AiOutlinePartition />}
-          variant={isActive ? "primary" : "ghost"}
+          variant={isActive ? "active" : "ghost"}
           className="flex-1 justify-start"
           asChild
         >
@@ -75,7 +75,7 @@ const QuotationExplorerItem = (
         path.to.newQuoteAssembly(meta.quoteId, meta.quoteLineId, parentId);
       return (
         <Button
-          variant={isActive ? "primary" : "ghost"}
+          variant={isActive ? "active" : "ghost"}
           className={cn(
             "font-mono w-full justify-between",
             !isActive && "text-muted-foreground"
@@ -100,7 +100,7 @@ const QuotationExplorerItem = (
 
       return (
         <Button
-          variant={isActive ? "primary" : "ghost"}
+          variant={isActive ? "active" : "ghost"}
           className="flex-1 justify-between"
           asChild
         >
@@ -167,7 +167,7 @@ const QuotationExplorerItem = (
         path.to.newQuoteOperation(meta.quoteId, meta.quoteLineId, parentId);
       return (
         <Button
-          variant={isActive ? "primary" : "ghost"}
+          variant={isActive ? "active" : "ghost"}
           className={cn(
             "font-mono w-full justify-between",
             !isActive && "text-muted-foreground"
@@ -196,7 +196,7 @@ const QuotationExplorerItem = (
       return (
         <Button
           leftIcon={<LuClock />}
-          variant={isActive ? "primary" : "ghost"}
+          variant={isActive ? "active" : "ghost"}
           className="flex-1 justify-start"
           asChild
         >
@@ -213,7 +213,7 @@ const QuotationExplorerItem = (
       isActive = pathname === path.to.quoteDetails(id);
       return (
         <Button
-          variant={isActive ? "primary" : "ghost"}
+          variant={isActive ? "active" : "ghost"}
           className="flex-1 justify-start"
           asChild
         >
@@ -340,8 +340,8 @@ const QuotationExplorer = () => {
         label: quote.quote.quoteId!,
         type: "parent",
         children: quote.lines?.map<BillOfMaterialNode>((line) => ({
-          id: line.id,
-          label: line.description,
+          id: line.id!,
+          label: line.description!,
           type: "line",
           meta: line,
           children:
@@ -351,9 +351,9 @@ const QuotationExplorer = () => {
                     id: `${line.id}-assemblies`,
                     label: "Assemblies",
                     type: "assemblies",
-                    children: assembliesByLineId[line.id]
+                    children: assembliesByLineId[line.id!]
                       ? [
-                          ...(arrayToTree([...assembliesByLineId[line.id]], {
+                          ...(arrayToTree([...assembliesByLineId[line.id!]], {
                             id: "id",
                             dataField: null,
                           }) as BillOfMaterialNode[]),
@@ -368,8 +368,8 @@ const QuotationExplorer = () => {
                     id: `${line.id}-operations`,
                     label: "Operations",
                     type: "operations",
-                    children: operationsByLineId[line.id]
-                      ? [...operationsByLineId[line.id]]?.filter(
+                    children: operationsByLineId[line.id!]
+                      ? [...operationsByLineId[line.id!]]?.filter(
                           (operation) => operation.parentId === undefined
                         )
                       : ([] as BillOfMaterialNode[]),
@@ -589,7 +589,7 @@ const QuotationSearch = ({ onSelect }: QuotationSearchProps) => {
   const linesById = useMemo(
     () =>
       quote?.lines.reduce<Record<string, QuotationLine>>((acc, line) => {
-        acc[line.id] = line;
+        acc[line.id!] = line;
         return acc;
       }, {}),
     [quote?.lines]
@@ -640,8 +640,8 @@ const QuotationSearch = ({ onSelect }: QuotationSearchProps) => {
                   value={`lines ${line.partId} ${line.description}`}
                   key={line.id}
                   onSelect={() => {
-                    onSelect(line.id);
-                    navigate(path.to.quoteLine(line.quoteId, line.id));
+                    onSelect(line.id!);
+                    navigate(path.to.quoteLine(line.quoteId!, line.id!));
                     setOpen(false);
                   }}
                 >
@@ -656,7 +656,7 @@ const QuotationSearch = ({ onSelect }: QuotationSearchProps) => {
                     className={cn(
                       "ml-auto h-4 w-4",
                       `${pathname}${search}` ===
-                        path.to.quoteLine(line.quoteId, line.id)
+                        path.to.quoteLine(line.quoteId!, line.id!)
                         ? "opacity-100"
                         : "opacity-0"
                     )}
