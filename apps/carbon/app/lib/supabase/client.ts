@@ -54,3 +54,5 @@ export const getSupabaseServiceRole = () => {
 
   return getSupabaseClient(SUPABASE_SERVICE_ROLE);
 };
+
+export const supabaseClient = getSupabase();

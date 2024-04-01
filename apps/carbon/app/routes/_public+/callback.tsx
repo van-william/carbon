@@ -1,9 +1,9 @@
 import { validator } from "@carbon/remix-validated-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { useFetcher } from "@remix-run/react";
-import { useEffect, useMemo } from "react";
-import { getSupabase } from "~/lib/supabase";
+import { useActionData, useFetcher } from "@remix-run/react";
+import { useEffect } from "react";
+import { supabaseClient } from "~/lib/supabase/client";
 import { getUserByEmail } from "~/modules/users/users.server";
 import { refreshAccessToken } from "~/services/auth";
 import { callbackValidator } from "~/services/auth/auth.models";
@@ -42,7 +42,7 @@ export async function action({ request }: ActionFunctionArgs): FormActionData {
   const { refreshToken } = validation.data;
   const authSession = await refreshAccessToken(refreshToken);
   if (!authSession) {
-    throw redirect(
+    return redirect(
       path.to.root,
       await flash(request, error(authSession, "Invalid refresh token"))
     );
@@ -66,13 +66,13 @@ export async function action({ request }: ActionFunctionArgs): FormActionData {
 }
 
 export default function AuthCallback() {
+  const result = useActionData<typeof action>();
   const fetcher = useFetcher();
-  const supabase = useMemo(() => getSupabase(), []);
 
   useEffect(() => {
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, supabaseSession) => {
+    } = supabaseClient.auth.onAuthStateChange((event, supabaseSession) => {
       if (event === "SIGNED_IN") {
         // supabase sdk has ability to read url fragment that contains your token after third party provider redirects you here
         // this fragment url looks like https://.....#access_token=evxxxxxxxx&refresh_token=xxxxxx, and it's not readable server-side (Oauth security)
@@ -86,16 +86,18 @@ export default function AuthCallback() {
         if (!refreshToken) return;
 
         const formData = new FormData();
+
         formData.append("refreshToken", refreshToken);
+
         fetcher.submit(formData, { method: "post" });
       }
     });
 
     return () => {
-      // to prevent a memory leak
+      // prevent memory leak. Listener stays alive 👨‍🎤
       subscription.unsubscribe();
     };
-  }, [fetcher, supabase.auth]);
+  }, [fetcher]);
 
-  return null;
+  return <pre>{JSON.stringify(result, null, 2)}</pre>;
 }
