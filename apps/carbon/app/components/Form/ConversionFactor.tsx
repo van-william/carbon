@@ -70,9 +70,9 @@ const ConversionFactor = forwardRef<
     );
 
     const [conversionDirection, setConversionDirection] = useState(
-      conversionFactor > 1
-        ? ConversionDirection.PurchasedToInventory
-        : ConversionDirection.InventoryToPurchased
+      conversionFactor >= 1
+        ? ConversionDirection.InventoryToPurchased
+        : ConversionDirection.PurchasedToInventory
     );
 
     const switchDirection = () => {
@@ -102,14 +102,33 @@ const ConversionFactor = forwardRef<
       if (purchasingCode === inventoryCode) return `No conversion is required`;
 
       if (conversionDirection === ConversionDirection.InventoryToPurchased) {
-        return `There ${conversionFactor === 1 ? "is" : "are"} ${twoDecimals(
-          inverseOfConversion
-        )} ${purchaseUnit.toLocaleLowerCase()} in one ${inventoryUnit.toLocaleLowerCase()}`;
+        return (
+          <>
+            <span>
+              {`There ${conversionFactor === 1 ? "is" : "are"} ${twoDecimals(
+                conversionFactor
+              )} ${inventoryUnit.toLocaleLowerCase()} in one `}
+              <span className="text-primary">
+                {purchaseUnit.toLocaleLowerCase()}
+              </span>
+            </span>
+          </>
+        );
       }
 
-      return `There ${conversionFactor === 1 ? "is" : "are"} ${twoDecimals(
-        conversionFactor
-      )} ${inventoryUnit.toLocaleLowerCase()} in one ${purchaseUnit.toLocaleLowerCase()}`;
+      return (
+        <>
+          <span>
+            {`There ${conversionFactor === 1 ? "is" : "are"} ${twoDecimals(
+              inverseOfConversion
+            )} `}
+            <span className="text-primary">
+              {purchaseUnit.toLocaleLowerCase()}
+            </span>
+            {` in one ${inventoryUnit.toLocaleLowerCase()}`}
+          </span>
+        </>
+      );
     }, [
       conversionDirection,
       conversionFactor,
@@ -118,10 +137,10 @@ const ConversionFactor = forwardRef<
       unitOfMeasureOptions,
     ]);
 
-    const onPurchaseUnitChange = (value: number) => setConversionFactor(value);
-
-    const onInventoryUnitChange = (value: number) =>
+    const onPurchaseUnitChange = (value: number) =>
       setConversionFactor(1 / value);
+
+    const onInventoryUnitChange = (value: number) => setConversionFactor(value);
 
     const onConfirm = () => {
       setControlValue(conversionFactor);
@@ -137,7 +156,15 @@ const ConversionFactor = forwardRef<
     return (
       <FormControl isInvalid={!!error} isRequired={isRequired}>
         {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
-        <input type="hidden" {...getInputProps()} />
+        <input
+          {...getInputProps({
+            id: name,
+          })}
+          type="hidden"
+          name={name}
+          id={name}
+          value={controlValue}
+        />
         <Modal
           open={open}
           onOpenChange={(open) => {
@@ -171,10 +198,10 @@ const ConversionFactor = forwardRef<
                 </VStack>
                 {conversionDirection ===
                 ConversionDirection.PurchasedToInventory ? (
-                  <HStack className="w-full justify-around">
-                    <VStack>
+                  <HStack className="w-full justify-around items-start">
+                    <VStack spacing={1}>
                       <NumberField
-                        value={conversionFactor}
+                        value={1 / conversionFactor}
                         onChange={onPurchaseUnitChange}
                       >
                         <NumberInputGroup className="relative">
@@ -190,33 +217,27 @@ const ConversionFactor = forwardRef<
                           </NumberInputStepper>
                         </NumberInputGroup>
                       </NumberField>
+                      <span className="text-xs text-primary">Purchased</span>
                     </VStack>
-                    <VStack className="w-auto">
+                    <VStack className="w-auto pt-2">
                       <span className="font-mono text-xl">=</span>
                     </VStack>
-                    <VStack>
+                    <VStack spacing={1}>
                       <NumberField value={1}>
                         <NumberInputGroup className="relative">
                           <NumberInput isReadOnly />
                         </NumberInputGroup>
                       </NumberField>
+                      <span className="text-xs text-muted-foreground ">
+                        Inventory
+                      </span>
                     </VStack>
                   </HStack>
                 ) : (
-                  <HStack className="w-full justify-around">
-                    <VStack>
-                      <NumberField value={1}>
-                        <NumberInputGroup className="relative">
-                          <NumberInput isReadOnly />
-                        </NumberInputGroup>
-                      </NumberField>
-                    </VStack>
-                    <VStack className="w-auto">
-                      <span className="font-mono text-xl">=</span>
-                    </VStack>
-                    <VStack>
+                  <HStack className="w-full justify-around items-start">
+                    <VStack spacing={1}>
                       <NumberField
-                        value={1 / conversionFactor}
+                        value={conversionFactor}
                         onChange={onInventoryUnitChange}
                       >
                         <NumberInputGroup className="relative">
@@ -232,6 +253,22 @@ const ConversionFactor = forwardRef<
                           </NumberInputStepper>
                         </NumberInputGroup>
                       </NumberField>
+                      <span className="text-xs text-muted-foreground ">
+                        Inventory
+                      </span>
+                    </VStack>
+                    <VStack className="w-auto pt-2">
+                      <span className="font-mono text-xl">=</span>
+                    </VStack>
+                    <VStack spacing={1}>
+                      <NumberField value={1}>
+                        <NumberInputGroup className="relative">
+                          <NumberInput isReadOnly />
+                        </NumberInputGroup>
+                      </NumberField>
+                      <span className="text-xs text-muted-foreground text-primary">
+                        Purchased
+                      </span>
                     </VStack>
                   </HStack>
                 )}

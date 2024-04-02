@@ -69,11 +69,6 @@ const PartPurchasingForm = ({ initialValues }: PartPurchasingFormProps) => {
               purchasingCode={purchasingCode ?? undefined}
               inventoryCode={inventoryCode}
             />
-            {/* <Number
-              name="conversionFactor"
-              label="Conversion Factor"
-              minValue={0}
-            /> */}
             <Boolean name="purchasingBlocked" label="Purchasing Blocked" />
           </div>
         </CardContent>
