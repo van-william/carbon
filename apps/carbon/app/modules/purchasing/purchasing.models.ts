@@ -97,6 +97,7 @@ export const purchaseOrderLineValidator = z
     description: zfd.text(z.string().optional()),
     purchaseQuantity: zfd.numeric(z.number().optional()),
     unitOfMeasureCode: zfd.text(z.string().optional()),
+    conversionFactor: zfd.numeric(z.number().optional()),
     unitPrice: zfd.numeric(z.number().optional()),
     setupPrice: zfd.numeric(z.number().optional()),
     locationId: zfd.text(z.string().optional()),

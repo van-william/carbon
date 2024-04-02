@@ -6,7 +6,6 @@ import {
   BsPeopleFill,
   BsShieldLock,
 } from "react-icons/bs";
-import { CgProfile } from "react-icons/cg";
 import { HiOutlineCube, HiOutlineDocumentDuplicate } from "react-icons/hi";
 import { LuSettings2 } from "react-icons/lu";
 import { TbPigMoney } from "react-icons/tb";
@@ -101,11 +100,6 @@ export function useModules() {
       name: "Settings",
       to: path.to.company,
       icon: LuSettings2,
-    },
-    {
-      name: "My Account",
-      to: path.to.profile,
-      icon: CgProfile,
     },
   ];
 

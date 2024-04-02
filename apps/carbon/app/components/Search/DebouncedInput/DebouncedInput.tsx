@@ -26,7 +26,7 @@ const DebouncedInput = ({ param, ...props }: DebounceInputProps) => {
     <Input
       defaultValue={params.get(param) || ""}
       onChange={(e) => setQuery(e.target.value)}
-      className="w-[200px]"
+      className="w-[100px] sm:w-[200px]"
       {...props}
     />
   );

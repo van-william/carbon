@@ -23,7 +23,7 @@ import { twoDecimals } from "@carbon/utils";
 import type { ElementRef } from "react";
 import { forwardRef, useMemo, useRef, useState } from "react";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
-import { MdTranslate } from "react-icons/md";
+import { MdSwapHoriz, MdTranslate } from "react-icons/md";
 import { useUnitOfMeasure } from "./UnitOfMeasure";
 
 enum ConversionDirection {
@@ -193,6 +193,7 @@ const ConversionFactor = forwardRef<
                       className="border-dashed"
                     >
                       Switch
+                      <MdSwapHoriz className="w-4 h-4 ml-1" />
                     </Button>
                   </div>
                 </VStack>

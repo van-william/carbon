@@ -7,6 +7,7 @@ import useKeyboardShortcuts from "./useKeyboardShortcuts";
 import useLocalStorage from "./useLocalStorage";
 import useMount from "./useMount";
 import useOutsideClick from "./useOutsideClick";
+import useWindowSize from "./useWindowSize";
 
 export {
   useDebounce,
@@ -18,4 +19,5 @@ export {
   useLocalStorage,
   useMount,
   useOutsideClick,
+  useWindowSize,
 };

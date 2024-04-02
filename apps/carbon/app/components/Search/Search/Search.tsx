@@ -255,7 +255,7 @@ const SearchButton = () => {
   });
 
   return (
-    <>
+    <div className="hidden sm:block">
       <Button
         leftIcon={<RxMagnifyingGlass />}
         variant="secondary"
@@ -268,7 +268,7 @@ const SearchButton = () => {
         </HStack>
       </Button>
       <SearchModal isOpen={searchModal.isOpen} onClose={searchModal.onClose} />
-    </>
+    </div>
   );
 };
 

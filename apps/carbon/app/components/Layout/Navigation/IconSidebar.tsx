@@ -3,9 +3,11 @@ import { Link, useMatches } from "@remix-run/react";
 import { noop } from "@tanstack/react-table";
 import { forwardRef, type AnchorHTMLAttributes } from "react";
 import { BsFillHexagonFill } from "react-icons/bs";
+import { CgProfile } from "react-icons/cg";
 import { z } from "zod";
 import { useOptimisticLocation } from "~/hooks";
 import type { Authenticated, NavItem } from "~/types";
+import { path } from "~/utils/path";
 import { useModules } from "./useModules";
 
 export const ModuleHandle = z.object({
@@ -29,7 +31,7 @@ const IconSidebar = () => {
   }, new Set<string>());
 
   return (
-    <div className="w-14 h-full flex flex-col z-50">
+    <div className="w-14 h-full flex-col z-50 hidden sm:flex">
       <nav
         data-state={navigationPanel.isOpen ? "expanded" : "collapsed"}
         className={cn(
@@ -41,33 +43,50 @@ const IconSidebar = () => {
         onMouseEnter={navigationPanel.onOpen}
         onMouseLeave={navigationPanel.onClose}
       >
-        <VStack spacing={1} className="flex flex-col justify-start px-2">
-          <Button isIcon asChild variant="ghost" size="lg">
-            <Link to="/">
-              <BsFillHexagonFill />
-            </Link>
-          </Button>
+        <VStack
+          spacing={1}
+          className="flex flex-col justify-between h-full px-2"
+        >
+          <VStack spacing={1}>
+            <Button isIcon asChild variant="ghost" size="lg">
+              <Link to="/">
+                <BsFillHexagonFill />
+              </Link>
+            </Button>
+            {links.map((link) => {
+              const m = getModule(link.to);
+              const moduleMatches = matchedModules.has(m);
+              const anotherModuleMatches = links.some((l) => {
+                const m = getModule(l.to);
+                return matchedModules.has(m);
+              });
 
-          {links.map((link) => {
-            const m = getModule(link.to);
-            const moduleMatches = matchedModules.has(m);
-            const anotherModuleMatches = links.some((l) => {
-              const m = getModule(l.to);
-              return matchedModules.has(m);
-            });
+              const isActive =
+                currentModule === m || (moduleMatches && !anotherModuleMatches);
+              return (
+                <NavigationIconLink
+                  key={link.name}
+                  link={link}
+                  isActive={isActive}
+                  isOpen={navigationPanel.isOpen}
+                  onClick={navigationPanel.onClose}
+                />
+              );
+            })}
+          </VStack>
 
-            const isActive =
-              currentModule === m || (moduleMatches && !anotherModuleMatches);
-            return (
-              <NavigationIconLink
-                key={link.name}
-                link={link}
-                isActive={isActive}
-                isOpen={navigationPanel.isOpen}
-                onClick={navigationPanel.onClose}
-              />
-            );
-          })}
+          <VStack spacing={1}>
+            <NavigationIconLink
+              link={{
+                to: path.to.profile,
+                icon: CgProfile,
+                name: "Account",
+              }}
+              isActive={matchedModules.has(getModule(path.to.profile))}
+              isOpen={navigationPanel.isOpen}
+              onClick={navigationPanel.onClose}
+            />
+          </VStack>
         </VStack>
       </nav>
     </div>

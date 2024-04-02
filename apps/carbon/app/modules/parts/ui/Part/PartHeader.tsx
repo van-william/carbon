@@ -93,7 +93,7 @@ const PartHeader = () => {
               </CardAttributeValue>
             </CardAttribute>
             <CardAttribute>
-              <CardAttributeLabel>Unit of Measure</CardAttributeLabel>
+              <CardAttributeLabel>UoM</CardAttributeLabel>
               <CardAttributeValue>
                 {routeData?.partSummary?.unitOfMeasureCode}
               </CardAttributeValue>

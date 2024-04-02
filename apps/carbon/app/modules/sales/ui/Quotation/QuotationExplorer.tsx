@@ -466,13 +466,7 @@ const QuotationExplorer = () => {
     return tree.map((node) => {
       return (
         <div className="w-full" role="group" key={`${node.id}:${node.type}`}>
-          <HStack
-            className="items-stretch w-full border-l border-border"
-            spacing={0}
-            style={{
-              paddingLeft: `calc(${0.75 * level}rem)`,
-            }}
-          >
+          <HStack className="items-stretch w-full" spacing={0}>
             <IconButton
               aria-label={collapsedNodes[node.id] ? "Expand" : "Collapse"}
               onClick={() => toggleNode(node.id)}
