@@ -190,6 +190,7 @@ export async function getPartSuppliers(
       id, supplier(id, name),
       supplierPartId, supplierUnitOfMeasureCode,
       minimumOrderQuantity, conversionFactor,
+      unitPrice,
       customFields
     `
     )

@@ -20,7 +20,6 @@ import {
   CustomFormFields,
   Hidden,
   InputControlled,
-  Number,
   NumberControlled,
   Part,
   Select,
@@ -76,15 +75,23 @@ const PurchaseOrderLineForm = ({
   const [partData, setPartData] = useState<{
     partId: string;
     description: string;
+    quantity: number;
     unitPrice: number;
-    uom: string;
+    purchaseUom: string;
+    inventoryUom: string;
+    conversionFactor: number;
     shelfId: string;
+    minimumOrderQuantity?: number;
   }>({
     partId: initialValues.partId ?? "",
     description: initialValues.description ?? "",
+    quantity: initialValues.purchaseQuantity ?? 1,
     unitPrice: initialValues.unitPrice ?? 0,
-    uom: initialValues.unitOfMeasureCode ?? "",
+    purchaseUom: initialValues.purchaseUnitOfMeasureCode ?? "",
+    inventoryUom: initialValues.inventoryUnitOfMeasureCode ?? "",
+    conversionFactor: initialValues.conversionFactor ?? 1,
     shelfId: initialValues.shelfId ?? "",
+    minimumOrderQuantity: undefined,
   });
 
   const shelfFetcher = useFetcher<Awaited<ReturnType<typeof getShelvesList>>>();
@@ -124,39 +131,60 @@ const PurchaseOrderLineForm = ({
     setPartData({
       partId: "",
       description: "",
+      quantity: 1,
       unitPrice: 0,
-      uom: "EA",
+      purchaseUom: "EA",
+      inventoryUom: "EA",
+      conversionFactor: 1,
       shelfId: "",
+      minimumOrderQuantity: 0,
     });
   };
 
   const onPartChange = async (partId: string) => {
     if (!supabase) return;
-    const [part, shelf, cost] = await Promise.all([
+    const [part, partSupplier, inventory] = await Promise.all([
       supabase
         .from("part")
-        .select("name, unitOfMeasureCode")
+        .select(
+          `
+          name, unitOfMeasureCode, 
+          partCost(unitCost), 
+          partReplenishment(purchasingUnitOfMeasureCode, conversionFactor, purchasingLeadTime)
+        `
+        )
         .eq("id", partId)
         .single(),
+      supabase
+        .from("partSupplier")
+        .select("*")
+        .eq("partId", partId)
+        .eq("supplierId", routeData?.purchaseOrder?.supplierId!)
+        .maybeSingle(),
       supabase
         .from("partInventory")
         .select("defaultShelfId")
         .eq("partId", partId)
         .eq("locationId", locationId)
-        .maybeSingle(),
-      supabase
-        .from("partCost")
-        .select("unitCost")
-        .eq("partId", partId)
         .single(),
     ]);
+
+    const partCost = part?.data?.partCost?.[0];
+    const partReplenishment = part?.data?.partReplenishment?.[0];
 
     setPartData({
       partId,
       description: part.data?.name ?? "",
-      unitPrice: cost.data?.unitCost ?? 0,
-      uom: part.data?.unitOfMeasureCode ?? "EA",
-      shelfId: shelf.data?.defaultShelfId ?? "",
+      quantity: partSupplier?.data?.minimumOrderQuantity ?? 1,
+      unitPrice: partSupplier?.data?.unitPrice ?? partCost?.unitCost ?? 0,
+      purchaseUom:
+        partReplenishment?.purchasingUnitOfMeasureCode ??
+        part.data?.unitOfMeasureCode ??
+        "EA",
+      inventoryUom: part.data?.unitOfMeasureCode ?? "EA",
+      conversionFactor: partReplenishment?.conversionFactor ?? 1,
+      shelfId: inventory.data?.defaultShelfId ?? "",
+      minimumOrderQuantity: partSupplier?.data?.minimumOrderQuantity ?? 0,
     });
   };
 
@@ -171,9 +199,13 @@ const PurchaseOrderLineForm = ({
     setPartData({
       partId: "",
       description: service.data?.name ?? "",
+      quantity: 1,
       unitPrice: 0,
-      uom: "EA",
+      purchaseUom: "EA",
+      inventoryUom: "EA",
+      conversionFactor: 1,
       shelfId: "",
+      minimumOrderQuantity: 0,
     });
   };
 
@@ -224,7 +256,10 @@ const PurchaseOrderLineForm = ({
           <DrawerBody>
             <Hidden name="id" />
             <Hidden name="purchaseOrderId" />
-
+            <Hidden
+              name="inventoryUnitOfMeasureCode"
+              value={partData?.inventoryUom}
+            />
             <VStack spacing={4}>
               <Select
                 name="purchaseOrderLineType"
@@ -265,9 +300,13 @@ const PurchaseOrderLineForm = ({
                     setPartData({
                       partId: "",
                       description: value?.label ?? "",
+                      quantity: 1,
                       unitPrice: 0,
-                      uom: "EA",
+                      purchaseUom: "EA",
+                      inventoryUom: "EA",
+                      conversionFactor: 1,
                       shelfId: "",
+                      minimumOrderQuantity: 0,
                     });
                   }}
                 />
@@ -286,10 +325,21 @@ const PurchaseOrderLineForm = ({
               />
               {type !== "Comment" && (
                 <>
-                  <Number name="purchaseQuantity" label="Quantity" />
+                  <NumberControlled
+                    minValue={partData.minimumOrderQuantity}
+                    name="purchaseQuantity"
+                    label="Quantity"
+                    value={partData.quantity}
+                    onChange={(value) => {
+                      setPartData((d) => ({
+                        ...d,
+                        quantity: value,
+                      }));
+                    }}
+                  />
                   {/* 
                 // TODO: implement this and replace the UoM in PartForm */}
-                  {/* <UnitOfMeasure name="unitOfMeasureCode" label="Unit of Measure" value={uom} /> */}
+                  {/* <UnitOfMeasure name="unitOfMeasureCode" label="Unit of Measure" value={purchaseUom} /> */}
                   <NumberControlled
                     name="unitPrice"
                     label="Unit Price"

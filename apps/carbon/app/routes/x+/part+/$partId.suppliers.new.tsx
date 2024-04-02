@@ -60,6 +60,7 @@ export default function NewPartSupplierRoute() {
     partId: partId,
     supplierId: "",
     supplierPartId: "",
+    unitPrice: 0,
     supplierUnitOfMeasureCode: "EA",
     minimumOrderQuantity: 1,
     conversionFactor: 1,

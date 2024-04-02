@@ -5560,6 +5560,7 @@ export type Database = {
           supplierId: string
           supplierPartId: string | null
           supplierUnitOfMeasureCode: string | null
+          unitPrice: number | null
           updatedAt: string | null
           updatedBy: string | null
         }
@@ -5575,6 +5576,7 @@ export type Database = {
           supplierId: string
           supplierPartId?: string | null
           supplierUnitOfMeasureCode?: string | null
+          unitPrice?: number | null
           updatedAt?: string | null
           updatedBy?: string | null
         }
@@ -5590,6 +5592,7 @@ export type Database = {
           supplierId?: string
           supplierPartId?: string | null
           supplierUnitOfMeasureCode?: string | null
+          unitPrice?: number | null
           updatedAt?: string | null
           updatedBy?: string | null
         }
@@ -7756,17 +7759,20 @@ export type Database = {
         Row: {
           accountNumber: string | null
           assetId: string | null
+          conversionFactor: number | null
           createdAt: string
           createdBy: string
           customFields: Json | null
           description: string | null
           id: string
+          inventoryUnitOfMeasureCode: string | null
           invoicedComplete: boolean
           locationId: string | null
           partId: string | null
           purchaseOrderId: string
           purchaseOrderLineType: Database["public"]["Enums"]["purchaseOrderLineType"]
           purchaseQuantity: number | null
+          purchaseUnitOfMeasureCode: string | null
           quantityInvoiced: number | null
           quantityReceived: number | null
           quantityToInvoice: number | null
@@ -7784,17 +7790,20 @@ export type Database = {
         Insert: {
           accountNumber?: string | null
           assetId?: string | null
+          conversionFactor?: number | null
           createdAt?: string
           createdBy: string
           customFields?: Json | null
           description?: string | null
           id?: string
+          inventoryUnitOfMeasureCode?: string | null
           invoicedComplete?: boolean
           locationId?: string | null
           partId?: string | null
           purchaseOrderId: string
           purchaseOrderLineType: Database["public"]["Enums"]["purchaseOrderLineType"]
           purchaseQuantity?: number | null
+          purchaseUnitOfMeasureCode?: string | null
           quantityInvoiced?: number | null
           quantityReceived?: number | null
           quantityToInvoice?: number | null
@@ -7812,17 +7821,20 @@ export type Database = {
         Update: {
           accountNumber?: string | null
           assetId?: string | null
+          conversionFactor?: number | null
           createdAt?: string
           createdBy?: string
           customFields?: Json | null
           description?: string | null
           id?: string
+          inventoryUnitOfMeasureCode?: string | null
           invoicedComplete?: boolean
           locationId?: string | null
           partId?: string | null
           purchaseOrderId?: string
           purchaseOrderLineType?: Database["public"]["Enums"]["purchaseOrderLineType"]
           purchaseQuantity?: number | null
+          purchaseUnitOfMeasureCode?: string | null
           quantityInvoiced?: number | null
           quantityReceived?: number | null
           quantityToInvoice?: number | null
@@ -7881,6 +7893,13 @@ export type Database = {
             referencedColumns: ["userId"]
           },
           {
+            foreignKeyName: "purchaseOrderLine_inventoryUnitOfMeasureCode_fkey"
+            columns: ["inventoryUnitOfMeasureCode"]
+            isOneToOne: false
+            referencedRelation: "unitOfMeasure"
+            referencedColumns: ["code"]
+          },
+          {
             foreignKeyName: "purchaseOrderLine_partId_fkey"
             columns: ["partId"]
             isOneToOne: false
@@ -7921,6 +7940,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "purchaseOrders"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseOrderLine_purchaseUnitOfMeasureCode_fkey"
+            columns: ["purchaseUnitOfMeasureCode"]
+            isOneToOne: false
+            referencedRelation: "unitOfMeasure"
+            referencedColumns: ["code"]
           },
           {
             foreignKeyName: "purchaseOrderLine_serviceId_fkey"
@@ -13999,14 +14025,14 @@ export type Database = {
           },
           {
             foreignKeyName: "partner_id_fkey"
-            columns: ["id"]
+            columns: ["supplierLocationId"]
             isOneToOne: false
             referencedRelation: "supplierLocation"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "partner_id_fkey"
-            columns: ["supplierLocationId"]
+            columns: ["id"]
             isOneToOne: false
             referencedRelation: "supplierLocation"
             referencedColumns: ["id"]
