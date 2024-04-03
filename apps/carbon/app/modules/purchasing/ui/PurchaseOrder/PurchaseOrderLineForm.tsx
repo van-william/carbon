@@ -17,6 +17,7 @@ import type { z } from "zod";
 import {
   Account,
   ComboboxControlled,
+  ConversionFactor,
   CustomFormFields,
   Hidden,
   InputControlled,
@@ -25,6 +26,7 @@ import {
   Select,
   Service,
   Submit,
+  UnitOfMeasure,
 } from "~/components/Form";
 import { usePermissions, useRouteData, useUser } from "~/hooks";
 import { useSupabase } from "~/lib/supabase";
@@ -337,9 +339,6 @@ const PurchaseOrderLineForm = ({
                       }));
                     }}
                   />
-                  {/* 
-                // TODO: implement this and replace the UoM in PartForm */}
-                  {/* <UnitOfMeasure name="unitOfMeasureCode" label="Unit of Measure" value={purchaseUom} /> */}
                   <NumberControlled
                     name="unitPrice"
                     label="Unit Price"
@@ -351,6 +350,37 @@ const PurchaseOrderLineForm = ({
                       }))
                     }
                   />
+
+                  {type === "Part" && (
+                    <>
+                      <UnitOfMeasure
+                        name="purchaseUnitOfMeasureCode"
+                        label="Unit of Measure"
+                        value={partData.purchaseUom}
+                        onChange={(newValue) => {
+                          if (newValue) {
+                            setPartData((d) => ({
+                              ...d,
+                              purchaseUom: newValue?.value as string,
+                            }));
+                          }
+                        }}
+                      />
+                      <ConversionFactor
+                        name="conversionFactor"
+                        purchasingCode={partData.purchaseUom}
+                        inventoryCode={partData.inventoryUom}
+                        value={partData.conversionFactor}
+                        onChange={(value) => {
+                          setPartData((d) => ({
+                            ...d,
+                            conversionFactor: value,
+                          }));
+                        }}
+                      />
+                    </>
+                  )}
+
                   {["Part", "Service"].includes(type) && (
                     <ComboboxControlled
                       name="locationId"

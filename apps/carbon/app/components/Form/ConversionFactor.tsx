@@ -21,7 +21,7 @@ import {
 import { useControlField, useField } from "@carbon/remix-validated-form";
 import { twoDecimals } from "@carbon/utils";
 import type { ElementRef } from "react";
-import { forwardRef, useMemo, useRef, useState } from "react";
+import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 import { MdSwapHoriz, MdTranslate } from "react-icons/md";
 import { useUnitOfMeasure } from "./UnitOfMeasure";
@@ -39,6 +39,7 @@ type ConversionFactorProps = {
   isReadOnly?: boolean;
   isRequired?: boolean;
   helperText?: string;
+  value?: number;
   onChange?: (newValue: number) => void;
 };
 
@@ -53,6 +54,7 @@ const ConversionFactor = forwardRef<
       isRequired,
       isReadOnly,
       helperText,
+      value,
       onChange,
       purchasingCode,
       inventoryCode,
@@ -68,6 +70,14 @@ const ConversionFactor = forwardRef<
     const [conversionFactor, setConversionFactor] = useState(
       initialValue.current
     );
+
+    useEffect(() => {
+      if (value) {
+        setControlValue(value);
+        setConversionFactor(value);
+        initialValue.current = value;
+      }
+    }, [setControlValue, value]);
 
     const [conversionDirection, setConversionDirection] = useState(
       conversionFactor >= 1
@@ -137,10 +147,15 @@ const ConversionFactor = forwardRef<
       unitOfMeasureOptions,
     ]);
 
-    const onPurchaseUnitChange = (value: number) =>
-      setConversionFactor(1 / value);
+    const onPurchaseUnitChange = (v: number) => {
+      setConversionFactor(1 / v);
+      onChange?.(1 / v);
+    };
 
-    const onInventoryUnitChange = (value: number) => setConversionFactor(value);
+    const onInventoryUnitChange = (v: number) => {
+      setConversionFactor(v);
+      onChange?.(v);
+    };
 
     const onConfirm = () => {
       setControlValue(conversionFactor);
