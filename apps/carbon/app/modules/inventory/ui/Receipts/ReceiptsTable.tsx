@@ -48,7 +48,9 @@ const ReceiptsTable = memo(({ data, count, locations }: ReceiptsTableProps) => {
         accessorKey: "receiptId",
         header: "Receipt ID",
         cell: ({ row }) => (
-          <Hyperlink to={row.original.id!}>{row.original.receiptId}</Hyperlink>
+          <Hyperlink to={path.to.receiptDetails(row.original.id!)}>
+            {row.original.receiptId}
+          </Hyperlink>
         ),
       },
       {
@@ -238,7 +240,9 @@ const ReceiptsTable = memo(({ data, count, locations }: ReceiptsTableProps) => {
           <MenuItem
             disabled={!permissions.can("update", "inventory")}
             onClick={() => {
-              navigate(`${path.to.receipt(row.id!)}?${params.toString()}`);
+              navigate(
+                `${path.to.receiptDetails(row.id!)}?${params.toString()}`
+              );
             }}
           >
             <MenuIcon icon={<BsFillPenFill />} />

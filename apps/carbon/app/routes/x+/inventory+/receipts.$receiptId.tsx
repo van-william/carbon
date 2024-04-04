@@ -103,7 +103,7 @@ export default function EditReceiptsRoute() {
       assignee={receipt.assignee}
       // @ts-ignore
       initialValues={initialValues}
-      status={receipt.status}
+      status={receipt.status ?? "Draft"}
       notes={notes}
       receiptLines={receiptLines}
     />

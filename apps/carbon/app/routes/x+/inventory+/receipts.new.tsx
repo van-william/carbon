@@ -75,5 +75,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     );
   }
 
+  console.log(`redirecting to ${path.to.receipt(insertReceipt.data.id)}`);
+
   throw redirect(path.to.receipt(insertReceipt.data.id));
 }

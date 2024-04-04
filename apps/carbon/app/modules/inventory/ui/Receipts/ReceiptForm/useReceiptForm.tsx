@@ -1,4 +1,4 @@
-import { useNavigate } from "@remix-run/react";
+import { useNavigate, useParams } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { z } from "zod";
@@ -24,8 +24,12 @@ export default function useReceiptForm({
 }) {
   const permissions = usePermissions();
   const navigate = useNavigate();
-  const user = useUser();
   const [params] = useUrlParams();
+  const { receiptId } = useParams();
+
+  if (!receiptId) throw new Error("receiptId not found");
+
+  const user = useUser();
   const [error, setError] = useState<string | null>(null);
   const { supabase } = useSupabase();
 
@@ -33,7 +37,9 @@ export default function useReceiptForm({
 
   const routeData = useRouteData<{
     locations: ListItem[];
-  }>(path.to.receipts);
+  }>(path.to.receiptRoot);
+
+  console.log({ routeData });
 
   const [internalReceiptLines, setReceiptLines] = useState<ReceiptLine[]>(
     receiptLines ?? []
@@ -66,7 +72,6 @@ export default function useReceiptForm({
     ) {
       await deleteReceipt();
     }
-
     navigate(path.to.receipts);
   };
 
