@@ -163,7 +163,7 @@ const PurchaseOrderPDF = ({
               <Text style={styles.tableCol2}>
                 {line.purchaseOrderLineType === "Comment"
                   ? ""
-                  : line.purchaseQuantity}
+                  : `${line.purchaseQuantity} ${line.purchaseUnitOfMeasureCode}`}
               </Text>
               <Text style={styles.tableCol3}>
                 {line.purchaseOrderLineType === "Comment"

@@ -212,7 +212,7 @@ const PurchaseOrderEmail = ({
                   <Text style={lineValue}>
                     {line.purchaseOrderLineType === "Comment"
                       ? ""
-                      : `(${line.purchaseQuantity})`}
+                      : `(${line.purchaseQuantity} ${line.purchaseUnitOfMeasureCode})`}
                   </Text>
                 </Column>
                 <Column style={lineValueWrapper} align="right">

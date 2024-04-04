@@ -14025,14 +14025,14 @@ export type Database = {
           },
           {
             foreignKeyName: "partner_id_fkey"
-            columns: ["supplierLocationId"]
+            columns: ["id"]
             isOneToOne: false
             referencedRelation: "supplierLocation"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "partner_id_fkey"
-            columns: ["id"]
+            columns: ["supplierLocationId"]
             isOneToOne: false
             referencedRelation: "supplierLocation"
             referencedColumns: ["id"]
@@ -14438,11 +14438,13 @@ export type Database = {
         Row: {
           accountNumber: string | null
           assetId: string | null
+          conversionFactor: number | null
           createdAt: string | null
           createdBy: string | null
           customFields: Json | null
           description: string | null
           id: string | null
+          inventoryUnitOfMeasureCode: string | null
           invoicedComplete: boolean | null
           locationId: string | null
           partDescription: string | null
@@ -14453,6 +14455,7 @@ export type Database = {
             | Database["public"]["Enums"]["purchaseOrderLineType"]
             | null
           purchaseQuantity: number | null
+          purchaseUnitOfMeasureCode: string | null
           quantityInvoiced: number | null
           quantityReceived: number | null
           quantityToInvoice: number | null
@@ -14551,6 +14554,13 @@ export type Database = {
             referencedColumns: ["userId"]
           },
           {
+            foreignKeyName: "purchaseOrderLine_inventoryUnitOfMeasureCode_fkey"
+            columns: ["inventoryUnitOfMeasureCode"]
+            isOneToOne: false
+            referencedRelation: "unitOfMeasure"
+            referencedColumns: ["code"]
+          },
+          {
             foreignKeyName: "purchaseOrderLine_partId_fkey"
             columns: ["partId"]
             isOneToOne: false
@@ -14591,6 +14601,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "purchaseOrders"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchaseOrderLine_purchaseUnitOfMeasureCode_fkey"
+            columns: ["purchaseUnitOfMeasureCode"]
+            isOneToOne: false
+            referencedRelation: "unitOfMeasure"
+            referencedColumns: ["code"]
           },
           {
             foreignKeyName: "purchaseOrderLine_serviceId_fkey"
