@@ -1,5 +1,5 @@
 // root.tsx
-import { Button, Heading, toast } from "@carbon/react";
+import { Button, Heading, Toaster, toast } from "@carbon/react";
 import { validator } from "@carbon/remix-validated-form";
 import type {
   ActionFunctionArgs,
@@ -121,6 +121,7 @@ function Document({
         <ScrollRestoration />
         <Scripts />
         <Analytics />
+        <Toaster />
         {process.env.NODE_ENV === "development" && <LiveReload />}
       </body>
     </html>
@@ -141,6 +142,7 @@ export default function App() {
     }
   }, [result]);
 
+  /* Dark/Light Mode */
   const mode = useMode();
 
   return (

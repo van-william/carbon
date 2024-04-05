@@ -43,7 +43,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         );
       }
 
-      throw redirect(path.to.receipt(purchaseOrderReceipt.data.id));
+      throw redirect(path.to.receiptLines(purchaseOrderReceipt.data.id));
     default:
       const defaultReceipt = await serviceRole.functions.invoke<{
         id: string;
@@ -60,6 +60,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
         );
       }
 
-      throw redirect(path.to.receipt(defaultReceipt.data.id));
+      throw redirect(path.to.receiptDetails(defaultReceipt.data.id));
   }
 }

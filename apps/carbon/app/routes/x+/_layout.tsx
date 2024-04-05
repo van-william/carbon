@@ -113,22 +113,6 @@ export default function AuthenticatedRoute() {
               </div>
             </div>
           </div>
-          {/* <div className="h-screen min-h-[0px] basis-0 flex-1">
-          <div className="flex h-full">
-            <IconSidebar />
-            <div className="w-full h-full">
-              <div className="grid grid-rows-[auto_1fr] h-full w-full">
-                <Topbar />
-                <div className="flex w-full h-full">
-                  <VStack spacing={0} className="bg-muted">
-                    <Outlet />
-                  </VStack>
-                </div>
-              </div>
-            </div>
-          </div>
-          <Toaster />
-        </div> */}
         </TooltipProvider>
       </RealtimeDataProvider>
     </SupabaseProvider>

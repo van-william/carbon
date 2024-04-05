@@ -13,6 +13,7 @@ import Grid from "~/components/Grid";
 import { useRealtime, useRouteData } from "~/hooks";
 import { useSupabase } from "~/lib/supabase";
 import type { Receipt, ReceiptLine } from "~/modules/inventory";
+import { useParts } from "~/stores";
 import type { ListItem } from "~/types";
 import { path } from "~/utils/path";
 
@@ -29,11 +30,24 @@ const ReceiptLines = () => {
     locations: ListItem[];
   }>(path.to.receipt(receiptId));
 
+  const [parts] = useParts();
+
   const receiptLineColumns = useMemo<ColumnDef<ReceiptLine>[]>(() => {
     return [
       {
         accessorKey: "partId",
         header: "Part",
+        cell: (item) => item.getValue(),
+      },
+      {
+        header: "Name",
+        cell: ({ row }) => {
+          return parts.find((p) => p.id === row.original.partId)?.name ?? null;
+        },
+      },
+      {
+        accessorKey: "receivedQuantity",
+        header: "Received Quantity",
         cell: (item) => item.getValue(),
       },
       {
@@ -44,11 +58,6 @@ const ReceiptLines = () => {
       {
         accessorKey: "outstandingQuantity",
         header: "Outstanding Quantity",
-        cell: (item) => item.getValue(),
-      },
-      {
-        accessorKey: "receivedQuantity",
-        header: "Received Quantity",
         cell: (item) => item.getValue(),
       },
       {
@@ -75,7 +84,7 @@ const ReceiptLines = () => {
         cell: (item) => item.getValue(),
       },
     ];
-  }, [routeData?.locations]);
+  }, [routeData?.locations, parts]);
 
   const onCellEdit = useCallback(
     async (id: string, value: unknown, row: ReceiptLine) => {
