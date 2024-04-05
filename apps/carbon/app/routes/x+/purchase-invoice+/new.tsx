@@ -9,10 +9,7 @@ import {
   purchaseInvoiceValidator,
   upsertPurchaseInvoice,
 } from "~/modules/invoicing";
-import {
-  createPurchaseInvoiceFromPurchaseOrder,
-  createPurchaseInvoiceFromReceipt,
-} from "~/modules/invoicing/invoicing.server";
+import { createPurchaseInvoiceFromPurchaseOrder } from "~/modules/invoicing/invoicing.server";
 import { getNextSequence, rollbackNextSequence } from "~/modules/settings";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session.server";
@@ -45,23 +42,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       if (result.error || !result?.data) {
         throw redirect(
           request.headers.get("Referer") ?? path.to.purchaseOrders,
-          await flash(
-            request,
-            error(result.error, "Failed to create purchase invoice")
-          )
-        );
-      }
-
-      throw redirect(path.to.purchaseInvoice(result.data?.id!));
-
-    case "Receipt":
-      if (!sourceDocumentId) throw new Error("Missing sourceDocumentId");
-
-      result = await createPurchaseInvoiceFromReceipt(sourceDocumentId, userId);
-
-      if (result.error || !result?.data) {
-        throw redirect(
-          request.headers.get("Referer") ?? path.to.receipts,
           await flash(
             request,
             error(result.error, "Failed to create purchase invoice")

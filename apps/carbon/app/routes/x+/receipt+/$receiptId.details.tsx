@@ -3,9 +3,11 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useParams } from "@remix-run/react";
 import { useRouteData } from "~/hooks";
+import { getSupabaseServiceRole } from "~/lib/supabase";
 import type { Receipt, ReceiptLine } from "~/modules/inventory";
 import {
   ReceiptForm,
+  getReceipt,
   receiptValidator,
   upsertReceipt,
 } from "~/modules/inventory";
@@ -32,6 +34,56 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const { id, ...data } = validation.data;
   if (!id) throw new Error("id not found");
+
+  const currentReceipt = await getReceipt(client, id);
+  if (currentReceipt.error) {
+    return json(
+      {},
+      await flash(
+        request,
+        error(currentReceipt.error, "Failed to load receipt")
+      )
+    );
+  }
+
+  console.log({
+    data,
+    currentReceipt,
+  });
+
+  const receiptDataHasChanged =
+    currentReceipt.data.sourceDocument !== data.sourceDocument ||
+    currentReceipt.data.sourceDocumentId !== data.sourceDocumentId ||
+    currentReceipt.data.locationId !== data.locationId;
+
+  if (receiptDataHasChanged) {
+    const serviceRole = getSupabaseServiceRole();
+    switch (data.sourceDocument) {
+      case "Purchase Order":
+        const purchaseOrderReceipt = await serviceRole.functions.invoke<{
+          id: string;
+        }>("create-receipt-from-purchase-order", {
+          body: {
+            locationId: data.locationId,
+            purchaseOrderId: data.sourceDocumentId,
+            receiptId: id,
+            userId: userId,
+          },
+        });
+        if (!purchaseOrderReceipt.data || purchaseOrderReceipt.error) {
+          throw redirect(
+            path.to.receipt(id),
+            await flash(
+              request,
+              error(purchaseOrderReceipt.error, "Failed to create receipt")
+            )
+          );
+        }
+        break;
+      default:
+        throw new Error("Unsupported source document");
+    }
+  }
 
   const updateReceipt = await upsertReceipt(client, {
     id,

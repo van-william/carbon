@@ -1,0 +1,65 @@
+import { redirect, type LoaderFunctionArgs } from "@remix-run/node";
+import { getSupabaseServiceRole } from "~/lib/supabase";
+import type { ReceiptSourceDocument } from "~/modules/inventory";
+import { getUserDefaults } from "~/modules/users/users.server";
+import { requirePermissions } from "~/services/auth";
+import { flash } from "~/services/session.server";
+import { path } from "~/utils/path";
+import { error } from "~/utils/result";
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const { client, userId } = await requirePermissions(request, {
+    create: "inventory",
+  });
+
+  const url = new URL(request.url);
+  const sourceDocument =
+    (url.searchParams.get("sourceDocument") as ReceiptSourceDocument) ??
+    undefined;
+  const sourceDocumentId = url.searchParams.get("sourceDocumentId") ?? "";
+
+  const defaults = await getUserDefaults(client, userId);
+
+  const serviceRole = getSupabaseServiceRole();
+  switch (sourceDocument) {
+    case "Purchase Order":
+      const purchaseOrderReceipt = await serviceRole.functions.invoke<{
+        id: string;
+      }>("create-receipt-from-purchase-order", {
+        body: {
+          locationId: defaults.data?.locationId,
+          purchaseOrderId: sourceDocumentId,
+          receiptId: undefined,
+          userId: userId,
+        },
+      });
+      if (!purchaseOrderReceipt.data || purchaseOrderReceipt.error) {
+        throw redirect(
+          path.to.purchaseOrder(sourceDocumentId),
+          await flash(
+            request,
+            error(purchaseOrderReceipt.error, "Failed to create receipt")
+          )
+        );
+      }
+
+      throw redirect(path.to.receipt(purchaseOrderReceipt.data.id));
+    default:
+      const defaultReceipt = await serviceRole.functions.invoke<{
+        id: string;
+      }>("create-receipt-default", {
+        body: {
+          locationId: defaults.data?.locationId,
+          userId: userId,
+        },
+      });
+      if (!defaultReceipt.data || defaultReceipt.error) {
+        throw redirect(
+          path.to.receipts,
+          await flash(request, error(error, "Failed to create receipt"))
+        );
+      }
+
+      throw redirect(path.to.receipt(defaultReceipt.data.id));
+  }
+}

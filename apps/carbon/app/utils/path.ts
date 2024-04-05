@@ -332,7 +332,7 @@ export const path = {
       generatePath(
         `${x}/quote/${quoteId}/lines/${lineId}/operation/${operationId}/material/new`
       ),
-    newReceipt: `${x}/inventory/receipts/new`,
+    newReceipt: `${x}/receipt/new`,
     newRequestForQuote: `${x}/rfq/new`,
     newShift: `${x}/resources/shifts/new`,
     newShippingMethod: `${x}/inventory/shipping-methods/new`,

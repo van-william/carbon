@@ -13,7 +13,7 @@ const ReceiptSidebar = () => {
   const routeData = useRouteData<{
     receiptLines: ReceiptLine[];
     notes: Note[];
-  }>(path.to.part(receiptId));
+  }>(path.to.receipt(receiptId));
 
   const links = useReceiptSidebar(routeData?.receiptLines, routeData?.notes);
 

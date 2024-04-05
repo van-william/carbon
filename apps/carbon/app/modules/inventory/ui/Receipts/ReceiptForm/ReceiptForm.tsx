@@ -10,6 +10,7 @@ import {
 import { ValidatedForm } from "@carbon/remix-validated-form";
 import type { z } from "zod";
 import {
+  Combobox,
   ComboboxControlled,
   CustomFormFields,
   Hidden,
@@ -38,25 +39,16 @@ type ReceiptFormProps = {
 
 const formId = "receipt-form";
 
-const ReceiptForm = ({
-  initialValues,
-  status,
-  receiptLines,
-}: ReceiptFormProps) => {
+const ReceiptForm = ({ initialValues, status }: ReceiptFormProps) => {
   const permissions = usePermissions();
   const {
-    locationId,
     locations,
-    sourceDocumentId,
-    supplierId,
+    locationId,
     sourceDocuments,
+    supplierId,
     setLocationId,
     setSourceDocument,
-    setSourceDocumentId,
-  } = useReceiptForm({
-    receipt: initialValues,
-    receiptLines: receiptLines ?? [],
-  });
+  } = useReceiptForm();
 
   const isPosted = status === "Posted";
   const isEditing = initialValues.id !== undefined;
@@ -86,12 +78,6 @@ const ReceiptForm = ({
         </CardHeader>
         <CardContent>
           <Hidden name="id" />
-          <Hidden
-            name="sourceDocumentReadableId"
-            value={
-              sourceDocuments.find((d) => d.id === sourceDocumentId)?.name ?? ""
-            }
-          />
           <Hidden name="supplierId" value={supplierId ?? ""} />
           <VStack spacing={4} className="min-h-full">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 w-full">
@@ -116,24 +102,17 @@ const ReceiptForm = ({
                 onChange={(newValue) => {
                   if (newValue) {
                     setSourceDocument(newValue.value as ReceiptSourceDocument);
-                    setSourceDocumentId(null);
                   }
                 }}
                 isReadOnly={isPosted}
               />
-              <ComboboxControlled
+              <Combobox
                 name="sourceDocumentId"
                 label="Source Document ID"
                 options={sourceDocuments.map((d) => ({
                   label: d.name,
                   value: d.id,
                 }))}
-                value={sourceDocumentId ?? undefined}
-                onChange={(newValue) => {
-                  if (newValue) {
-                    setSourceDocumentId(newValue.value as string);
-                  }
-                }}
                 isReadOnly={isPosted}
               />
               <Input name="externalDocumentId" label="External Reference" />
@@ -155,18 +134,6 @@ const ReceiptForm = ({
       </Card>
     </ValidatedForm>
 
-    // <VStack>
-    //   <SectionTitle>Receipt Lines</SectionTitle>
-    //   <DataGrid<ReceiptLine>
-    //     data={internalReceiptLines}
-    //     columns={receiptLineColumns}
-    //     canEdit={!isPosted}
-    //     contained={false}
-    //     editableComponents={editableComponents}
-    //     onDataChange={setReceiptLines}
-    //   />
-    // </VStack>
-    // <SectionTitle>Notes</SectionTitle>
     // <Notes notes={notes} documentId={initialValues.id} />
   );
 };

@@ -17,15 +17,15 @@ import {
 } from "@carbon/react";
 import { formatDate } from "@carbon/utils";
 
-import { useParams } from "@remix-run/react";
+import { useNavigate, useParams } from "@remix-run/react";
 import { Assign, EmployeeAvatar, useOptimisticAssignment } from "~/components";
 import { usePermissions, useRouteData } from "~/hooks";
 import type { Receipt, ReceiptLine } from "~/modules/inventory";
 import { ReceiptStatus } from "~/modules/inventory";
 import { path } from "~/utils/path";
-import useReceiptForm from "./ReceiptForm/useReceiptForm";
 
 const ReceiptHeader = () => {
+  const navigate = useNavigate();
   const permissions = usePermissions();
   const { receiptId } = useParams();
   if (!receiptId) throw new Error("receiptId not found");
@@ -37,13 +37,15 @@ const ReceiptHeader = () => {
 
   if (!routeData) throw new Error("Could not find routeData");
 
-  const { canPost, onPost } = useReceiptForm({
-    // @ts-ignore
-    receipt: routeData.receipt,
-    receiptLines: routeData.receiptLines ?? [],
-  });
+  const canPost =
+    routeData.receiptLines.length > 0 &&
+    routeData.receiptLines.some((line) => line.receivedQuantity > 0);
 
   const isPosted = routeData.receipt.status === "Posted";
+
+  const onPost = () => {
+    navigate(path.to.receiptPost(routeData.receipt.id!));
+  };
 
   const optimisticAssignment = useOptimisticAssignment({
     id: receiptId,
