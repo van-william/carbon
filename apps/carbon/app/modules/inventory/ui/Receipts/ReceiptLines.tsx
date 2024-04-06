@@ -51,6 +51,11 @@ const ReceiptLines = () => {
         cell: (item) => item.getValue(),
       },
       {
+        accessorKey: "unitOfMeasure",
+        header: "Unit of Measure",
+        cell: (item) => item.getValue(),
+      },
+      {
         accessorKey: "orderQuantity",
         header: "Order Quantity",
         cell: (item) => item.getValue(),
@@ -60,11 +65,7 @@ const ReceiptLines = () => {
         header: "Outstanding Quantity",
         cell: (item) => item.getValue(),
       },
-      {
-        accessorKey: "unitPrice",
-        header: "Unit Cost",
-        cell: (item) => item.getValue(),
-      },
+
       {
         accessorKey: "locationId",
         header: "Location",
@@ -76,11 +77,6 @@ const ReceiptLines = () => {
       {
         accessorKey: "shelfId",
         header: "Shelf",
-        cell: (item) => item.getValue(),
-      },
-      {
-        accessorKey: "unitOfMeasure",
-        header: "Unit of Measure",
         cell: (item) => item.getValue(),
       },
     ];

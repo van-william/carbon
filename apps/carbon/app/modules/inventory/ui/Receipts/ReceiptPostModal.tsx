@@ -9,11 +9,13 @@ import {
   ModalOverlay,
   ModalTitle,
 } from "@carbon/react";
-import { Form, useNavigate } from "@remix-run/react";
+import { Form, useNavigate, useParams } from "@remix-run/react";
+import { path } from "~/utils/path";
 
-type ReceiptPostModalProps = {};
+const ReceiptPostModal = () => {
+  const { receiptId } = useParams();
+  if (!receiptId) throw new Error("receiptId not found");
 
-const ReceiptPostModal = (props: ReceiptPostModalProps) => {
   const navigate = useNavigate();
 
   const onCancel = () => navigate(-1);
@@ -36,7 +38,7 @@ const ReceiptPostModal = (props: ReceiptPostModalProps) => {
             <Button variant="solid" onClick={onCancel}>
               Cancel
             </Button>
-            <Form method="post">
+            <Form action={path.to.receiptPost(receiptId)} method="post">
               <Button type="submit">Post Receipt</Button>
             </Form>
           </HStack>
