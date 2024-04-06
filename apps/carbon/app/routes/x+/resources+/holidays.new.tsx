@@ -47,7 +47,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   throw redirect(
     path.to.holidays,
-    await flash(request, success("Holiday created."))
+    await flash(request, success("Holiday created"))
   );
 }
 

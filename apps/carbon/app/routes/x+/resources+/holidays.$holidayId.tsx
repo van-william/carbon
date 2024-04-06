@@ -72,7 +72,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   throw redirect(
     path.to.holidays,
-    await flash(request, success("Holiday updated."))
+    await flash(request, success("Holiday updated"))
   );
 }
 

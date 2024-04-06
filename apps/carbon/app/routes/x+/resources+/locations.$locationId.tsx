@@ -73,7 +73,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   throw redirect(
     path.to.locations,
-    await flash(request, success("Location updated."))
+    await flash(request, success("Location updated"))
   );
 }
 

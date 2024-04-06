@@ -1,5 +1,5 @@
 // root.tsx
-import { Button, Heading, Toaster, toast } from "@carbon/react";
+import { Button, Heading, toast } from "@carbon/react";
 import { validator } from "@carbon/remix-validated-form";
 import type {
   ActionFunctionArgs,
@@ -118,10 +118,10 @@ function Document({
       </head>
       <body className="h-full bg-background">
         {children}
+
         <ScrollRestoration />
         <Scripts />
         <Analytics />
-        <Toaster />
         {process.env.NODE_ENV === "development" && <LiveReload />}
       </body>
     </html>

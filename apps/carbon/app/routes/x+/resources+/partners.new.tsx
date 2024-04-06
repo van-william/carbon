@@ -47,7 +47,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   throw redirect(
     path.to.partners,
-    await flash(request, success("Partner created."))
+    await flash(request, success("Partner created"))
   );
 }
 

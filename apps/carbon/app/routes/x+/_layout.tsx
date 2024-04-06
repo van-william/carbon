@@ -1,3 +1,4 @@
+import { Toaster, TooltipProvider } from "@carbon/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Outlet, useLoaderData, useNavigation } from "@remix-run/react";
@@ -20,7 +21,6 @@ import {
 } from "~/services/session.server";
 import { path } from "~/utils/path";
 
-import { TooltipProvider } from "@carbon/react";
 import type { ShouldRevalidateFunction } from "@remix-run/react";
 
 export const shouldRevalidate: ShouldRevalidateFunction = ({
@@ -112,6 +112,7 @@ export default function AuthenticatedRoute() {
                 </div>
               </div>
             </div>
+            <Toaster richColors position="bottom-right" />
           </div>
         </TooltipProvider>
       </RealtimeDataProvider>

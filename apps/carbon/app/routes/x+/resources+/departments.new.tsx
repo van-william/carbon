@@ -59,7 +59,7 @@ export async function action({ request }: ActionFunctionArgs) {
     ? json(createDepartment, { status: 201 })
     : redirect(
         path.to.departments,
-        await flash(request, success("Department created."))
+        await flash(request, success("Department created"))
       );
 }
 

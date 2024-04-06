@@ -72,7 +72,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   throw redirect(
     path.to.departments,
-    await flash(request, success("Department updated."))
+    await flash(request, success("Department updated"))
   );
 }
 
