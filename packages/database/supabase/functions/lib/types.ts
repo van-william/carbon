@@ -9680,6 +9680,7 @@ export type Database = {
       }
       receiptLine: {
         Row: {
+          conversionFactor: number | null
           createdAt: string
           createdBy: string
           id: string
@@ -9697,6 +9698,7 @@ export type Database = {
           updatedBy: string | null
         }
         Insert: {
+          conversionFactor?: number | null
           createdAt?: string
           createdBy: string
           id?: string
@@ -9714,6 +9716,7 @@ export type Database = {
           updatedBy?: string | null
         }
         Update: {
+          conversionFactor?: number | null
           createdAt?: string
           createdBy?: string
           id?: string

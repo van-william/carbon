@@ -135,11 +135,11 @@ const PurchaseOrderLineForm = ({
       description: "",
       quantity: 1,
       unitPrice: 0,
-      purchaseUom: "EA",
-      inventoryUom: "EA",
+      purchaseUom: "",
+      inventoryUom: "",
       conversionFactor: 1,
       shelfId: "",
-      minimumOrderQuantity: 0,
+      minimumOrderQuantity: undefined,
     });
   };
 

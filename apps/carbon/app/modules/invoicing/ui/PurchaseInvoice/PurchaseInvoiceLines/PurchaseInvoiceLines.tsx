@@ -20,18 +20,20 @@ import { IoMdTrash } from "react-icons/io";
 import { MdMoreHoriz } from "react-icons/md";
 import { New } from "~/components";
 import {
+  EditableList,
   EditableNumber,
   EditablePurchaseInvoiceLineNumber,
   EditableText,
 } from "~/components/Editable";
+import { useUnitOfMeasure } from "~/components/Form/UnitOfMeasure";
 import Grid from "~/components/Grid";
 import { useRealtime, useRouteData, useUser } from "~/hooks";
+import { useCustomColumns } from "~/hooks/useCustomColumns";
 import type { PurchaseInvoice, PurchaseInvoiceLine } from "~/modules/invoicing";
 import { usePurchaseInvoiceTotals } from "~/modules/invoicing";
 import type { ListItem } from "~/types";
 import { path } from "~/utils/path";
 import usePurchaseInvoiceLines from "./usePurchaseInvoiceLines";
-import { useCustomColumns } from "~/hooks/useCustomColumns";
 
 const PurchaseInvoiceLines = () => {
   const { invoiceId } = useParams();
@@ -48,6 +50,7 @@ const PurchaseInvoiceLines = () => {
   }>(path.to.purchaseInvoice(invoiceId));
 
   const { defaults, id: userId } = useUser();
+  const unitOfMeasureOptions = useUnitOfMeasure();
   const {
     canEdit,
     canDelete,
@@ -149,6 +152,48 @@ const PurchaseInvoiceLines = () => {
         cell: (item) => item.getValue(),
       },
       {
+        accessorKey: "purchaseUnitOfMeasureCode",
+        header: "Pur. UoM",
+        cell: ({ row }) => {
+          switch (row.original.invoiceLineType) {
+            case "Part":
+              return <span>{row.original.purchaseUnitOfMeasureCode}</span>;
+            default:
+              return null;
+          }
+        },
+      },
+      {
+        accessorKey: "conversionFactor",
+        header: "Conversion Factor",
+        cell: ({ row }) => {
+          switch (row.original.invoiceLineType) {
+            case "Part":
+              return <span>{row.original.conversionFactor}</span>;
+            default:
+              return null;
+          }
+        },
+      },
+      {
+        accessorKey: "locationId",
+        header: "Location",
+        cell: ({ row }) => {
+          switch (row.original.invoiceLineType) {
+            case "Part":
+              return (
+                <span>
+                  {
+                    routeData?.locations.find(
+                      (l) => l.id == row.original.locationId
+                    )?.name
+                  }
+                </span>
+              );
+          }
+        },
+      },
+      {
         accessorKey: "shelfId",
         header: "Shelf",
         cell: (item) => item.getValue(),
@@ -189,6 +234,8 @@ const PurchaseInvoiceLines = () => {
         defaultLocationId: defaults.locationId,
         userId: userId,
       }),
+      purchaseUnitOfMeasureCode: EditableList(onCellEdit, unitOfMeasureOptions),
+      conversionFactor: EditableNumber(onCellEdit),
     }),
     [
       onCellEdit,
@@ -198,6 +245,7 @@ const PurchaseInvoiceLines = () => {
       accountOptions,
       defaults.locationId,
       userId,
+      unitOfMeasureOptions,
     ]
   );
 

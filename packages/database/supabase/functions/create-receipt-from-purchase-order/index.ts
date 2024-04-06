@@ -83,6 +83,7 @@ serve(async (req: Request) => {
           orderQuantity: d.purchaseQuantity * (d.conversionFactor ?? 1),
           outstandingQuantity: outstandingQuantity * (d.conversionFactor ?? 1),
           receivedQuantity: outstandingQuantity * (d.conversionFactor ?? 1),
+          conversionFactor: d.conversionFactor ?? 1,
           unitPrice: d.unitPrice / (d.conversionFactor ?? 1),
           unitOfMeasure: d.inventoryUnitOfMeasureCode ?? "EA",
           locationId: d.locationId,
