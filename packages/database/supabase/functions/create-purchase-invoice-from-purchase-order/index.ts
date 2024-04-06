@@ -1,9 +1,9 @@
 import { serve } from "https://deno.land/std@0.175.0/http/server.ts";
 import { DB, getConnectionPool, getDatabaseClient } from "../lib/database.ts";
 
-import { Database } from "../lib/types.ts";
 import { corsHeaders } from "../lib/headers.ts";
 import { getSupabaseServiceRole } from "../lib/supabase.ts";
+import { Database } from "../lib/types.ts";
 import { getNextSequence } from "../shared/get-next-sequence.ts";
 
 const pool = getConnectionPool(1);
@@ -122,6 +122,9 @@ serve(async (req: Request) => {
             description: line.description,
             quantity: line.quantityToInvoice,
             unitPrice: line.unitPrice ?? 0,
+            purchaseUnitOfMeasureCode: line.purchaseUnitOfMeasureCode,
+            inventoryUnitOfMeasureCode: line.inventoryUnitOfMeasureCode,
+            conversionFactor: line.conversionFactor,
             // TODO: currency code and exchange rate
             currencyCode: "USD",
             exchangeRate: 1,

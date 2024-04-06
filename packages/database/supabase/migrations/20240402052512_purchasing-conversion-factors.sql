@@ -4,7 +4,7 @@ ALTER TABLE "purchaseOrderLine" ADD COLUMN "purchaseUnitOfMeasureCode" TEXT REFE
 
 UPDATE "purchaseOrderLine" SET "inventoryUnitOfMeasureCode" = "unitOfMeasureCode";
 ALTER TABLE "purchaseOrderLine" DROP CONSTRAINT "purchaseOrderLine_unitOfMeasureCode_fkey";
-ALTER TABLE "purchaseOrderLine" DROP COLUMN "unitOfMeasureCode";
+ALTER TABLE "purchaseOrderLine" DROP COLUMN "unitOfMeasureCode" CASCADE;
 
 ALTER TABLE "purchaseInvoiceLine" ADD COLUMN "conversionFactor" NUMERIC(10, 2) DEFAULT 1;
 ALTER TABLE "purchaseInvoiceLine" ADD COLUMN "inventoryUnitOfMeasureCode" TEXT REFERENCES "unitOfMeasure" ("code");
@@ -12,12 +12,12 @@ ALTER TABLE "purchaseInvoiceLine" ADD COLUMN "purchaseUnitOfMeasureCode" TEXT RE
 
 UPDATE "purchaseInvoiceLine" SET "inventoryUnitOfMeasureCode" = "unitOfMeasureCode";
 ALTER TABLE "purchaseInvoiceLine" DROP CONSTRAINT "purchaseInvoiceLines_unitOfMeasureCode_fkey";
-ALTER TABLE "purchaseInvoiceLine" DROP COLUMN "unitOfMeasureCode";
+ALTER TABLE "purchaseInvoiceLine" DROP COLUMN "unitOfMeasureCode" CASCADE;
 
 ALTER TABLE "partSupplier" ADD COLUMN "unitPrice" NUMERIC(10, 2) DEFAULT 0;
 
 
-DROP VIEW "purchaseOrderLines";
+DROP VIEW IF EXISTS "purchaseOrderLines";
 CREATE OR REPLACE VIEW "purchaseOrderLines" WITH(SECURITY_INVOKER=true) AS
   SELECT 
     pol.*,

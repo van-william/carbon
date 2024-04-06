@@ -562,7 +562,7 @@ serve(async (req: Request) => {
               receivedQuantity: invoiceLineQuantityInInventoryUnit,
               locationId: invoiceLine.locationId,
               shelfId: invoiceLine.shelfId,
-              unitOfMeasure: invoiceLine.unitOfMeasureCode ?? "EA",
+              unitOfMeasure: invoiceLine.inventoryUnitOfMeasureCode ?? "EA",
               unitPrice: invoiceLine.unitPrice,
               createdBy: invoiceLine.createdBy,
             });
