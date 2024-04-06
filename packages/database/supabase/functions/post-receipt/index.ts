@@ -110,16 +110,13 @@ serve(async (req: Request) => {
             purchaseOrderLine.purchaseQuantity &&
             purchaseOrderLine.purchaseQuantity > 0
           ) {
-            const receivedQuantityInPurchaseUnit =
-              receiptLine.receivedQuantity /
-              (receiptLine.conversionFactor ?? 1);
             const newQuantityReceived =
               (purchaseOrderLine.quantityReceived ?? 0) +
-              receivedQuantityInPurchaseUnit;
+              receiptLine.receivedQuantity;
 
             const receivedComplete =
               purchaseOrderLine.receivedComplete ||
-              receivedQuantityInPurchaseUnit >=
+              receiptLine.receivedQuantity >=
                 (purchaseOrderLine.quantityToReceive ??
                   purchaseOrderLine.purchaseQuantity);
 
@@ -185,9 +182,6 @@ serve(async (req: Request) => {
         > = {};
 
         for await (const receiptLine of receiptLines.data) {
-          const receivedQuantityInPurchaseUnit =
-            receiptLine.receivedQuantity / (receiptLine.conversionFactor ?? 1);
-
           let postingGroupInventory:
             | Database["public"]["Tables"]["postingGroupInventory"]["Row"]
             | null = null;
@@ -303,13 +297,10 @@ serve(async (req: Request) => {
           const quantityToReverse = Math.max(
             0,
             Math.min(
-              receivedQuantityInPurchaseUnit ?? 0,
+              receiptLine.receivedQuantity ?? 0,
               quantityInvoiced - quantityReceived
             )
           );
-
-          const quantityToReverseInInventoryUnit =
-            quantityToReverse * (receiptLine.conversionFactor ?? 1);
 
           const quantityAlreadyReversed =
             quantityReceived < quantityInvoiced ? quantityReceived : 0;
@@ -344,10 +335,6 @@ serve(async (req: Request) => {
                   )
                 );
 
-                const quantityToReverseForEntryInInventoryUnit =
-                  quantityToReverseForEntry *
-                  (receiptLine.conversionFactor ?? 1);
-
                 if (quantityToReverseForEntry > 0) {
                   if (
                     entry[0].accrual === false ||
@@ -372,7 +359,7 @@ serve(async (req: Request) => {
                             "asset", // "Interim Inventory Accrual"
                             quantityToReverseForEntry * unitCostForEntry
                           ),
-                    quantity: quantityToReverseForEntryInInventoryUnit,
+                    quantity: quantityToReverseForEntry,
                     documentType: "Invoice",
                     documentId: receipt.data?.id,
                     externalDocumentId: receipt?.data.externalDocumentId,
@@ -394,7 +381,7 @@ serve(async (req: Request) => {
                             "asset", // "Interim Inventory Accrual"
                             quantityToReverseForEntry * unitCostForEntry
                           ),
-                    quantity: quantityToReverseForEntryInInventoryUnit,
+                    quantity: quantityToReverseForEntry,
                     documentType: "Invoice",
                     documentId: receipt.data?.id,
                     externalDocumentId: receipt?.data.externalDocumentId,
@@ -420,7 +407,7 @@ serve(async (req: Request) => {
               documentId: receipt.data?.id ?? undefined,
               externalDocumentId: receipt.data?.externalDocumentId ?? undefined,
               partId: receiptLine.partId,
-              quantity: quantityToReverseInInventoryUnit,
+              quantity: quantityToReverse,
               cost: value,
               costPostedToGL: value,
             });
@@ -435,7 +422,7 @@ serve(async (req: Request) => {
                 accountNumber: postingGroupInventory.inventoryAccount,
                 description: "Inventory Account",
                 amount: debit("asset", value),
-                quantity: quantityToReverseInInventoryUnit,
+                quantity: quantityToReverse,
                 documentType: "Receipt",
                 documentId: receipt.data?.id,
                 externalDocumentId: receipt.data?.externalDocumentId,
@@ -450,7 +437,7 @@ serve(async (req: Request) => {
                 accountNumber: postingGroupInventory.directCostAppliedAccount,
                 description: "Direct Cost Applied",
                 amount: credit("expense", value),
-                quantity: quantityToReverseInInventoryUnit,
+                quantity: quantityToReverse,
                 documentType: "Receipt",
                 documentId: receipt.data?.id,
                 externalDocumentId: receipt.data?.externalDocumentId,
@@ -465,7 +452,7 @@ serve(async (req: Request) => {
                 accountNumber: postingGroupInventory.overheadAccount,
                 description: "Overhead Account",
                 amount: debit("asset", value),
-                quantity: quantityToReverseInInventoryUnit,
+                quantity: quantityToReverse,
                 documentType: "Receipt",
                 documentId: receipt.data?.id,
                 externalDocumentId: receipt.data?.externalDocumentId,
@@ -480,7 +467,7 @@ serve(async (req: Request) => {
                 accountNumber: postingGroupInventory.overheadCostAppliedAccount,
                 description: "Overhead Cost Applied",
                 amount: credit("expense", value),
-                quantity: quantityToReverseInInventoryUnit,
+                quantity: quantityToReverse,
                 documentType: "Receipt",
                 documentId: receipt.data?.id,
                 externalDocumentId: receipt.data?.externalDocumentId,
@@ -498,7 +485,7 @@ serve(async (req: Request) => {
               accountNumber: postingGroupPurchasing.purchaseAccount,
               description: "Purchase Account",
               amount: debit("expense", value),
-              quantity: quantityToReverseInInventoryUnit,
+              quantity: quantityToReverse,
               documentType: "Receipt",
               documentId: receipt.data?.id,
               externalDocumentId: receipt.data?.externalDocumentId,
@@ -513,7 +500,7 @@ serve(async (req: Request) => {
               accountNumber: postingGroupPurchasing.payablesAccount,
               description: "Accounts Payable",
               amount: credit("liability", value),
-              quantity: quantityToReverseInInventoryUnit,
+              quantity: quantityToReverse,
               documentType: "Receipt",
               documentId: receipt.data?.id,
               externalDocumentId: receipt.data?.externalDocumentId,
@@ -524,16 +511,13 @@ serve(async (req: Request) => {
             });
           }
 
-          if (receivedQuantityInPurchaseUnit > quantityToReverse) {
+          if (receiptLine.receivedQuantity > quantityToReverse) {
             // create the accrual entries for received not invoiced
             const quantityToAccrue =
-              receivedQuantityInPurchaseUnit - quantityToReverse;
-
-            const quantityToAccrueInInventoryUnit =
-              quantityToAccrue * (receiptLine.conversionFactor ?? 1);
+              receiptLine.receivedQuantity - quantityToReverse;
 
             const expectedValue =
-              (receivedQuantityInPurchaseUnit - quantityToReverse) *
+              (receiptLine.receivedQuantity - quantityToReverse) *
               receiptLine.unitPrice;
 
             const journalLineReference = nanoid();
@@ -544,7 +528,7 @@ serve(async (req: Request) => {
               description: "Interim Inventory Accrual",
               accrual: true,
               amount: debit("asset", expectedValue),
-              quantity: quantityToAccrueInInventoryUnit,
+              quantity: quantityToAccrue,
               documentType: "Receipt",
               documentId: receipt.data?.id ?? undefined,
               externalDocumentId:
@@ -559,7 +543,7 @@ serve(async (req: Request) => {
               description: "Inventory Received Not Invoiced",
               accrual: true,
               amount: credit("liability", expectedValue),
-              quantity: quantityToAccrueInInventoryUnit,
+              quantity: quantityToAccrue,
               documentType: "Receipt",
               documentId: receipt.data?.id ?? undefined,
               externalDocumentId:
