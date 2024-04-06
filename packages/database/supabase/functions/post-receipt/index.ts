@@ -110,13 +110,17 @@ serve(async (req: Request) => {
             purchaseOrderLine.purchaseQuantity &&
             purchaseOrderLine.purchaseQuantity > 0
           ) {
+            const recivedQuantityInPurchaseUnit =
+              receiptLine.receivedQuantity /
+              (receiptLine.conversionFactor ?? 1);
+
             const newQuantityReceived =
               (purchaseOrderLine.quantityReceived ?? 0) +
-              receiptLine.receivedQuantity;
+              recivedQuantityInPurchaseUnit;
 
             const receivedComplete =
               purchaseOrderLine.receivedComplete ||
-              receiptLine.receivedQuantity >=
+              recivedQuantityInPurchaseUnit >=
                 (purchaseOrderLine.quantityToReceive ??
                   purchaseOrderLine.purchaseQuantity);
 
@@ -182,6 +186,9 @@ serve(async (req: Request) => {
         > = {};
 
         for await (const receiptLine of receiptLines.data) {
+          const receiptLineQuantityInInventoryUnit =
+            receiptLine.receivedQuantity * (receiptLine.conversionFactor ?? 1);
+
           let postingGroupInventory:
             | Database["public"]["Tables"]["postingGroupInventory"]["Row"]
             | null = null;
@@ -557,7 +564,7 @@ serve(async (req: Request) => {
             partLedgerInserts.push({
               postingDate: today,
               partId: receiptLine.partId,
-              quantity: receiptLine.receivedQuantity,
+              quantity: receiptLineQuantityInInventoryUnit,
               locationId: receiptLine.locationId,
               shelfId: receiptLine.shelfId,
               entryType: "Positive Adjmt.",

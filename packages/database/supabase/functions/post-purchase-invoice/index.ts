@@ -2,10 +2,10 @@
 import { serve } from "https://deno.land/std@0.175.0/http/server.ts";
 import { format } from "https://deno.land/std@0.205.0/datetime/mod.ts";
 import { nanoid } from "https://deno.land/x/nanoid@v3.0.0/mod.ts";
-import type { Database } from "../lib/types.ts";
 import { DB, getConnectionPool, getDatabaseClient } from "../lib/database.ts";
 import { corsHeaders } from "../lib/headers.ts";
 import { getSupabaseServiceRole } from "../lib/supabase.ts";
+import type { Database } from "../lib/types.ts";
 import { credit, debit, journalReference } from "../lib/utils.ts";
 import { getCurrentAccountingPeriod } from "../shared/get-accounting-period.ts";
 import { getNextSequence } from "../shared/get-next-sequence.ts";
@@ -220,6 +220,9 @@ serve(async (req: Request) => {
     > = {};
 
     for await (const invoiceLine of purchaseInvoiceLines.data) {
+      const invoiceLineQuantityInInventoryUnit =
+        invoiceLine.quantity * (invoiceLine.conversionFactor ?? 1);
+
       // declaring shared variables between part and service cases
       // outside of the switch case to avoid redeclaring them
       let postingGroupInventory:
@@ -554,9 +557,9 @@ serve(async (req: Request) => {
             receiptLineInserts.push({
               partId: invoiceLine.partId!,
               lineId: invoiceLine.id,
-              orderQuantity: invoiceLine.quantity,
-              outstandingQuantity: invoiceLine.quantity,
-              receivedQuantity: invoiceLine.quantity,
+              orderQuantity: invoiceLineQuantityInInventoryUnit,
+              outstandingQuantity: invoiceLineQuantityInInventoryUnit,
+              receivedQuantity: invoiceLineQuantityInInventoryUnit,
               locationId: invoiceLine.locationId,
               shelfId: invoiceLine.shelfId,
               unitOfMeasure: invoiceLine.unitOfMeasureCode ?? "EA",
@@ -569,7 +572,7 @@ serve(async (req: Request) => {
               partLedgerInserts.push({
                 postingDate: today,
                 partId: invoiceLine.partId!,
-                quantity: invoiceLine.quantity,
+                quantity: invoiceLineQuantityInInventoryUnit,
                 locationId: invoiceLine.locationId,
                 shelfId: invoiceLine.shelfId,
                 entryType: "Positive Adjmt.",
@@ -590,7 +593,7 @@ serve(async (req: Request) => {
               externalDocumentId:
                 purchaseInvoice.data?.supplierReference ?? undefined,
               partId: invoiceLine.partId,
-              quantity: invoiceLine.quantity,
+              quantity: invoiceLineQuantityInInventoryUnit,
               cost: invoiceLine.quantity * invoiceLine.unitPrice,
               costPostedToGL: invoiceLine.quantity * invoiceLine.unitPrice,
             });
