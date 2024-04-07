@@ -223,6 +223,9 @@ serve(async (req: Request) => {
       const invoiceLineQuantityInInventoryUnit =
         invoiceLine.quantity * (invoiceLine.conversionFactor ?? 1);
 
+      const invoiceLineUnitPriceInInventoryUnit =
+        invoiceLine.unitPrice * (invoiceLine.conversionFactor ?? 1);
+
       // declaring shared variables between part and service cases
       // outside of the switch case to avoid redeclaring them
       let postingGroupInventory:
@@ -281,7 +284,7 @@ serve(async (req: Request) => {
               "asset",
               invoiceLine.quantity * invoiceLine.unitPrice
             ),
-            quantity: invoiceLine.quantity,
+            quantity: invoiceLineQuantityInInventoryUnit,
             documentType: "Invoice",
             documentId: purchaseInvoice.data?.id,
             externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -291,7 +294,7 @@ serve(async (req: Request) => {
             journalLineReference,
           });
 
-          // creidt the direct cost applied account
+          // credit the direct cost applied account
           journalLineInserts.push({
             accountNumber: accountDefaults.data.overheadCostAppliedAccount!,
             description: "Overhead Cost Applied",
@@ -299,7 +302,7 @@ serve(async (req: Request) => {
               "expense",
               invoiceLine.quantity * invoiceLine.unitPrice
             ),
-            quantity: invoiceLine.quantity,
+            quantity: invoiceLineQuantityInInventoryUnit,
             documentType: "Invoice",
             documentId: purchaseInvoice.data?.id,
             externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -319,7 +322,7 @@ serve(async (req: Request) => {
               "expense",
               invoiceLine.quantity * invoiceLine.unitPrice
             ),
-            quantity: invoiceLine.quantity,
+            quantity: invoiceLineQuantityInInventoryUnit,
             documentType: "Invoice",
             documentId: purchaseInvoice.data?.id,
             externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -337,7 +340,7 @@ serve(async (req: Request) => {
               "liability",
               invoiceLine.quantity * invoiceLine.unitPrice
             ),
-            quantity: invoiceLine.quantity,
+            quantity: invoiceLineQuantityInInventoryUnit,
             documentType: "Invoice",
             documentId: purchaseInvoice.data?.id,
             externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -430,7 +433,7 @@ serve(async (req: Request) => {
               "expense",
               invoiceLine.quantity * invoiceLine.unitPrice
             ),
-            quantity: invoiceLine.quantity,
+            quantity: invoiceLineQuantityInInventoryUnit,
             documentType: "Invoice",
             documentId: purchaseInvoice.data?.id,
             externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -445,7 +448,7 @@ serve(async (req: Request) => {
               "expense",
               invoiceLine.quantity * invoiceLine.unitPrice
             ),
-            quantity: invoiceLine.quantity,
+            quantity: invoiceLineQuantityInInventoryUnit,
             documentType: "Invoice",
             documentId: purchaseInvoice.data?.id,
             externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -462,7 +465,7 @@ serve(async (req: Request) => {
               "expense",
               invoiceLine.quantity * invoiceLine.unitPrice
             ),
-            quantity: invoiceLine.quantity,
+            quantity: invoiceLineQuantityInInventoryUnit,
             documentType: "Invoice",
             documentId: purchaseInvoice.data?.id,
             externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -480,7 +483,7 @@ serve(async (req: Request) => {
               "liability",
               invoiceLine.quantity * invoiceLine.unitPrice
             ),
-            quantity: invoiceLine.quantity,
+            quantity: invoiceLineQuantityInInventoryUnit,
             documentType: "Invoice",
             documentId: purchaseInvoice.data?.id,
             externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -611,7 +614,7 @@ serve(async (req: Request) => {
                   "asset",
                   invoiceLine.quantity * invoiceLine.unitPrice
                 ),
-                quantity: invoiceLine.quantity,
+                quantity: invoiceLineQuantityInInventoryUnit,
                 documentType: "Invoice",
                 documentId: purchaseInvoice.data?.id,
                 externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -626,7 +629,7 @@ serve(async (req: Request) => {
                   "expense",
                   invoiceLine.quantity * invoiceLine.unitPrice
                 ),
-                quantity: invoiceLine.quantity,
+                quantity: invoiceLineQuantityInInventoryUnit,
                 documentType: "Invoice",
                 documentId: purchaseInvoice.data?.id,
                 externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -641,7 +644,7 @@ serve(async (req: Request) => {
                   "asset",
                   invoiceLine.quantity * invoiceLine.unitPrice
                 ),
-                quantity: invoiceLine.quantity,
+                quantity: invoiceLineQuantityInInventoryUnit,
                 documentType: "Invoice",
                 documentId: purchaseInvoice.data?.id,
                 externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -656,7 +659,7 @@ serve(async (req: Request) => {
                   "expense",
                   invoiceLine.quantity * invoiceLine.unitPrice
                 ),
-                quantity: invoiceLine.quantity,
+                quantity: invoiceLineQuantityInInventoryUnit,
                 documentType: "Invoice",
                 documentId: purchaseInvoice.data?.id,
                 externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -674,7 +677,7 @@ serve(async (req: Request) => {
                 "expense",
                 invoiceLine.quantity * invoiceLine.unitPrice
               ),
-              quantity: invoiceLine.quantity,
+              quantity: invoiceLineQuantityInInventoryUnit,
               documentType: "Invoice",
               documentId: purchaseInvoice.data?.id,
               externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -692,7 +695,7 @@ serve(async (req: Request) => {
                 "liability",
                 invoiceLine.quantity * invoiceLine.unitPrice
               ),
-              quantity: invoiceLine.quantity,
+              quantity: invoiceLineQuantityInInventoryUnit,
               documentType: "Invoice",
               documentId: purchaseInvoice.data?.id,
               externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -738,12 +741,18 @@ serve(async (req: Request) => {
               (line) => line.id === invoiceLine.purchaseOrderLineId
             );
 
-            const quantityReceived = purchaseOrderLine?.quantityReceived ?? 0;
-            const quantityInvoiced = purchaseOrderLine?.quantityInvoiced ?? 0;
+            const quantityReceived =
+              (purchaseOrderLine?.quantityReceived ?? 0) *
+              (purchaseOrderLine?.conversionFactor ?? 1);
+
+            const quantityInvoiced =
+              (purchaseOrderLine?.quantityInvoiced ?? 0) *
+              (purchaseOrderLine?.conversionFactor ?? 1);
+
             const quantityToReverse = Math.max(
               0,
               Math.min(
-                invoiceLine.quantity ?? 0,
+                invoiceLineQuantityInInventoryUnit,
                 quantityReceived - quantityInvoiced
               )
             );
@@ -752,8 +761,8 @@ serve(async (req: Request) => {
               quantityReceived > quantityInvoiced ? quantityInvoiced : 0;
 
             if (quantityToReverse > 0) {
-              let counted = 0;
-              let reversed = 0;
+              let quantityCounted = 0;
+              let quantityReversed = 0;
 
               existingJournalLineGroups.forEach((entry) => {
                 if (entry[0].quantity) {
@@ -764,13 +773,15 @@ serve(async (req: Request) => {
 
                   // akin to supply
                   const quantityAvailableToReverseForEntry =
-                    quantityAlreadyReversed > counted
-                      ? entry[0].quantity + counted - quantityAlreadyReversed
+                    quantityAlreadyReversed > quantityCounted
+                      ? entry[0].quantity +
+                        quantityCounted -
+                        quantityAlreadyReversed
                       : entry[0].quantity;
 
                   // akin to demand
                   const quantityRequiredToReverse =
-                    quantityToReverse - reversed;
+                    quantityToReverse - quantityReversed;
 
                   // we can't reverse more than what's available or what's required
                   const quantityToReverseForEntry = Math.max(
@@ -837,8 +848,8 @@ serve(async (req: Request) => {
                     });
                   }
 
-                  counted += entry[0].quantity;
-                  reversed += quantityToReverseForEntry;
+                  quantityCounted += entry[0].quantity;
+                  quantityReversed += quantityToReverseForEntry;
                 }
               });
 
@@ -853,8 +864,9 @@ serve(async (req: Request) => {
                   purchaseInvoice.data?.supplierReference ?? undefined,
                 partId: invoiceLine.partId,
                 quantity: quantityToReverse,
-                cost: quantityToReverse * invoiceLine.unitPrice,
-                costPostedToGL: quantityToReverse * invoiceLine.unitPrice,
+                cost: quantityToReverse * invoiceLineUnitPriceInInventoryUnit,
+                costPostedToGL:
+                  quantityToReverse * invoiceLineUnitPriceInInventoryUnit,
               });
 
               // create the normal GL entries for a part
@@ -868,7 +880,7 @@ serve(async (req: Request) => {
                   description: "Inventory Account",
                   amount: debit(
                     "asset",
-                    quantityToReverse * invoiceLine.unitPrice
+                    quantityToReverse * invoiceLineUnitPriceInInventoryUnit
                   ),
                   quantity: quantityToReverse,
                   documentType: "Invoice",
@@ -886,7 +898,7 @@ serve(async (req: Request) => {
                   description: "Direct Cost Applied",
                   amount: credit(
                     "expense",
-                    quantityToReverse * invoiceLine.unitPrice
+                    quantityToReverse * invoiceLineUnitPriceInInventoryUnit
                   ),
                   quantity: quantityToReverse,
                   documentType: "Invoice",
@@ -904,7 +916,7 @@ serve(async (req: Request) => {
                   description: "Overhead Account",
                   amount: debit(
                     "asset",
-                    quantityToReverse * invoiceLine.unitPrice
+                    quantityToReverse * invoiceLineUnitPriceInInventoryUnit
                   ),
                   quantity: quantityToReverse,
                   documentType: "Invoice",
@@ -923,7 +935,7 @@ serve(async (req: Request) => {
                   description: "Overhead Cost Applied",
                   amount: credit(
                     "expense",
-                    quantityToReverse * invoiceLine.unitPrice
+                    quantityToReverse * invoiceLineUnitPriceInInventoryUnit
                   ),
                   quantity: quantityToReverse,
                   documentType: "Invoice",
@@ -944,7 +956,7 @@ serve(async (req: Request) => {
                 description: "Purchase Account",
                 amount: debit(
                   "expense",
-                  quantityToReverse * invoiceLine.unitPrice
+                  quantityToReverse * invoiceLineUnitPriceInInventoryUnit
                 ),
                 quantity: quantityToReverse,
                 documentType: "Invoice",
@@ -962,7 +974,7 @@ serve(async (req: Request) => {
                 description: "Accounts Payable",
                 amount: credit(
                   "liability",
-                  quantityToReverse * invoiceLine.unitPrice
+                  quantityToReverse * invoiceLineUnitPriceInInventoryUnit
                 ),
                 quantity: quantityToReverse,
                 documentType: "Invoice",
@@ -975,9 +987,10 @@ serve(async (req: Request) => {
               });
             }
 
-            if (invoiceLine.quantity > quantityToReverse) {
+            if (invoiceLineQuantityInInventoryUnit > quantityToReverse) {
               // create the accrual entries for invoiced not received
-              const quantityToAccrue = invoiceLine.quantity - quantityToReverse;
+              const quantityToAccrue =
+                invoiceLineQuantityInInventoryUnit - quantityToReverse;
 
               journalLineReference = nanoid();
 
@@ -989,7 +1002,7 @@ serve(async (req: Request) => {
                 accrual: true,
                 amount: debit(
                   "asset",
-                  quantityToAccrue * invoiceLine.unitPrice
+                  quantityToAccrue * invoiceLineUnitPriceInInventoryUnit
                 ),
                 quantity: quantityToAccrue,
                 documentType: "Invoice",
@@ -1011,7 +1024,7 @@ serve(async (req: Request) => {
                 description: "Interim Inventory Accrual",
                 amount: credit(
                   "asset",
-                  quantityToAccrue * invoiceLine.unitPrice
+                  quantityToAccrue * invoiceLineUnitPriceInInventoryUnit
                 ),
                 quantity: quantityToAccrue,
                 documentType: "Invoice",
