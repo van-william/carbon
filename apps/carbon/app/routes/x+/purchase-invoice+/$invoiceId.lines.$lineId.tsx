@@ -116,7 +116,11 @@ export default function EditPurchaseInvoiceLineRoute() {
     quantity: purchaseInvoiceLine?.quantity ?? 1,
     unitPrice: purchaseInvoiceLine?.unitPrice ?? 0,
     currencyCode: purchaseInvoiceLine?.currencyCode ?? "USD",
-    unitOfMeasureCode: purchaseInvoiceLine?.unitOfMeasureCode ?? "",
+    purchaseUnitOfMeasureCode:
+      purchaseInvoiceLine?.purchaseUnitOfMeasureCode ?? "",
+    inventoryUnitOfMeasureCode:
+      purchaseInvoiceLine?.inventoryUnitOfMeasureCode ?? "",
+    conversionFactor: purchaseInvoiceLine?.conversionFactor ?? 1,
     shelfId: purchaseInvoiceLine?.shelfId ?? "",
     ...getCustomFields(purchaseInvoiceLine?.customFields),
   };

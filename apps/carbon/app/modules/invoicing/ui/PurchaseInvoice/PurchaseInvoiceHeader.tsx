@@ -63,7 +63,7 @@ const PurchaseInvoiceHeader = () => {
     if (!supabase) throw new Error("supabase not found");
     const { data, error } = await supabase
       .from("purchaseInvoiceLine")
-      .select("partId, quantity")
+      .select("partId, quantity, conversionFactor")
       .eq("invoiceId", invoiceId)
       .eq("invoiceLineType", "Part")
       .is("purchaseOrderLineId", null);
@@ -72,7 +72,12 @@ const PurchaseInvoiceHeader = () => {
     if (!data) return;
 
     // so that we can ask the user if they want to receive those lines
-    setLinesNotAssociatedWithPO(data ?? []);
+    setLinesNotAssociatedWithPO(
+      data.map((d) => ({
+        ...d,
+        quantity: d.quantity * d.conversionFactor,
+      })) ?? []
+    );
     postingModal.onOpen();
   };
 
