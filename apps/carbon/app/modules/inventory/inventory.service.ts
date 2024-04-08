@@ -56,7 +56,7 @@ export async function getReceipt(
   client: SupabaseClient<Database>,
   receiptId: string
 ) {
-  return client.from("receipt").select("*").eq("id", receiptId).single();
+  return client.from("receipts").select("*").eq("id", receiptId).single();
 }
 
 export async function getReceiptLines(

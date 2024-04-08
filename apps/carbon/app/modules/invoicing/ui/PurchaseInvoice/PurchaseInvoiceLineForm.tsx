@@ -10,30 +10,25 @@ import {
   FormLabel,
   HStack,
   Input,
-  NumberDecrementStepper,
-  NumberField,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputGroup,
-  NumberInputStepper,
   VStack,
 } from "@carbon/react";
 
 import { ValidatedForm } from "@carbon/remix-validated-form";
 import { useFetcher, useNavigate, useParams } from "@remix-run/react";
 import { useEffect, useMemo, useState } from "react";
-import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 import type { z } from "zod";
 import {
   Account,
   ComboboxControlled,
+  ConversionFactor,
   CustomFormFields,
   Hidden,
-  Number,
+  NumberControlled,
   Part,
   Select,
   Service,
   Submit,
+  UnitOfMeasure,
 } from "~/components/Form";
 import { usePermissions, useRouteData, useUser } from "~/hooks";
 import { useSupabase } from "~/lib/supabase";
@@ -84,15 +79,23 @@ const PurchaseInvoiceLineForm = ({
   const [partData, setPartData] = useState<{
     partId: string;
     description: string;
+    quantity: number;
     unitPrice: number;
-    uom: string;
+    purchaseUom: string;
+    inventoryUom: string;
+    conversionFactor: number;
     shelfId: string;
+    minimumOrderQuantity?: number;
   }>({
     partId: initialValues.partId ?? "",
     description: initialValues.description ?? "",
+    quantity: initialValues.quantity ?? 1,
     unitPrice: initialValues.unitPrice ?? 0,
-    uom: initialValues.unitOfMeasureCode ?? "",
+    purchaseUom: initialValues.purchaseUnitOfMeasureCode ?? "",
+    inventoryUom: initialValues.inventoryUnitOfMeasureCode ?? "",
+    conversionFactor: initialValues.conversionFactor ?? 1,
     shelfId: initialValues.shelfId ?? "",
+    minimumOrderQuantity: undefined,
   });
 
   const shelfFetcher = useFetcher<Awaited<ReturnType<typeof getShelvesList>>>();
@@ -134,39 +137,60 @@ const PurchaseInvoiceLineForm = ({
     setPartData({
       partId: "",
       description: "",
+      quantity: 1,
       unitPrice: 0,
-      uom: "EA",
+      inventoryUom: "",
+      purchaseUom: "",
+      conversionFactor: 1,
       shelfId: "",
+      minimumOrderQuantity: undefined,
     });
   };
 
   const onPartChange = async (partId: string) => {
     if (!supabase) return;
-    const [part, shelf, cost] = await Promise.all([
+    const [part, partSupplier, inventory] = await Promise.all([
       supabase
         .from("part")
-        .select("name, unitOfMeasureCode")
+        .select(
+          `
+          name, unitOfMeasureCode, 
+          partCost(unitCost), 
+          partReplenishment(purchasingUnitOfMeasureCode, conversionFactor, purchasingLeadTime)
+        `
+        )
         .eq("id", partId)
         .single(),
+      supabase
+        .from("partSupplier")
+        .select("*")
+        .eq("partId", partId)
+        .eq("supplierId", routeData?.purchaseOrder?.supplierId!)
+        .maybeSingle(),
       supabase
         .from("partInventory")
         .select("defaultShelfId")
         .eq("partId", partId)
         .eq("locationId", locationId)
-        .maybeSingle(),
-      supabase
-        .from("partCost")
-        .select("unitCost")
-        .eq("partId", partId)
         .single(),
     ]);
+
+    const partCost = part?.data?.partCost?.[0];
+    const partReplenishment = part?.data?.partReplenishment?.[0];
 
     setPartData({
       partId,
       description: part.data?.name ?? "",
-      unitPrice: cost.data?.unitCost ?? 0,
-      uom: part.data?.unitOfMeasureCode ?? "EA",
-      shelfId: shelf.data?.defaultShelfId ?? "",
+      quantity: partSupplier?.data?.minimumOrderQuantity ?? 1,
+      unitPrice: partSupplier?.data?.unitPrice ?? partCost?.unitCost ?? 0,
+      purchaseUom:
+        partReplenishment?.purchasingUnitOfMeasureCode ??
+        part.data?.unitOfMeasureCode ??
+        "EA",
+      inventoryUom: part.data?.unitOfMeasureCode ?? "EA",
+      conversionFactor: partReplenishment?.conversionFactor ?? 1,
+      shelfId: inventory.data?.defaultShelfId ?? "",
+      minimumOrderQuantity: partSupplier?.data?.minimumOrderQuantity ?? 0,
     });
   };
 
@@ -181,9 +205,13 @@ const PurchaseInvoiceLineForm = ({
     setPartData({
       partId: "",
       description: service.data?.name ?? "",
+      quantity: 1,
       unitPrice: 0,
-      uom: "EA",
+      purchaseUom: "EA",
+      inventoryUom: "EA",
+      conversionFactor: 1,
       shelfId: "",
+      minimumOrderQuantity: undefined,
     });
   };
 
@@ -235,6 +263,10 @@ const PurchaseInvoiceLineForm = ({
             <Hidden name="id" />
             <Hidden name="invoiceId" />
             <Hidden name="description" value={partData.description} />
+            <Hidden
+              name="inventoryUnitOfMeasureCode"
+              value={partData?.inventoryUom}
+            />
             <VStack spacing={4}>
               <Select
                 name="invoiceLineType"
@@ -272,13 +304,17 @@ const PurchaseInvoiceLineForm = ({
                   label="Account"
                   classes={["Expense", "Asset"]}
                   onChange={(value) => {
-                    setPartData((d) => ({
-                      ...d,
+                    setPartData({
                       partId: "",
-                      description: value?.label!,
-                      uom: "EA",
+                      description: value?.label ?? "",
+                      quantity: 1,
+                      unitPrice: 0,
+                      purchaseUom: "EA",
+                      inventoryUom: "EA",
+                      conversionFactor: 1,
                       shelfId: "",
-                    }));
+                      minimumOrderQuantity: 0,
+                    });
                   }}
                 />
               )}
@@ -297,35 +333,60 @@ const PurchaseInvoiceLineForm = ({
               </FormControl>
               {type !== "Comment" && (
                 <>
-                  <Number name="quantity" label="Quantity" />
-                  {/* 
-                // TODO: implement this and replace the UoM in PartForm */}
-                  {/* <UnitOfMeasure name="unitOfMeasureCode" label="Unit of Measure" value={uom} /> */}
-                  <FormControl>
-                    <FormLabel htmlFor="unitPrice">Unit Price</FormLabel>
-                    <NumberField
-                      name="unitPrice"
-                      value={partData.unitPrice}
-                      onChange={(value) =>
-                        setPartData((d) => ({
-                          ...d,
-                          unitPrice: value,
-                        }))
-                      }
-                    >
-                      <NumberInputGroup className="relative">
-                        <NumberInput />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper>
-                            <LuChevronUp size="1em" strokeWidth="3" />
-                          </NumberIncrementStepper>
-                          <NumberDecrementStepper>
-                            <LuChevronDown size="1em" strokeWidth="3" />
-                          </NumberDecrementStepper>
-                        </NumberInputStepper>
-                      </NumberInputGroup>
-                    </NumberField>
-                  </FormControl>
+                  <NumberControlled
+                    minValue={partData.minimumOrderQuantity}
+                    name="quantity"
+                    label="Quantity"
+                    value={partData.quantity}
+                    onChange={(value) => {
+                      setPartData((d) => ({
+                        ...d,
+                        quantity: value,
+                      }));
+                    }}
+                  />
+                  <NumberControlled
+                    name="unitPrice"
+                    label="Unit Price"
+                    value={partData.unitPrice}
+                    onChange={(value) =>
+                      setPartData((d) => ({
+                        ...d,
+                        unitPrice: value,
+                      }))
+                    }
+                  />
+
+                  {type === "Part" && (
+                    <>
+                      <UnitOfMeasure
+                        name="purchaseUnitOfMeasureCode"
+                        label="Unit of Measure"
+                        value={partData.purchaseUom}
+                        onChange={(newValue) => {
+                          if (newValue) {
+                            setPartData((d) => ({
+                              ...d,
+                              purchaseUom: newValue?.value as string,
+                            }));
+                          }
+                        }}
+                      />
+                      <ConversionFactor
+                        name="conversionFactor"
+                        purchasingCode={partData.purchaseUom}
+                        inventoryCode={partData.inventoryUom}
+                        value={partData.conversionFactor}
+                        onChange={(value) => {
+                          setPartData((d) => ({
+                            ...d,
+                            conversionFactor: value,
+                          }));
+                        }}
+                      />
+                    </>
+                  )}
+
                   {["Part", "Service"].includes(type) && (
                     <ComboboxControlled
                       name="locationId"

@@ -26,6 +26,12 @@ type PartSuppliersProps = {
   partSuppliers: PartSupplier[];
 };
 
+// TODO: make dynamic
+const formatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+});
+
 const PartSuppliers = ({ partSuppliers }: PartSuppliersProps) => {
   const navigate = useNavigate();
   const { canEdit, onCellEdit } = usePartSuppliers();
@@ -78,6 +84,11 @@ const PartSuppliers = ({ partSuppliers }: PartSuppliersProps) => {
         cell: (item) => item.getValue(),
       },
       {
+        accessorKey: "unitPrice",
+        header: "Unit Price",
+        cell: (item) => formatter.format(item.getValue<number>()),
+      },
+      {
         accessorKey: "supplierUnitOfMeasureCode",
         header: "Unit of Measure",
         cell: (item) => item.getValue(),
@@ -102,6 +113,7 @@ const PartSuppliers = ({ partSuppliers }: PartSuppliersProps) => {
       supplierUnitOfMeasureCode: EditableList(onCellEdit, unitOfMeasureOptions),
       minimumOrderQuantity: EditableNumber(onCellEdit),
       conversionFactor: EditableNumber(onCellEdit),
+      unitPrice: EditableNumber(onCellEdit),
     }),
     [onCellEdit, unitOfMeasureOptions]
   );

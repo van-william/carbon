@@ -69,7 +69,9 @@ export default function NewPurchaseOrderLineRoute() {
     purchaseQuantity: 1,
     unitPrice: 0,
     setupPrice: 0,
-    unitOfMeasureCode: "",
+    purchaseUnitOfMeasureCode: "",
+    inventoryUnitOfMeasureCode: "",
+    conversionFactor: 1,
     shelfId: "",
   };
 

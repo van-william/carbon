@@ -1,8 +1,14 @@
-import { Checkbox, Enumerable, MenuIcon, MenuItem } from "@carbon/react";
+import {
+  Checkbox,
+  Enumerable,
+  MenuIcon,
+  MenuItem,
+  useDisclosure,
+} from "@carbon/react";
 import { formatDate } from "@carbon/utils";
 import { useNavigate } from "@remix-run/react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { memo, useCallback, useMemo } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { BsFillPenFill } from "react-icons/bs";
 import { IoMdTrash } from "react-icons/io";
 import {
@@ -12,6 +18,7 @@ import {
   SupplierAvatar,
   Table,
 } from "~/components";
+import { ConfirmDelete } from "~/components/Modals";
 import { usePermissions, useRealtime, useUrlParams } from "~/hooks";
 import { useCustomColumns } from "~/hooks/useCustomColumns";
 import type { Receipt } from "~/modules/inventory";
@@ -48,7 +55,9 @@ const ReceiptsTable = memo(({ data, count, locations }: ReceiptsTableProps) => {
         accessorKey: "receiptId",
         header: "Receipt ID",
         cell: ({ row }) => (
-          <Hyperlink to={row.original.id!}>{row.original.receiptId}</Hyperlink>
+          <Hyperlink to={path.to.receiptDetails(row.original.id!)}>
+            {row.original.receiptId}
+          </Hyperlink>
         ),
       },
       {
@@ -231,6 +240,9 @@ const ReceiptsTable = memo(({ data, count, locations }: ReceiptsTableProps) => {
     return [...result, ...customColumns];
   }, [locations, suppliers, people, customColumns]);
 
+  const [selectedReceipt, setSelectedReceipt] = useState<Receipt | null>(null);
+  const deleteReceiptModal = useDisclosure();
+
   const renderContextMenu = useCallback(
     (row: Receipt) => {
       return (
@@ -238,7 +250,9 @@ const ReceiptsTable = memo(({ data, count, locations }: ReceiptsTableProps) => {
           <MenuItem
             disabled={!permissions.can("update", "inventory")}
             onClick={() => {
-              navigate(`${path.to.receipt(row.id!)}?${params.toString()}`);
+              navigate(
+                `${path.to.receiptDetails(row.id!)}?${params.toString()}`
+              );
             }}
           >
             <MenuIcon icon={<BsFillPenFill />} />
@@ -251,9 +265,8 @@ const ReceiptsTable = memo(({ data, count, locations }: ReceiptsTableProps) => {
               row.status === "Pending"
             }
             onClick={() => {
-              navigate(
-                `${path.to.deleteReceipt(row.id!)}?${params.toString()}`
-              );
+              setSelectedReceipt(row);
+              deleteReceiptModal.onOpen();
             }}
           >
             <MenuIcon icon={<IoMdTrash />} />
@@ -262,31 +275,49 @@ const ReceiptsTable = memo(({ data, count, locations }: ReceiptsTableProps) => {
         </>
       );
     },
-    [navigate, params, permissions]
+    [deleteReceiptModal, navigate, params, permissions]
   );
 
   return (
-    <Table<(typeof data)[number]>
-      data={data}
-      columns={columns}
-      count={count}
-      defaultColumnPinning={{
-        left: ["receiptId"],
-      }}
-      defaultColumnVisibility={{
-        createdAt: false,
-        createdBy: false,
-        updatedAt: false,
-        updatedBy: false,
-      }}
-      primaryAction={
-        permissions.can("create", "inventory") && (
-          <New label="Receipt" to={path.to.newReceipt} />
-        )
-      }
-      renderContextMenu={renderContextMenu}
-      withColumnOrdering
-    />
+    <>
+      <Table<(typeof data)[number]>
+        data={data}
+        columns={columns}
+        count={count}
+        defaultColumnPinning={{
+          left: ["receiptId"],
+        }}
+        defaultColumnVisibility={{
+          createdAt: false,
+          createdBy: false,
+          updatedAt: false,
+          updatedBy: false,
+        }}
+        primaryAction={
+          permissions.can("create", "inventory") && (
+            <New label="Receipt" to={path.to.newReceipt} />
+          )
+        }
+        renderContextMenu={renderContextMenu}
+        withColumnOrdering
+      />
+      {selectedReceipt && selectedReceipt.id && (
+        <ConfirmDelete
+          action={path.to.deleteReceipt(selectedReceipt.id)}
+          isOpen={deleteReceiptModal.isOpen}
+          name={selectedReceipt.receiptId!}
+          text={`Are you sure you want to delete ${selectedReceipt.receiptId!}? This cannot be undone.`}
+          onCancel={() => {
+            deleteReceiptModal.onClose();
+            setSelectedReceipt(null);
+          }}
+          onSubmit={() => {
+            deleteReceiptModal.onClose();
+            setSelectedReceipt(null);
+          }}
+        />
+      )}
+    </>
   );
 });
 

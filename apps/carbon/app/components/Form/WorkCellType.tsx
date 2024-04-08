@@ -10,27 +10,11 @@ import CreatableCombobox from "./CreatableCombobox";
 type WorkCellTypeSelectProps = Omit<ComboboxProps, "options">;
 
 const WorkCellType = (props: WorkCellTypeSelectProps) => {
-  const workCellTypeFetcher =
-    useFetcher<Awaited<ReturnType<typeof getWorkCellTypesList>>>();
-
   const newWorkCellTypeModal = useDisclosure();
   const [created, setCreated] = useState<string>("");
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  useMount(() => {
-    workCellTypeFetcher.load(path.to.api.workCellTypes);
-  });
-
-  const options = useMemo(
-    () =>
-      workCellTypeFetcher.data?.data
-        ? workCellTypeFetcher.data?.data.map((c) => ({
-            value: c.id,
-            label: c.name,
-          }))
-        : [],
-    [workCellTypeFetcher.data]
-  );
+  const options = useWorkCellTypes();
 
   return (
     <>
@@ -69,3 +53,25 @@ const WorkCellType = (props: WorkCellTypeSelectProps) => {
 WorkCellType.displayName = "WorkCellType";
 
 export default WorkCellType;
+
+export const useWorkCellTypes = () => {
+  const workCellTypeFetcher =
+    useFetcher<Awaited<ReturnType<typeof getWorkCellTypesList>>>();
+
+  useMount(() => {
+    workCellTypeFetcher.load(path.to.api.workCellTypes);
+  });
+
+  const options = useMemo(
+    () =>
+      workCellTypeFetcher.data?.data
+        ? workCellTypeFetcher.data?.data.map((c) => ({
+            value: c.id,
+            label: c.name,
+          }))
+        : [],
+    [workCellTypeFetcher.data]
+  );
+
+  return options;
+};

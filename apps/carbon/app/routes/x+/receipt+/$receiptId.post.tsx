@@ -1,7 +1,6 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { triggerClient } from "~/lib/trigger.server";
-import { ReceiptPostModal } from "~/modules/inventory";
 import { requirePermissions } from "~/services/auth";
 import { flash } from "~/services/session.server";
 import { path } from "~/utils/path";
@@ -41,8 +40,4 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
 
   throw redirect(path.to.receipts);
-}
-
-export default function ReceiptPostRoute() {
-  return <ReceiptPostModal />;
 }

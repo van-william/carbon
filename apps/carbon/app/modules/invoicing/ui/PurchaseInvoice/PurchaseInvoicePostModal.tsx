@@ -9,7 +9,7 @@ import {
   ModalTitle,
 } from "@carbon/react";
 
-import { Form } from "@remix-run/react";
+import { Form, useNavigation } from "@remix-run/react";
 import { path } from "~/utils/path";
 
 type PurchaseInvoicePostModalProps = {
@@ -26,6 +26,7 @@ const PurchaseInvoicePostModal = ({
   linesToReceive,
 }: PurchaseInvoicePostModalProps) => {
   const hasLinesToReceive = linesToReceive.length > 0;
+  const navigation = useNavigation();
 
   return (
     <Modal
@@ -63,7 +64,7 @@ const PurchaseInvoicePostModal = ({
               Cancel
             </Button>
             <Form method="post" action={path.to.purchaseInvoicePost(invoiceId)}>
-              <Button type="submit">
+              <Button isDisabled={navigation.state !== "idle"} type="submit">
                 {hasLinesToReceive
                   ? "Post and Receive Invoice"
                   : "Post Invoice"}

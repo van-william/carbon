@@ -15,19 +15,3 @@ export async function createPurchaseInvoiceFromPurchaseOrder(
     }
   );
 }
-
-export async function createPurchaseInvoiceFromReceipt(
-  receiptId: string,
-  userId: string
-) {
-  const client = getSupabaseServiceRole();
-  return client.functions.invoke<{ id: string }>(
-    "create-purchase-invoice-from-receipt",
-    {
-      body: {
-        id: receiptId,
-        userId: userId,
-      },
-    }
-  );
-}

@@ -11,27 +11,11 @@ import CreatableCombobox from "./CreatableCombobox";
 type LocationSelectProps = Omit<ComboboxProps, "options">;
 
 const Location = (props: LocationSelectProps) => {
-  const locationFetcher =
-    useFetcher<Awaited<ReturnType<typeof getLocationsList>>>();
-
   const newLocationModal = useDisclosure();
   const [created, setCreated] = useState<string>("");
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  useMount(() => {
-    locationFetcher.load(path.to.api.locations);
-  });
-
-  const options = useMemo(
-    () =>
-      locationFetcher.data?.data
-        ? locationFetcher.data?.data.map((c) => ({
-            value: c.id,
-            label: c.name,
-          }))
-        : [],
-    [locationFetcher.data]
-  );
+  const options = useLocations();
 
   return (
     <>
@@ -71,3 +55,25 @@ const Location = (props: LocationSelectProps) => {
 Location.displayName = "Location";
 
 export default Location;
+
+const useLocations = () => {
+  const locationFetcher =
+    useFetcher<Awaited<ReturnType<typeof getLocationsList>>>();
+
+  useMount(() => {
+    locationFetcher.load(path.to.api.locations);
+  });
+
+  const options = useMemo(
+    () =>
+      locationFetcher.data?.data
+        ? locationFetcher.data?.data.map((c) => ({
+            value: c.id,
+            label: c.name,
+          }))
+        : [],
+    [locationFetcher.data]
+  );
+
+  return options;
+};

@@ -21,10 +21,12 @@ import { IoMdTrash } from "react-icons/io";
 import { MdMoreHoriz } from "react-icons/md";
 import { New } from "~/components";
 import {
+  EditableList,
   EditableNumber,
   EditablePurchaseOrderLineNumber,
   EditableText,
 } from "~/components/Editable";
+import { useUnitOfMeasure } from "~/components/Form/UnitOfMeasure";
 import Grid from "~/components/Grid";
 import { useRealtime, useRouteData, useUser } from "~/hooks";
 import { useCustomColumns } from "~/hooks/useCustomColumns";
@@ -50,6 +52,8 @@ const PurchaseOrderLines = () => {
 
   const locations = routeData?.locations ?? [];
   const { defaults, id: userId } = useUser();
+  const unitOfMeasureOptions = useUnitOfMeasure();
+
   const {
     canEdit,
     canDelete,
@@ -169,6 +173,30 @@ const PurchaseOrderLines = () => {
         },
       },
       {
+        accessorKey: "purchaseUnitOfMeasureCode",
+        header: "Pur. UoM",
+        cell: ({ row }) => {
+          switch (row.original.purchaseOrderLineType) {
+            case "Part":
+              return <span>{row.original.purchaseUnitOfMeasureCode}</span>;
+            default:
+              return null;
+          }
+        },
+      },
+      {
+        accessorKey: "conversionFactor",
+        header: "Conversion Factor",
+        cell: ({ row }) => {
+          switch (row.original.purchaseOrderLineType) {
+            case "Part":
+              return <span>{row.original.conversionFactor}</span>;
+            default:
+              return null;
+          }
+        },
+      },
+      {
         accessorKey: "locationId",
         header: "Location",
         cell: ({ row }) => {
@@ -276,6 +304,8 @@ const PurchaseOrderLines = () => {
         defaultLocationId: defaults.locationId,
         userId: userId,
       }),
+      purchaseUnitOfMeasureCode: EditableList(onCellEdit, unitOfMeasureOptions),
+      conversionFactor: EditableNumber(onCellEdit),
     }),
     [
       onCellEdit,
@@ -285,6 +315,7 @@ const PurchaseOrderLines = () => {
       accountOptions,
       defaults.locationId,
       userId,
+      unitOfMeasureOptions,
     ]
   );
 

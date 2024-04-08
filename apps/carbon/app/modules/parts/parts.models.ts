@@ -126,6 +126,7 @@ export const partSupplierValidator = z.object({
   supplierUnitOfMeasureCode: zfd.text(z.string().optional()),
   minimumOrderQuantity: zfd.numeric(z.number().min(0)),
   conversionFactor: zfd.numeric(z.number().min(0)),
+  unitPrice: zfd.numeric(z.number().min(0)),
 });
 
 export const partUnitSalePriceValidator = z.object({
@@ -163,6 +164,6 @@ export const serviceSupplierValidator = z.object({
 
 export const unitOfMeasureValidator = z.object({
   id: zfd.text(z.string().optional()),
-  code: z.string().min(1, { message: "Code is required" }).max(5),
+  code: z.string().min(1, { message: "Code is required" }).max(10),
   name: z.string().min(1, { message: "Name is required" }).max(50),
 });

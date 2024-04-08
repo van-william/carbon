@@ -1,5 +1,6 @@
-import { HStack } from "@carbon/react";
-import { useMatches } from "@remix-run/react";
+import { Button, HStack, useWindowSize } from "@carbon/react";
+import { Link, useMatches } from "@remix-run/react";
+import { BsFillHexagonFill } from "react-icons/bs";
 import { z } from "zod";
 import {
   BreadcrumbItem,
@@ -32,9 +33,20 @@ const Breadcrumbs = () => {
     })
     .filter(Boolean);
 
+  const { width } = useWindowSize();
+
   return (
     <HStack className="items-center h-full -ml-2" spacing={0}>
       <BreadcrumbsBase className="line-clamp-1">
+        {width && width <= 640 && (
+          <BreadcrumbItem>
+            <Button isIcon asChild variant="ghost">
+              <Link to="/">
+                <BsFillHexagonFill />
+              </Link>
+            </Button>
+          </BreadcrumbItem>
+        )}
         {breadcrumbs.map((breadcrumb, i) => (
           <BreadcrumbItem key={i}>
             <BreadcrumbLink

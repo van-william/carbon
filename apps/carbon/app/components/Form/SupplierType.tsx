@@ -14,38 +14,11 @@ import CreatableCombobox from "./CreatableCombobox";
 type SupplierTypeSelectProps = Omit<ComboboxProps, "options">;
 
 const SupplierType = (props: SupplierTypeSelectProps) => {
-  const supplierTypeFetcher =
-    useFetcher<Awaited<ReturnType<typeof getSupplierTypesList>>>();
-
-  const sharedSupplierData = useRouteData<{
-    supplierTypes: SupplierTypeType[];
-  }>(path.to.supplierRoot);
-
   const newSupplierTypeModal = useDisclosure();
   const [created, setCreated] = useState<string>("");
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  const hasSupplierData = sharedSupplierData?.supplierTypes;
-
-  useMount(() => {
-    if (!hasSupplierData) supplierTypeFetcher.load(path.to.api.supplierTypes);
-  });
-
-  const options = useMemo(() => {
-    const dataSource =
-      (hasSupplierData
-        ? sharedSupplierData.supplierTypes
-        : supplierTypeFetcher.data?.data) ?? [];
-
-    return dataSource.map((c) => ({
-      value: c.id,
-      label: c.name,
-    }));
-  }, [
-    supplierTypeFetcher.data?.data,
-    hasSupplierData,
-    sharedSupplierData?.supplierTypes,
-  ]);
+  const options = useSupplierTypes();
 
   return (
     <>
@@ -79,3 +52,36 @@ const SupplierType = (props: SupplierTypeSelectProps) => {
 SupplierType.displayName = "SupplierType";
 
 export default SupplierType;
+
+export const useSupplierTypes = () => {
+  const supplierTypeFetcher =
+    useFetcher<Awaited<ReturnType<typeof getSupplierTypesList>>>();
+
+  const sharedSupplierData = useRouteData<{
+    supplierTypes: SupplierTypeType[];
+  }>(path.to.supplierRoot);
+
+  const hasSupplierData = sharedSupplierData?.supplierTypes;
+
+  useMount(() => {
+    if (!hasSupplierData) supplierTypeFetcher.load(path.to.api.supplierTypes);
+  });
+
+  const options = useMemo(() => {
+    const dataSource =
+      (hasSupplierData
+        ? sharedSupplierData.supplierTypes
+        : supplierTypeFetcher.data?.data) ?? [];
+
+    return dataSource.map((c) => ({
+      value: c.id,
+      label: c.name,
+    }));
+  }, [
+    supplierTypeFetcher.data?.data,
+    hasSupplierData,
+    sharedSupplierData?.supplierTypes,
+  ]);
+
+  return options;
+};

@@ -2,10 +2,10 @@
 import { serve } from "https://deno.land/std@0.175.0/http/server.ts";
 import { format } from "https://deno.land/std@0.205.0/datetime/mod.ts";
 import { nanoid } from "https://deno.land/x/nanoid@v3.0.0/mod.ts";
-import type { Database } from "../lib/types.ts";
 import { DB, getConnectionPool, getDatabaseClient } from "../lib/database.ts";
 import { corsHeaders } from "../lib/headers.ts";
 import { getSupabaseServiceRole } from "../lib/supabase.ts";
+import type { Database } from "../lib/types.ts";
 import { credit, debit, journalReference } from "../lib/utils.ts";
 import { getCurrentAccountingPeriod } from "../shared/get-accounting-period.ts";
 import { getNextSequence } from "../shared/get-next-sequence.ts";
@@ -220,6 +220,12 @@ serve(async (req: Request) => {
     > = {};
 
     for await (const invoiceLine of purchaseInvoiceLines.data) {
+      const invoiceLineQuantityInInventoryUnit =
+        invoiceLine.quantity * (invoiceLine.conversionFactor ?? 1);
+
+      const invoiceLineUnitPriceInInventoryUnit =
+        invoiceLine.unitPrice / (invoiceLine.conversionFactor ?? 1);
+
       // declaring shared variables between part and service cases
       // outside of the switch case to avoid redeclaring them
       let postingGroupInventory:
@@ -278,7 +284,7 @@ serve(async (req: Request) => {
               "asset",
               invoiceLine.quantity * invoiceLine.unitPrice
             ),
-            quantity: invoiceLine.quantity,
+            quantity: invoiceLineQuantityInInventoryUnit,
             documentType: "Invoice",
             documentId: purchaseInvoice.data?.id,
             externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -288,7 +294,7 @@ serve(async (req: Request) => {
             journalLineReference,
           });
 
-          // creidt the direct cost applied account
+          // credit the direct cost applied account
           journalLineInserts.push({
             accountNumber: accountDefaults.data.overheadCostAppliedAccount!,
             description: "Overhead Cost Applied",
@@ -296,7 +302,7 @@ serve(async (req: Request) => {
               "expense",
               invoiceLine.quantity * invoiceLine.unitPrice
             ),
-            quantity: invoiceLine.quantity,
+            quantity: invoiceLineQuantityInInventoryUnit,
             documentType: "Invoice",
             documentId: purchaseInvoice.data?.id,
             externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -316,7 +322,7 @@ serve(async (req: Request) => {
               "expense",
               invoiceLine.quantity * invoiceLine.unitPrice
             ),
-            quantity: invoiceLine.quantity,
+            quantity: invoiceLineQuantityInInventoryUnit,
             documentType: "Invoice",
             documentId: purchaseInvoice.data?.id,
             externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -334,7 +340,7 @@ serve(async (req: Request) => {
               "liability",
               invoiceLine.quantity * invoiceLine.unitPrice
             ),
-            quantity: invoiceLine.quantity,
+            quantity: invoiceLineQuantityInInventoryUnit,
             documentType: "Invoice",
             documentId: purchaseInvoice.data?.id,
             externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -427,7 +433,7 @@ serve(async (req: Request) => {
               "expense",
               invoiceLine.quantity * invoiceLine.unitPrice
             ),
-            quantity: invoiceLine.quantity,
+            quantity: invoiceLineQuantityInInventoryUnit,
             documentType: "Invoice",
             documentId: purchaseInvoice.data?.id,
             externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -442,7 +448,7 @@ serve(async (req: Request) => {
               "expense",
               invoiceLine.quantity * invoiceLine.unitPrice
             ),
-            quantity: invoiceLine.quantity,
+            quantity: invoiceLineQuantityInInventoryUnit,
             documentType: "Invoice",
             documentId: purchaseInvoice.data?.id,
             externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -459,7 +465,7 @@ serve(async (req: Request) => {
               "expense",
               invoiceLine.quantity * invoiceLine.unitPrice
             ),
-            quantity: invoiceLine.quantity,
+            quantity: invoiceLineQuantityInInventoryUnit,
             documentType: "Invoice",
             documentId: purchaseInvoice.data?.id,
             externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -477,7 +483,7 @@ serve(async (req: Request) => {
               "liability",
               invoiceLine.quantity * invoiceLine.unitPrice
             ),
-            quantity: invoiceLine.quantity,
+            quantity: invoiceLineQuantityInInventoryUnit,
             documentType: "Invoice",
             documentId: purchaseInvoice.data?.id,
             externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -554,12 +560,12 @@ serve(async (req: Request) => {
             receiptLineInserts.push({
               partId: invoiceLine.partId!,
               lineId: invoiceLine.id,
-              orderQuantity: invoiceLine.quantity,
-              outstandingQuantity: invoiceLine.quantity,
-              receivedQuantity: invoiceLine.quantity,
+              orderQuantity: invoiceLineQuantityInInventoryUnit,
+              outstandingQuantity: invoiceLineQuantityInInventoryUnit,
+              receivedQuantity: invoiceLineQuantityInInventoryUnit,
               locationId: invoiceLine.locationId,
               shelfId: invoiceLine.shelfId,
-              unitOfMeasure: invoiceLine.unitOfMeasureCode ?? "EA",
+              unitOfMeasure: invoiceLine.inventoryUnitOfMeasureCode ?? "EA",
               unitPrice: invoiceLine.unitPrice,
               createdBy: invoiceLine.createdBy,
             });
@@ -569,7 +575,7 @@ serve(async (req: Request) => {
               partLedgerInserts.push({
                 postingDate: today,
                 partId: invoiceLine.partId!,
-                quantity: invoiceLine.quantity,
+                quantity: invoiceLineQuantityInInventoryUnit,
                 locationId: invoiceLine.locationId,
                 shelfId: invoiceLine.shelfId,
                 entryType: "Positive Adjmt.",
@@ -590,7 +596,7 @@ serve(async (req: Request) => {
               externalDocumentId:
                 purchaseInvoice.data?.supplierReference ?? undefined,
               partId: invoiceLine.partId,
-              quantity: invoiceLine.quantity,
+              quantity: invoiceLineQuantityInInventoryUnit,
               cost: invoiceLine.quantity * invoiceLine.unitPrice,
               costPostedToGL: invoiceLine.quantity * invoiceLine.unitPrice,
             });
@@ -608,7 +614,7 @@ serve(async (req: Request) => {
                   "asset",
                   invoiceLine.quantity * invoiceLine.unitPrice
                 ),
-                quantity: invoiceLine.quantity,
+                quantity: invoiceLineQuantityInInventoryUnit,
                 documentType: "Invoice",
                 documentId: purchaseInvoice.data?.id,
                 externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -623,7 +629,7 @@ serve(async (req: Request) => {
                   "expense",
                   invoiceLine.quantity * invoiceLine.unitPrice
                 ),
-                quantity: invoiceLine.quantity,
+                quantity: invoiceLineQuantityInInventoryUnit,
                 documentType: "Invoice",
                 documentId: purchaseInvoice.data?.id,
                 externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -638,7 +644,7 @@ serve(async (req: Request) => {
                   "asset",
                   invoiceLine.quantity * invoiceLine.unitPrice
                 ),
-                quantity: invoiceLine.quantity,
+                quantity: invoiceLineQuantityInInventoryUnit,
                 documentType: "Invoice",
                 documentId: purchaseInvoice.data?.id,
                 externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -653,7 +659,7 @@ serve(async (req: Request) => {
                   "expense",
                   invoiceLine.quantity * invoiceLine.unitPrice
                 ),
-                quantity: invoiceLine.quantity,
+                quantity: invoiceLineQuantityInInventoryUnit,
                 documentType: "Invoice",
                 documentId: purchaseInvoice.data?.id,
                 externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -671,7 +677,7 @@ serve(async (req: Request) => {
                 "expense",
                 invoiceLine.quantity * invoiceLine.unitPrice
               ),
-              quantity: invoiceLine.quantity,
+              quantity: invoiceLineQuantityInInventoryUnit,
               documentType: "Invoice",
               documentId: purchaseInvoice.data?.id,
               externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -689,7 +695,7 @@ serve(async (req: Request) => {
                 "liability",
                 invoiceLine.quantity * invoiceLine.unitPrice
               ),
-              quantity: invoiceLine.quantity,
+              quantity: invoiceLineQuantityInInventoryUnit,
               documentType: "Invoice",
               documentId: purchaseInvoice.data?.id,
               externalDocumentId: purchaseInvoice.data?.supplierReference,
@@ -735,12 +741,18 @@ serve(async (req: Request) => {
               (line) => line.id === invoiceLine.purchaseOrderLineId
             );
 
-            const quantityReceived = purchaseOrderLine?.quantityReceived ?? 0;
-            const quantityInvoiced = purchaseOrderLine?.quantityInvoiced ?? 0;
+            const quantityReceived =
+              (purchaseOrderLine?.quantityReceived ?? 0) *
+              (purchaseOrderLine?.conversionFactor ?? 1);
+
+            const quantityInvoiced =
+              (purchaseOrderLine?.quantityInvoiced ?? 0) *
+              (purchaseOrderLine?.conversionFactor ?? 1);
+
             const quantityToReverse = Math.max(
               0,
               Math.min(
-                invoiceLine.quantity ?? 0,
+                invoiceLineQuantityInInventoryUnit,
                 quantityReceived - quantityInvoiced
               )
             );
@@ -749,8 +761,8 @@ serve(async (req: Request) => {
               quantityReceived > quantityInvoiced ? quantityInvoiced : 0;
 
             if (quantityToReverse > 0) {
-              let counted = 0;
-              let reversed = 0;
+              let quantityCounted = 0;
+              let quantityReversed = 0;
 
               existingJournalLineGroups.forEach((entry) => {
                 if (entry[0].quantity) {
@@ -761,13 +773,15 @@ serve(async (req: Request) => {
 
                   // akin to supply
                   const quantityAvailableToReverseForEntry =
-                    quantityAlreadyReversed > counted
-                      ? entry[0].quantity + counted - quantityAlreadyReversed
+                    quantityAlreadyReversed > quantityCounted
+                      ? entry[0].quantity +
+                        quantityCounted -
+                        quantityAlreadyReversed
                       : entry[0].quantity;
 
                   // akin to demand
                   const quantityRequiredToReverse =
-                    quantityToReverse - reversed;
+                    quantityToReverse - quantityReversed;
 
                   // we can't reverse more than what's available or what's required
                   const quantityToReverseForEntry = Math.max(
@@ -834,8 +848,8 @@ serve(async (req: Request) => {
                     });
                   }
 
-                  counted += entry[0].quantity;
-                  reversed += quantityToReverseForEntry;
+                  quantityCounted += entry[0].quantity;
+                  quantityReversed += quantityToReverseForEntry;
                 }
               });
 
@@ -850,8 +864,9 @@ serve(async (req: Request) => {
                   purchaseInvoice.data?.supplierReference ?? undefined,
                 partId: invoiceLine.partId,
                 quantity: quantityToReverse,
-                cost: quantityToReverse * invoiceLine.unitPrice,
-                costPostedToGL: quantityToReverse * invoiceLine.unitPrice,
+                cost: quantityToReverse * invoiceLineUnitPriceInInventoryUnit,
+                costPostedToGL:
+                  quantityToReverse * invoiceLineUnitPriceInInventoryUnit,
               });
 
               // create the normal GL entries for a part
@@ -865,7 +880,7 @@ serve(async (req: Request) => {
                   description: "Inventory Account",
                   amount: debit(
                     "asset",
-                    quantityToReverse * invoiceLine.unitPrice
+                    quantityToReverse * invoiceLineUnitPriceInInventoryUnit
                   ),
                   quantity: quantityToReverse,
                   documentType: "Invoice",
@@ -883,7 +898,7 @@ serve(async (req: Request) => {
                   description: "Direct Cost Applied",
                   amount: credit(
                     "expense",
-                    quantityToReverse * invoiceLine.unitPrice
+                    quantityToReverse * invoiceLineUnitPriceInInventoryUnit
                   ),
                   quantity: quantityToReverse,
                   documentType: "Invoice",
@@ -901,7 +916,7 @@ serve(async (req: Request) => {
                   description: "Overhead Account",
                   amount: debit(
                     "asset",
-                    quantityToReverse * invoiceLine.unitPrice
+                    quantityToReverse * invoiceLineUnitPriceInInventoryUnit
                   ),
                   quantity: quantityToReverse,
                   documentType: "Invoice",
@@ -920,7 +935,7 @@ serve(async (req: Request) => {
                   description: "Overhead Cost Applied",
                   amount: credit(
                     "expense",
-                    quantityToReverse * invoiceLine.unitPrice
+                    quantityToReverse * invoiceLineUnitPriceInInventoryUnit
                   ),
                   quantity: quantityToReverse,
                   documentType: "Invoice",
@@ -941,7 +956,7 @@ serve(async (req: Request) => {
                 description: "Purchase Account",
                 amount: debit(
                   "expense",
-                  quantityToReverse * invoiceLine.unitPrice
+                  quantityToReverse * invoiceLineUnitPriceInInventoryUnit
                 ),
                 quantity: quantityToReverse,
                 documentType: "Invoice",
@@ -959,7 +974,7 @@ serve(async (req: Request) => {
                 description: "Accounts Payable",
                 amount: credit(
                   "liability",
-                  quantityToReverse * invoiceLine.unitPrice
+                  quantityToReverse * invoiceLineUnitPriceInInventoryUnit
                 ),
                 quantity: quantityToReverse,
                 documentType: "Invoice",
@@ -972,9 +987,10 @@ serve(async (req: Request) => {
               });
             }
 
-            if (invoiceLine.quantity > quantityToReverse) {
+            if (invoiceLineQuantityInInventoryUnit > quantityToReverse) {
               // create the accrual entries for invoiced not received
-              const quantityToAccrue = invoiceLine.quantity - quantityToReverse;
+              const quantityToAccrue =
+                invoiceLineQuantityInInventoryUnit - quantityToReverse;
 
               journalLineReference = nanoid();
 
@@ -986,7 +1002,7 @@ serve(async (req: Request) => {
                 accrual: true,
                 amount: debit(
                   "asset",
-                  quantityToAccrue * invoiceLine.unitPrice
+                  quantityToAccrue * invoiceLineUnitPriceInInventoryUnit
                 ),
                 quantity: quantityToAccrue,
                 documentType: "Invoice",
@@ -1008,7 +1024,7 @@ serve(async (req: Request) => {
                 description: "Interim Inventory Accrual",
                 amount: credit(
                   "asset",
-                  quantityToAccrue * invoiceLine.unitPrice
+                  quantityToAccrue * invoiceLineUnitPriceInInventoryUnit
                 ),
                 quantity: quantityToAccrue,
                 documentType: "Invoice",

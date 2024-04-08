@@ -11,6 +11,18 @@ type ShiftSelectProps = Omit<SelectProps, "options"> & {
 };
 
 const Shift = (props: ShiftSelectProps) => {
+  const options = useShifts({
+    location: props.location,
+  });
+
+  return (
+    <Select options={options} {...props} label={props?.label ?? "Shift"} />
+  );
+};
+
+export default Shift;
+
+export const useShifts = (props?: { location?: string }) => {
   const shiftFetcher = useFetcher<Awaited<ReturnType<typeof getShiftsList>>>();
 
   useEffect(() => {
@@ -18,7 +30,7 @@ const Shift = (props: ShiftSelectProps) => {
       shiftFetcher.load(path.to.api.shifts(props.location));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.location]);
+  }, [props?.location]);
 
   const options = useMemo(
     () =>
@@ -30,9 +42,5 @@ const Shift = (props: ShiftSelectProps) => {
     [shiftFetcher.data]
   );
 
-  return (
-    <Select options={options} {...props} label={props?.label ?? "Shift"} />
-  );
+  return options;
 };
-
-export default Shift;

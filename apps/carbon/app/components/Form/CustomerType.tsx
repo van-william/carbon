@@ -12,38 +12,11 @@ import CreatableCombobox from "./CreatableCombobox";
 type CustomerTypeSelectProps = Omit<ComboboxProps, "options">;
 
 const CustomerType = (props: CustomerTypeSelectProps) => {
-  const customerTypeFetcher =
-    useFetcher<Awaited<ReturnType<typeof getCustomerTypesList>>>();
-
-  const sharedCustomerData = useRouteData<{
-    customerTypes: SupplierStatus[];
-  }>(path.to.customerRoot);
-
   const newCustomerTypeModal = useDisclosure();
   const [created, setCreated] = useState<string>("");
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  const hasSupplierData = sharedCustomerData?.customerTypes;
-
-  useMount(() => {
-    if (!hasSupplierData) customerTypeFetcher.load(path.to.api.customerTypes);
-  });
-
-  const options = useMemo(() => {
-    const dataSource =
-      (hasSupplierData
-        ? sharedCustomerData.customerTypes
-        : customerTypeFetcher.data?.data) ?? [];
-
-    return dataSource.map((c) => ({
-      value: c.id,
-      label: c.name,
-    }));
-  }, [
-    customerTypeFetcher.data?.data,
-    hasSupplierData,
-    sharedCustomerData?.customerTypes,
-  ]);
+  const options = useCustomerTypes();
 
   return (
     <>
@@ -77,3 +50,36 @@ const CustomerType = (props: CustomerTypeSelectProps) => {
 CustomerType.displayName = "CustomerType";
 
 export default CustomerType;
+
+export const useCustomerTypes = () => {
+  const customerTypeFetcher =
+    useFetcher<Awaited<ReturnType<typeof getCustomerTypesList>>>();
+
+  const sharedCustomerData = useRouteData<{
+    customerTypes: SupplierStatus[];
+  }>(path.to.customerRoot);
+
+  const hasSupplierData = sharedCustomerData?.customerTypes;
+
+  useMount(() => {
+    if (!hasSupplierData) customerTypeFetcher.load(path.to.api.customerTypes);
+  });
+
+  const options = useMemo(() => {
+    const dataSource =
+      (hasSupplierData
+        ? sharedCustomerData.customerTypes
+        : customerTypeFetcher.data?.data) ?? [];
+
+    return dataSource.map((c) => ({
+      value: c.id,
+      label: c.name,
+    }));
+  }, [
+    customerTypeFetcher.data?.data,
+    hasSupplierData,
+    sharedCustomerData?.customerTypes,
+  ]);
+
+  return options;
+};

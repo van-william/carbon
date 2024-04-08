@@ -33,13 +33,13 @@ export async function action({ request }: ActionFunctionArgs) {
   if (createShift.error) {
     throw redirect(
       path.to.shifts,
-      await flash(request, error(createShift.error, "Failed to create shift."))
+      await flash(request, error(createShift.error, "Failed to create shift"))
     );
   }
 
   throw redirect(
     path.to.shifts,
-    await flash(request, success("Shift created."))
+    await flash(request, success("Shift created"))
   );
 }
 

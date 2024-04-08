@@ -90,7 +90,7 @@ CREATE TABLE "unitOfMeasure" (
 
   CONSTRAINT "unitOfMeasure_pkey" PRIMARY KEY ("id"),
   CONSTRAINT "unitOfMeasure_code_key" UNIQUE ("code"),
-  CONSTRAINT "unitOfMeasure_code_check" CHECK (char_length("code") <= 3),
+  CONSTRAINT "unitOfMeasure_code_check" CHECK (char_length("code") <= 6),
   CONSTRAINT "unitOfMeasure_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "user"("id"),
   CONSTRAINT "unitOfMeasure_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "user"("id")
 );

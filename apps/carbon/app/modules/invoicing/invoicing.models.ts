@@ -53,10 +53,12 @@ export const purchaseInvoiceLineValidator = z
     assetId: zfd.text(z.string().optional()),
     description: zfd.text(z.string().optional()),
     quantity: zfd.numeric(z.number().optional()),
+    purchaseUnitOfMeasureCode: zfd.text(z.string().optional()),
+    inventoryUnitOfMeasureCode: zfd.text(z.string().optional()),
+    conversionFactor: zfd.numeric(z.number().optional()),
     unitPrice: zfd.numeric(z.number().optional()),
     locationId: zfd.text(z.string().optional()),
     shelfId: zfd.text(z.string().optional()),
-    unitOfMeasureCode: zfd.text(z.string().optional()),
     currencyCode: zfd.text(z.string().optional()),
     exchangeRate: zfd.numeric(z.number().optional()),
   })

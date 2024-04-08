@@ -1,23 +1,26 @@
 import { Heading, cn } from "@carbon/react";
-import { formatDate } from "@carbon/utils";
-import { getLocalTimeZone, today } from "@internationalized/date";
+import { getLocalTimeZone } from "@internationalized/date";
 import { Link } from "@remix-run/react";
 import type { ComponentProps } from "react";
 import { useModules } from "~/components/Layout/Navigation/useModules";
 import { useUser } from "~/hooks";
 import type { Authenticated, NavItem } from "~/types";
 
+const formatter = new Intl.DateTimeFormat("en-US", {
+  dateStyle: "full",
+  timeZone: getLocalTimeZone(),
+});
+
 export default function AppIndexRoute() {
   const user = useUser();
   const modules = useModules();
+
+  const date = new Date();
+
   return (
     <div className="p-8 w-full h-full bg-muted">
       <Heading size="h3">Hello, {user.firstName}</Heading>
-      <Subheading>
-        {formatDate(today(getLocalTimeZone()).toString(), {
-          dateStyle: "full",
-        })}
-      </Subheading>
+      <Subheading>{formatter.format(date)}</Subheading>
       <Hr />
       <Subheading className="mb-8">Modules</Subheading>
       <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">

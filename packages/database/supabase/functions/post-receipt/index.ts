@@ -110,13 +110,17 @@ serve(async (req: Request) => {
             purchaseOrderLine.purchaseQuantity &&
             purchaseOrderLine.purchaseQuantity > 0
           ) {
+            const recivedQuantityInPurchaseUnit =
+              receiptLine.receivedQuantity /
+              (receiptLine.conversionFactor ?? 1);
+
             const newQuantityReceived =
               (purchaseOrderLine.quantityReceived ?? 0) +
-              receiptLine.receivedQuantity;
+              recivedQuantityInPurchaseUnit;
 
             const receivedComplete =
               purchaseOrderLine.receivedComplete ||
-              receiptLine.receivedQuantity >=
+              recivedQuantityInPurchaseUnit >=
                 (purchaseOrderLine.quantityToReceive ??
                   purchaseOrderLine.purchaseQuantity);
 
@@ -291,8 +295,13 @@ serve(async (req: Request) => {
             (line) => line.id === receiptLine.lineId
           );
 
-          const quantityReceived = purchaseOrderLine?.quantityReceived ?? 0;
-          const quantityInvoiced = purchaseOrderLine?.quantityInvoiced ?? 0;
+          const quantityReceived =
+            (purchaseOrderLine?.quantityReceived ?? 0) *
+            (purchaseOrderLine?.conversionFactor ?? 1);
+
+          const quantityInvoiced =
+            (purchaseOrderLine?.quantityInvoiced ?? 0) *
+            (purchaseOrderLine?.conversionFactor ?? 1);
 
           const quantityToReverse = Math.max(
             0,
@@ -306,9 +315,9 @@ serve(async (req: Request) => {
             quantityReceived < quantityInvoiced ? quantityReceived : 0;
 
           if (quantityToReverse > 0) {
-            let counted = 0;
-            let reversed = 0;
-            let value = 0;
+            let quantityCounted = 0;
+            let quantityReversed = 0;
+            let reversedValue = 0;
 
             existingJournalLineGroups.forEach((entry) => {
               if (entry[0].quantity) {
@@ -319,12 +328,15 @@ serve(async (req: Request) => {
 
                 // akin to supply
                 const quantityAvailableToReverseForEntry =
-                  quantityAlreadyReversed > counted
-                    ? entry[0].quantity + counted - quantityAlreadyReversed
+                  quantityAlreadyReversed > quantityCounted
+                    ? entry[0].quantity +
+                      quantityCounted -
+                      quantityAlreadyReversed
                     : entry[0].quantity;
 
                 // akin to demand
-                const quantityRequiredToReverse = quantityToReverse - reversed;
+                const quantityRequiredToReverse =
+                  quantityToReverse - quantityReversed;
 
                 // we can't reverse more than what's available or what's required
                 const quantityToReverseForEntry = Math.max(
@@ -392,9 +404,9 @@ serve(async (req: Request) => {
                   });
                 }
 
-                counted += entry[0].quantity;
-                reversed += quantityToReverseForEntry;
-                value += unitCostForEntry * quantityToReverseForEntry;
+                quantityCounted += entry[0].quantity;
+                quantityReversed += quantityToReverseForEntry;
+                reversedValue += unitCostForEntry * quantityToReverseForEntry;
               }
             });
 
@@ -408,8 +420,8 @@ serve(async (req: Request) => {
               externalDocumentId: receipt.data?.externalDocumentId ?? undefined,
               partId: receiptLine.partId,
               quantity: quantityToReverse,
-              cost: value,
-              costPostedToGL: value,
+              cost: reversedValue,
+              costPostedToGL: reversedValue,
             });
 
             // create the normal GL entries
@@ -421,7 +433,7 @@ serve(async (req: Request) => {
               journalLineInserts.push({
                 accountNumber: postingGroupInventory.inventoryAccount,
                 description: "Inventory Account",
-                amount: debit("asset", value),
+                amount: debit("asset", reversedValue),
                 quantity: quantityToReverse,
                 documentType: "Receipt",
                 documentId: receipt.data?.id,
@@ -436,7 +448,7 @@ serve(async (req: Request) => {
               journalLineInserts.push({
                 accountNumber: postingGroupInventory.directCostAppliedAccount,
                 description: "Direct Cost Applied",
-                amount: credit("expense", value),
+                amount: credit("expense", reversedValue),
                 quantity: quantityToReverse,
                 documentType: "Receipt",
                 documentId: receipt.data?.id,
@@ -451,7 +463,7 @@ serve(async (req: Request) => {
               journalLineInserts.push({
                 accountNumber: postingGroupInventory.overheadAccount,
                 description: "Overhead Account",
-                amount: debit("asset", value),
+                amount: debit("asset", reversedValue),
                 quantity: quantityToReverse,
                 documentType: "Receipt",
                 documentId: receipt.data?.id,
@@ -466,7 +478,7 @@ serve(async (req: Request) => {
               journalLineInserts.push({
                 accountNumber: postingGroupInventory.overheadCostAppliedAccount,
                 description: "Overhead Cost Applied",
-                amount: credit("expense", value),
+                amount: credit("expense", reversedValue),
                 quantity: quantityToReverse,
                 documentType: "Receipt",
                 documentId: receipt.data?.id,
@@ -484,7 +496,7 @@ serve(async (req: Request) => {
             journalLineInserts.push({
               accountNumber: postingGroupPurchasing.purchaseAccount,
               description: "Purchase Account",
-              amount: debit("expense", value),
+              amount: debit("expense", reversedValue),
               quantity: quantityToReverse,
               documentType: "Receipt",
               documentId: receipt.data?.id,
@@ -499,7 +511,7 @@ serve(async (req: Request) => {
             journalLineInserts.push({
               accountNumber: postingGroupPurchasing.payablesAccount,
               description: "Accounts Payable",
-              amount: credit("liability", value),
+              amount: credit("liability", reversedValue),
               quantity: quantityToReverse,
               documentType: "Receipt",
               documentId: receipt.data?.id,

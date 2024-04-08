@@ -23,6 +23,7 @@ const ModeSwitcher = () => {
       onSubmit={() => {
         document.body.removeAttribute("style");
       }}
+      className="hidden sm:block"
     >
       <input type="hidden" name="mode" value={nextMode} />
 

@@ -8,6 +8,7 @@ import Boolean from "./Boolean";
 import Color from "./Color";
 import Combobox from "./Combobox";
 import ComboboxControlled from "./ComboboxControlled";
+import ConversionFactor from "./ConversionFactor";
 import CreatableCombobox from "./CreatableCombobox";
 import Currency from "./Currency";
 import CustomFormFields from "./CustomFormFields";
@@ -64,6 +65,7 @@ export {
   Color,
   Combobox,
   ComboboxControlled,
+  ConversionFactor,
   CreatableCombobox,
   Currency,
   CustomFormFields,

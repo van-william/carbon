@@ -227,6 +227,7 @@ import {
   useKeyboardShortcuts,
   useMount,
   useOutsideClick,
+  useWindowSize,
 } from "./hooks";
 import { cn } from "./utils/cn";
 import { getValidChildren, reactNodeToString } from "./utils/react";
@@ -445,6 +446,7 @@ export {
   useModalDrawerType,
   useMount,
   useOutsideClick,
+  useWindowSize,
 };
 export type {
   AvatarProps,

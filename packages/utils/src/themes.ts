@@ -265,7 +265,7 @@ export const themes = [
     name: "green",
     label: "Green",
     activeColor: {
-      light: "142.1 76.2% 36.3%",
+      light: "151 76.2% 36.3%",
       dark: "142.1 70.6% 45.3%",
     },
     cssVars: {
@@ -276,7 +276,7 @@ export const themes = [
         "card-foreground": "240 10% 3.9%",
         popover: "0 0% 100%",
         "popover-foreground": "240 10% 3.9%",
-        primary: "142.1 76.2% 36.3%",
+        primary: "151 47% 40%",
         "primary-foreground": "355.7 100% 97.3%",
         secondary: "240 4.8% 95.9%",
         "secondary-foreground": "240 5.9% 10%",
@@ -288,7 +288,7 @@ export const themes = [
         "destructive-foreground": "0 0% 98%",
         border: "240 5.9% 90%",
         input: "240 5.9% 90%",
-        ring: "142.1 76.2% 36.3%",
+        ring: "151 47% 40%",
       },
       dark: {
         background: "20 14.3% 6.1%",
