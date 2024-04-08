@@ -46,11 +46,6 @@ export async function action({ request }: ActionFunctionArgs) {
     );
   }
 
-  console.log({
-    data,
-    currentReceipt,
-  });
-
   const receiptDataHasChanged =
     currentReceipt.data.sourceDocument !== data.sourceDocument ||
     currentReceipt.data.sourceDocumentId !== data.sourceDocumentId ||
