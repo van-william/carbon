@@ -1,3 +1,4 @@
+import { getLocalTimeZone, parseDate } from "@internationalized/date";
 const relativeFormatter = new Intl.RelativeTimeFormat(undefined, {
   numeric: "auto",
 });
@@ -14,14 +15,15 @@ const DIVISIONS: { amount: number; name: Intl.RelativeTimeFormatUnit }[] = [
 
 const defaultFormatOptions: Intl.DateTimeFormatOptions = {
   dateStyle: "medium",
+  timeZone: getLocalTimeZone(),
 };
 
 export function formatDate(
-  isoString?: string | null,
+  dateString?: string | null,
   options?: Intl.DateTimeFormatOptions
 ) {
-  if (!isoString) return "";
-  const date = new Date(isoString);
+  if (!dateString) return "";
+  const date = new Date(parseDate(dateString).toString());
 
   return new Intl.DateTimeFormat(
     undefined,
