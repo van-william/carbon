@@ -16,6 +16,7 @@ ALTER TABLE "purchaseInvoiceLine" DROP COLUMN "unitOfMeasureCode" CASCADE;
 
 ALTER TABLE "partSupplier" ADD COLUMN "unitPrice" NUMERIC(10, 2) DEFAULT 0;
 
+ALTER TABLE "unitOfMeasure" DROP CONSTRAINT "unitOfMeasure_code_check";
 
 DROP VIEW IF EXISTS "purchaseOrderLines";
 CREATE OR REPLACE VIEW "purchaseOrderLines" WITH(SECURITY_INVOKER=true) AS

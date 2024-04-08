@@ -224,7 +224,7 @@ serve(async (req: Request) => {
         invoiceLine.quantity * (invoiceLine.conversionFactor ?? 1);
 
       const invoiceLineUnitPriceInInventoryUnit =
-        invoiceLine.unitPrice * (invoiceLine.conversionFactor ?? 1);
+        invoiceLine.unitPrice / (invoiceLine.conversionFactor ?? 1);
 
       // declaring shared variables between part and service cases
       // outside of the switch case to avoid redeclaring them

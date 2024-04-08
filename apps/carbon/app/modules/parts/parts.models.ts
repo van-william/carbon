@@ -164,6 +164,6 @@ export const serviceSupplierValidator = z.object({
 
 export const unitOfMeasureValidator = z.object({
   id: zfd.text(z.string().optional()),
-  code: z.string().min(1, { message: "Code is required" }).max(5),
+  code: z.string().min(1, { message: "Code is required" }).max(10),
   name: z.string().min(1, { message: "Name is required" }).max(50),
 });

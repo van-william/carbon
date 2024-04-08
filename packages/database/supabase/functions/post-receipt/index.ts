@@ -529,8 +529,7 @@ serve(async (req: Request) => {
               receiptLine.receivedQuantity - quantityToReverse;
 
             const expectedValue =
-              ((receiptLine.receivedQuantity - quantityToReverse) /
-                (receiptLine.conversionFactor ?? 1)) *
+              (receiptLine.receivedQuantity - quantityToReverse) *
               receiptLine.unitPrice;
 
             const journalLineReference = nanoid();
