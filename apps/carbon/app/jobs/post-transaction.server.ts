@@ -28,9 +28,7 @@ const job = triggerClient.defineJob({
 
     switch (payload.type) {
       case "receipt":
-        await io.logger.info(
-          `📫 Posting receipt for receipt ${payload.documentId}`
-        );
+        await io.logger.info(`📫 Posting receipt ${payload.documentId}`);
         const postReceipt = await supabaseClient.functions.invoke(
           "post-receipt",
           {
@@ -48,7 +46,7 @@ const job = triggerClient.defineJob({
         break;
       case "purchase-invoice":
         await io.logger.info(
-          `📫 Posting receipt for purchase invoice ${payload.documentId}`
+          `📫 Posting purchase invoice ${payload.documentId}`
         );
         const postPurchaseInvoice = await supabaseClient.functions.invoke(
           "post-purchase-invoice",
@@ -63,6 +61,25 @@ const job = triggerClient.defineJob({
           success: postPurchaseInvoice.error === null ? true : false,
           message: postPurchaseInvoice.error?.message,
         };
+
+        if (result.success) {
+          await io.logger.info(
+            `💵 Updating pricing from invoice ${payload.documentId}`
+          );
+          const priceUpdate = await supabaseClient.functions.invoke(
+            "update-purchased-prices",
+            {
+              body: {
+                invoiceId: payload.documentId,
+              },
+            }
+          );
+
+          result = {
+            success: priceUpdate.error === null ? true : false,
+            message: priceUpdate.error?.message,
+          };
+        }
 
         break;
       default:

@@ -87,6 +87,10 @@ const useNextPartIdShortcut = () => {
   return { partId, onPartIdChange, loading };
 };
 
+function startsWithLetter(value: string) {
+  return /^[A-Za-z]/.test(value);
+}
+
 const PartForm = ({ initialValues, type = "card", onClose }: PartFormProps) => {
   const fetcher = useFetcher<PostgrestResponse<{ id: string }>>();
 
@@ -153,7 +157,11 @@ const PartForm = ({ initialValues, type = "card", onClose }: PartFormProps) => {
                   <InputControlled
                     name="id"
                     label="Part ID"
-                    helperText="Use ... to get the next part ID"
+                    helperText={
+                      startsWithLetter(partId)
+                        ? "Use ... to get the next part ID"
+                        : undefined
+                    }
                     value={partId}
                     onChange={onPartIdChange}
                     isDisabled={loading}
