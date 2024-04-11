@@ -6,6 +6,7 @@ import {
   CardTitle,
 } from "@carbon/react";
 import { ValidatedForm } from "@carbon/remix-validated-form";
+import { useState } from "react";
 import type { z } from "zod";
 import {
   Boolean,
@@ -26,6 +27,9 @@ const currency = "USD"; // TODO: get from settings
 
 const PartCostingForm = ({ initialValues }: PartCostingFormProps) => {
   const permissions = usePermissions();
+  const [partCostingMethod, setPartCostingMethod] = useState<string>(
+    initialValues.costingMethod
+  );
 
   const partCostingMethodOptions = partCostingMethods.map(
     (partCostingMethod) => ({
@@ -51,6 +55,9 @@ const PartCostingForm = ({ initialValues }: PartCostingFormProps) => {
               name="costingMethod"
               label="Part Costing Method"
               options={partCostingMethodOptions}
+              onChange={(newValue) => {
+                if (newValue) setPartCostingMethod(newValue.value);
+              }}
             />
             <Number
               name="standardCost"
@@ -59,6 +66,7 @@ const PartCostingForm = ({ initialValues }: PartCostingFormProps) => {
                 style: "currency",
                 currency,
               }}
+              isReadOnly={partCostingMethod !== "Standard"}
             />
 
             <Number
