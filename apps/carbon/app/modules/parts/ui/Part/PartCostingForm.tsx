@@ -71,7 +71,7 @@ const PartCostingForm = ({ initialValues }: PartCostingFormProps) => {
 
             <Number
               name="unitCost"
-              label="Unit Cost"
+              label="Average Cost"
               formatOptions={{
                 style: "currency",
                 currency,

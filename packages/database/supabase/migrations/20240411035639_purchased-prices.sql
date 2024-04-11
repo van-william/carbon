@@ -14,3 +14,6 @@ BEGIN
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+
+CREATE INDEX "costLedger_partId_idx" ON "costLedger" ("partId");
