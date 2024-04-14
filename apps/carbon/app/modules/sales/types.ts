@@ -12,7 +12,15 @@ import type {
   getQuoteMaterials,
   getQuoteOperation,
   getQuotes,
+  getSalesOrderExternalDocuments,
+  getSalesOrderLines,
+  getSalesOrders,
 } from "./sales.service";
+
+// TODO: we should just use the FileObject type from supabase
+export type SalesOrderAttachment = NonNullable<
+  Awaited<ReturnType<typeof getSalesOrderExternalDocuments>>["data"]
+>[number];
 
 export type Customer = NonNullable<
   Awaited<ReturnType<typeof getCustomers>>["data"]
@@ -63,3 +71,19 @@ export type QuotationOperation = NonNullable<
 >;
 
 export type QuotationStatusType = Database["public"]["Enums"]["quoteStatus"];
+
+export type SalesOrder = NonNullable<
+  Awaited<ReturnType<typeof getSalesOrders>>["data"]
+>[number];
+
+export type SalesOrderLine = NonNullable<
+  Awaited<ReturnType<typeof getSalesOrderLines>>["data"]
+>[number];
+
+export type SalesOrderLineType =
+  Database["public"]["Enums"]["salesOrderLineType"];
+
+export type SalesOrderStatus = Database["public"]["Enums"]["salesOrderStatus"];
+
+export type SalesOrderTransactionType =
+  Database["public"]["Enums"]["salesOrderTransactionType"];
