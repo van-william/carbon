@@ -11,6 +11,10 @@ const salesRoutes: AuthenticatedRouteGroup[] = [
         to: path.to.quotes,
       },
       {
+        name: "Sales Orders",
+        to: path.to.salesOrders,
+      },
+      {
         name: "Customers",
         to: path.to.customers,
       },
@@ -35,6 +39,7 @@ const salesRoutes: AuthenticatedRouteGroup[] = [
 
 export default function useSalesSubmodules() {
   const permissions = usePermissions();
+  // to modify
   return {
     groups: salesRoutes
       .filter((group) => {
