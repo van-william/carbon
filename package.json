@@ -28,6 +28,7 @@
   "scripts": {
     "build": "turbo run build",
     "build:packages": "turbo run build --filter=./packages/*",
+    "build:app": "turbo run build --filter=!www",
     "clean": "turbo run clean && rimraf ./node_modules && rimraf ./package-lock.json",
     "db:build": "run-s db:kill db:start setup",
     "db:function:new": "npm run db:function:new -w @carbon/database",
