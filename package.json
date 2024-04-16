@@ -45,7 +45,8 @@
     "db:types": "npm run db:types -w @carbon/database",
     "deploy": "turbo run deploy",
     "dev": "turbo run dev --filter=./apps/* --filter=./packages/*",
-    "dev:apps": "turbo run dev --filter=./apps/*",
+    "dev:apps": "turbo run dev --filter=./apps/carbon",
+    "dev:docs": "turbo run dev --filter=./apps/docs",
     "dev:packages": "turbo run dev --filter=./packages/*",
     "dev:www": "turbo run dev --filter=./www",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
@@ -58,7 +59,6 @@
   "workspaces": [
     "apps/*",
     "packages/*",
-    "shared",
     "www"
   ]
 }
