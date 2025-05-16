@@ -29,8 +29,8 @@ import type {
   SalesOrderLineShipment,
 } from "../../types";
 
-import { ShipmentStatus } from "~/modules/inventory/ui/Shipments";
 import { formatDate } from "@carbon/utils";
+import { ShipmentStatus } from "~/modules/inventory/ui/Shipments";
 
 type SalesOrderLineShipmentsProps = {
   salesOrder: SalesOrder;
@@ -114,6 +114,7 @@ export function SalesOrderLineShipments({
                         </Hyperlink>
                         <ShipmentStatus
                           status={groupedShipments[0].shipment.status}
+                          invoiced={groupedShipments[0].shipment.invoiced}
                         />
                       </HStack>
                     </Td>

@@ -3,9 +3,13 @@ import type { shipmentStatusType } from "~/modules/inventory";
 
 type ShipmentStatusProps = {
   status?: (typeof shipmentStatusType)[number] | null;
+  invoiced?: boolean | null;
 };
 
-const ShipmentStatus = ({ status }: ShipmentStatusProps) => {
+const ShipmentStatus = ({ status, invoiced }: ShipmentStatusProps) => {
+  if (invoiced) {
+    return <Status color="blue">Invoiced</Status>;
+  }
   switch (status) {
     case "Draft":
       return <Status color="gray">{status}</Status>;

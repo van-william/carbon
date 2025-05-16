@@ -563,6 +563,7 @@ serve(async (req: Request) => {
               sourceDocumentReadableId: salesInvoice.data.invoiceId,
               shippingMethodId: salesInvoiceShipment.data?.shippingMethodId,
               customerId: salesInvoice.data.customerId,
+              externalDocumentId: salesInvoice.data.customerReference,
               status: "Posted",
               postingDate: today,
               postedBy: userId,

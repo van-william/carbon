@@ -100,7 +100,10 @@ const ShipmentHeader = () => {
                 <span>{routeData?.shipment?.shipmentId}</span>
               </Heading>
             </Link>
-            <ShipmentStatus status={routeData?.shipment?.status} />
+            <ShipmentStatus
+              status={routeData?.shipment?.status}
+              invoiced={routeData?.shipment?.invoiced}
+            />
           </HStack>
           <HStack>
             {hasTrackingLabels && (

@@ -1,5 +1,6 @@
 import { ValidatedForm } from "@carbon/form";
 import {
+  Badge,
   Button,
   Card,
   CardAction,
@@ -23,16 +24,17 @@ import {
   useMount,
   VStack,
 } from "@carbon/react";
-import { useNavigate, useParams } from "@remix-run/react";
+import { useFetcher, useNavigate, useParams } from "@remix-run/react";
 import { useState } from "react";
 import {
-  LuChevronRight,
   LuChevronDown,
+  LuChevronRight,
+  LuCirclePlay,
   LuCirclePlus,
   LuHardHat,
   LuSettings2,
 } from "react-icons/lu";
-import { Assignee, Empty, Hyperlink } from "~/components";
+import { Assignee, Empty, Hyperlink, TimeTypeIcon } from "~/components";
 import {
   DatePicker,
   Hidden,
@@ -44,22 +46,23 @@ import {
 } from "~/components/Form";
 import { usePermissions } from "~/hooks";
 
+import { useCarbon } from "@carbon/auth";
+import { flushSync } from "react-dom";
+import { SupplierProcessPreview } from "~/components/Form/SupplierProcess";
 import {
   deadlineTypes,
   salesOrderToJobValidator,
 } from "~/modules/production/production.models";
 import type { Job, JobOperation } from "~/modules/production/types";
-import JobStatus from "~/modules/production/ui/Jobs/JobStatus";
-import { path } from "~/utils/path";
-import type { Opportunity, SalesOrder, SalesOrderLine } from "../../types";
 import {
   getDeadlineIcon,
   getDeadlineText,
 } from "~/modules/production/ui/Jobs/Deadline";
-import { useCarbon } from "@carbon/auth";
-import { flushSync } from "react-dom";
-import { SupplierProcessPreview } from "~/components/Form/SupplierProcess";
+import { JobStartModal } from "~/modules/production/ui/Jobs/JobHeader";
 import { JobOperationStatus } from "~/modules/production/ui/Jobs/JobOperationStatus";
+import JobStatus from "~/modules/production/ui/Jobs/JobStatus";
+import { path } from "~/utils/path";
+import type { Opportunity, SalesOrder, SalesOrderLine } from "../../types";
 
 type SalesOrderLineJobsProps = {
   salesOrder: SalesOrder;
@@ -256,6 +259,8 @@ export function SalesOrderLineJobs({
 export function SalesOrderJobItem({ job }: { job: Job }) {
   const disclosure = useDisclosure();
   const permissions = usePermissions();
+  const releaseModal = useDisclosure();
+  const statusFetcher = useFetcher<{}>();
 
   return (
     <VStack>
@@ -291,18 +296,45 @@ export function SalesOrderJobItem({ job }: { job: Job }) {
             </p>
           </div>
         </HStack>
-        <IconButton
-          aria-label={disclosure.isOpen ? "Collapse" : "Expand"}
-          icon={disclosure.isOpen ? <LuChevronDown /> : <LuChevronRight />}
-          variant="ghost"
-          onClick={(e) => {
-            e.stopPropagation();
-            disclosure.onToggle();
-          }}
-        />
+        <HStack>
+          <Button
+            onClick={releaseModal.onOpen}
+            isLoading={
+              statusFetcher.state !== "idle" &&
+              statusFetcher.formData?.get("status") === "Ready"
+            }
+            isDisabled={
+              job.status !== "Draft" ||
+              statusFetcher.state !== "idle" ||
+              !permissions.can("update", "production") ||
+              (job?.quantity === 0 && job?.scrapQuantity === 0)
+            }
+            leftIcon={<LuCirclePlay />}
+            variant="secondary"
+            size="sm"
+          >
+            Release
+          </Button>
+          <IconButton
+            aria-label={disclosure.isOpen ? "Collapse" : "Expand"}
+            icon={disclosure.isOpen ? <LuChevronDown /> : <LuChevronRight />}
+            variant="ghost"
+            onClick={(e) => {
+              e.stopPropagation();
+              disclosure.onToggle();
+            }}
+          />
+        </HStack>
       </HStack>
 
       {disclosure.isOpen && <JobDetails job={job} />}
+      {releaseModal.isOpen && (
+        <JobStartModal
+          job={job}
+          onClose={releaseModal.onClose}
+          fetcher={statusFetcher}
+        />
+      )}
     </VStack>
   );
 }
@@ -355,9 +387,47 @@ function JobDetails({ job }: { job: Job }) {
               <div className="grow h-full bg-muted/30 border border-border rounded-lg w-full">
                 <div className="grid items-center justify-between grid-cols-[1fr_auto] w-full gap-2 px-3 md:px-4 py-2 md:py-3">
                   <VStack spacing={0}>
-                    <h3 className="font-semibold truncate">
-                      {operation.description}
-                    </h3>
+                    <HStack className="w-full justify-between">
+                      <h3 className="font-semibold truncate">
+                        {operation.description}
+                      </h3>
+                      <HStack spacing={1}>
+                        {operation.operationType === "Outside" ? (
+                          <Badge>Outside</Badge>
+                        ) : (
+                          <>
+                            {(operation?.setupTime ?? 0) > 0 && (
+                              <Badge variant="secondary">
+                                <TimeTypeIcon
+                                  type="Setup"
+                                  className="h-3 w-3 mr-1"
+                                />
+                                {operation.setupTime} {operation.setupUnit}
+                              </Badge>
+                            )}
+                            {(operation?.laborTime ?? 0) > 0 && (
+                              <Badge variant="secondary">
+                                <TimeTypeIcon
+                                  type="Labor"
+                                  className="h-3 w-3 mr-1"
+                                />
+                                {operation.laborTime} {operation.laborUnit}
+                              </Badge>
+                            )}
+
+                            {(operation?.machineTime ?? 0) > 0 && (
+                              <Badge variant="secondary">
+                                <TimeTypeIcon
+                                  type="Machine"
+                                  className="h-3 w-3 mr-1"
+                                />
+                                {operation.machineTime} {operation.machineUnit}
+                              </Badge>
+                            )}
+                          </>
+                        )}
+                      </HStack>
+                    </HStack>
                     {operation.operationType === "Outside" ? (
                       <SupplierProcessPreview
                         processId={operation.processId}

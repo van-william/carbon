@@ -360,7 +360,7 @@ const getExplorePath = (jobId: string, type: string) => {
   }
 };
 
-function JobStartModal({
+export function JobStartModal({
   job,
   onClose,
   fetcher,

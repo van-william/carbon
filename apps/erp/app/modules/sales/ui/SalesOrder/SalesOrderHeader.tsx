@@ -421,7 +421,10 @@ const SalesOrderHeader = () => {
                                   <DropdownMenuIcon icon={<LuTruck />} />
                                   <HStack spacing={8}>
                                     <span>{shipment.shipmentId}</span>
-                                    <ShipmentStatus status={shipment.status} />
+                                    <ShipmentStatus
+                                      status={shipment.status}
+                                      invoiced={shipment.invoiced}
+                                    />
                                   </HStack>
                                 </Link>
                               </DropdownMenuItem>

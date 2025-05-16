@@ -230,7 +230,9 @@ const SalesInvoiceHeader = () => {
                   : "secondary"
               }
               onClick={showPostModal}
+              isLoading={postFetcher.state !== "idle"}
               isDisabled={
+                postFetcher.state !== "idle" ||
                 isPosted ||
                 routeData?.salesInvoiceLines?.length === 0 ||
                 !permissions.can("update", "invoicing")
