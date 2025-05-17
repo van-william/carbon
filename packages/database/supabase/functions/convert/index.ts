@@ -1018,10 +1018,12 @@ serve(async (req: Request) => {
 
         if (shipmentLines.error) throw shipmentLines.error;
 
+        // Accumulate quantities for each sales order line
         const quantitiesByLine = shipmentLines.data.reduce<
           Record<string, number>
         >((acc, line) => {
-          acc[line.lineId!] = line.shippedQuantity;
+          const lineId = line.lineId!;
+          acc[lineId] = (acc[lineId] || 0) + line.shippedQuantity;
           return acc;
         }, {});
 
