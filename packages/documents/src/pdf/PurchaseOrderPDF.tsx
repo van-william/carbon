@@ -72,7 +72,12 @@ const PurchaseOrderPDF = ({
     customerCountryName,
   } = purchaseOrderLocations;
 
-  const formatter = getCurrencyFormatter(purchaseOrder.currencyCode, locale);
+  console.log({ purchaseOrderLines });
+
+  const formatter = getCurrencyFormatter(
+    purchaseOrder.currencyCode ?? company.baseCurrencyCode ?? "USD",
+    locale
+  );
   const taxAmount = purchaseOrderLines.reduce(
     (acc, line) => acc + (line.supplierTaxAmount ?? 0),
     0
