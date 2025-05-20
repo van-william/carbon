@@ -18,7 +18,7 @@ const convertTiptapJSON = (
               <Text>{args?.title}</Text>
             </View>
           )}
-          {node.content.map((child, index) => convertTiptapJSON(child))}
+          {node?.content?.map((child, index) => convertTiptapJSON(child))}
         </View>
       );
 
@@ -32,7 +32,7 @@ const convertTiptapJSON = (
             marginBottom: 10,
           }}
         >
-          {node.content.map((child) => convertTiptapJSON(child))}
+          {node?.content?.map((child) => convertTiptapJSON(child))}
         </Text>
       );
 
@@ -46,7 +46,7 @@ const convertTiptapJSON = (
     case "bulletList":
       return (
         <View key="bulletList" style={{ marginLeft: 20 }}>
-          {node.content.map((child, index) =>
+          {node?.content?.map((child, index) =>
             convertTiptapJSON(child, {
               index,
               parentNodeType: "bulletList",
@@ -58,7 +58,7 @@ const convertTiptapJSON = (
     case "orderedList":
       return (
         <View key="orderedList" style={{ marginLeft: 20 }}>
-          {node.content.map((child, index) =>
+          {node?.content?.map((child, index) =>
             convertTiptapJSON(child, {
               index,
               parentNodeType: "orderedList",
@@ -77,7 +77,7 @@ const convertTiptapJSON = (
         >
           <Text style={{ marginRight: 5, fontSize: 9 }}> {indicator} </Text>
           <View>
-            {node.content.map((child, index) => convertTiptapJSON(child))}
+            {node?.content?.map((child, index) => convertTiptapJSON(child))}
           </View>
         </View>
       );
@@ -85,7 +85,7 @@ const convertTiptapJSON = (
     case "taskList":
       return (
         <View key="taskList" style={{ marginLeft: 20 }}>
-          {node.content.map((child, index) =>
+          {node?.content?.map((child, index) =>
             convertTiptapJSON(child, { index })
           )}
         </View>
@@ -99,7 +99,7 @@ const convertTiptapJSON = (
         >
           <Text style={{ marginRight: 5, fontSize: 9 }}>•</Text>
           <View>
-            {node.content.map((child, index) => convertTiptapJSON(child))}
+            {node?.content?.map((child, index) => convertTiptapJSON(child))}
           </View>
         </View>
       );
@@ -116,7 +116,12 @@ const convertTiptapJSON = (
 };
 
 const Note = ({ title, content }: { title?: string; content: JSONContent }) => {
-  if (!content || !("content" in content)) return null;
+  if (!content) return null;
+  if (typeof content !== "object") return null;
+  if (!("content" in content)) return null;
+  if (!Array.isArray(content.content) || content.content.length === 0)
+    return null;
+
   return <View>{convertTiptapJSON(content, { title })}</View>;
 };
 

@@ -75,7 +75,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       purchaseOrder={purchaseOrder.data}
       purchaseOrderLines={purchaseOrderLines.data ?? []}
       purchaseOrderLocations={purchaseOrderLocations.data}
-      terms={(terms?.data?.purchasingTerms ?? {}) as JSONContent}
+      terms={(terms?.data?.purchasingTerms || {}) as JSONContent}
     />
   );
 
