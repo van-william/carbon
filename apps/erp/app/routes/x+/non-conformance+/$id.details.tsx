@@ -32,7 +32,7 @@ import { setCustomFields } from "~/utils/form";
 import { getPrivateUrl, path } from "~/utils/path";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const { client, companyId } = await requirePermissions(request, {
+  const { client } = await requirePermissions(request, {
     view: "quality",
     bypassRls: true,
   });
@@ -123,6 +123,7 @@ export default function NonConformanceDetailsRoute() {
         title={nonConformance?.name ?? ""}
         subTitle={nonConformance?.nonConformanceId ?? ""}
         content={nonConformance?.content as JSONContent}
+        isDisabled={nonConformance?.status === "Closed"}
       />
 
       {permissions.is("employee") && (
@@ -157,11 +158,13 @@ function NonConformanceContent({
   title,
   subTitle,
   content: initialContent,
+  isDisabled,
 }: {
   id: string;
   title: string;
   subTitle: string;
   content: JSONContent;
+  isDisabled: boolean;
 }) {
   const {
     id: userId,
@@ -215,7 +218,7 @@ function NonConformanceContent({
         </CardHeader>
 
         <CardContent>
-          {permissions.can("update", "sales") ? (
+          {permissions.can("update", "quality") && !isDisabled ? (
             <Editor
               initialValue={(content ?? {}) as JSONContent}
               onUpload={onUploadImage}

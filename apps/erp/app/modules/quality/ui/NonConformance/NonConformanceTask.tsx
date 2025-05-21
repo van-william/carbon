@@ -85,20 +85,23 @@ const statusActions = {
 export function TaskItem({
   task,
   type,
+  isDisabled = false,
 }: {
   task:
     | NonConformanceInvestigationTask
     | NonConformanceActionTask
     | NonConformanceReviewer;
   type: "investigation" | "action" | "review";
+  isDisabled?: boolean;
 }) {
   const permissions = usePermissions();
   const disclosure = useDisclosure({
     defaultIsOpen: true,
   });
-  const { currentStatus, onOperationStatusChange, isDisabled } = useTaskStatus({
+  const { currentStatus, onOperationStatusChange } = useTaskStatus({
     task,
     type,
+    disabled: isDisabled,
   });
   const statusAction = statusActions[currentStatus];
   const { content, setContent, onUpdateContent, onUploadImage } = useTaskNotes({
@@ -133,7 +136,7 @@ export function TaskItem({
 
       {disclosure.isOpen && (
         <div className="px-4 py-2 rounded">
-          {permissions.can("update", "quality") ? (
+          {permissions.can("update", "quality") && !isDisabled ? (
             <Editor
               className="w-full min-h-[100px]"
               initialValue={content}
@@ -155,12 +158,17 @@ export function TaskItem({
       )}
       <div className="bg-muted/30 border-t px-4 py-2 flex justify-between w-full">
         <HStack>
-          <NonConformanceTaskStatus task={task} type="investigation" />
+          <NonConformanceTaskStatus
+            task={task}
+            type="investigation"
+            isDisabled={isDisabled}
+          />
           <Assignee
             table={getTable(type)}
             id={task.id}
             size="sm"
             value={task.assignee ?? undefined}
+            disabled={isDisabled}
           />
         </HStack>
         <HStack>
@@ -266,10 +274,12 @@ function useOptimisticTaskStatus(taskId: string) {
 }
 
 function useTaskStatus({
+  disabled = false,
   task,
   type,
   onChange,
 }: {
+  disabled?: boolean;
   task: {
     id?: string;
     status: NonConformanceInvestigationTask["status"];
@@ -282,7 +292,7 @@ function useTaskStatus({
   const permissions = usePermissions();
   const optimisticStatus = useOptimisticTaskStatus(task.id!);
 
-  const isDisabled = !permissions.can("update", "production");
+  const isDisabled = !permissions.can("update", "production") || disabled;
 
   const onOperationStatusChange = useCallback(
     (id: string, status: NonConformanceInvestigationTask["status"]) => {
@@ -319,6 +329,7 @@ export function NonConformanceTaskStatus({
   type,
   className,
   onChange,
+  isDisabled,
 }: {
   task: {
     id?: string;
@@ -328,11 +339,13 @@ export function NonConformanceTaskStatus({
   type: "investigation" | "action" | "approval" | "review";
   className?: string;
   onChange?: (status: NonConformanceInvestigationTask["status"]) => void;
+  isDisabled?: boolean;
 }) {
-  const { currentStatus, onOperationStatusChange, isDisabled } = useTaskStatus({
+  const { currentStatus, onOperationStatusChange } = useTaskStatus({
     task,
     type,
     onChange,
+    disabled: isDisabled,
   });
 
   return (

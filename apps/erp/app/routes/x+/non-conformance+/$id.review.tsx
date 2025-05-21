@@ -19,12 +19,13 @@ import {
 } from "@carbon/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useFetcher, useLoaderData } from "@remix-run/react";
+import { useFetcher, useLoaderData, useParams } from "@remix-run/react";
 import { LuCirclePlus } from "react-icons/lu";
 
 import { assertIsPost, error } from "@carbon/auth";
 import { useEffect, useRef } from "react";
-import type { NonConformanceReviewer } from "~/modules/quality";
+import { useRouteData } from "~/hooks";
+import type { NonConformance, NonConformanceReviewer } from "~/modules/quality";
 import {
   getNonConformanceReviewers,
   insertNonConformanceReviewer,
@@ -34,6 +35,7 @@ import {
   TaskItem,
   TaskProgress,
 } from "~/modules/quality/ui/NonConformance/NonConformanceTask";
+import { path } from "~/utils/path";
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
   const { client, companyId } = await requirePermissions(request, {
@@ -99,15 +101,29 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
 export default function NonConformanceReviewers() {
   const { reviewers } = useLoaderData<typeof loader>();
+  const { id } = useParams();
+  if (!id) throw new Error("Non-conformance ID is required");
+  const routeData = useRouteData<{
+    nonConformance: NonConformance;
+  }>(path.to.nonConformance(id));
 
   return (
     <VStack spacing={2} className="w-full">
-      <ReviewersList reviewers={reviewers} />
+      <ReviewersList
+        reviewers={reviewers}
+        isDisabled={routeData?.nonConformance.status === "Closed"}
+      />
     </VStack>
   );
 }
 
-function ReviewersList({ reviewers }: { reviewers: NonConformanceReviewer[] }) {
+function ReviewersList({
+  reviewers,
+  isDisabled,
+}: {
+  reviewers: NonConformanceReviewer[];
+  isDisabled: boolean;
+}) {
   const disclosure = useDisclosure();
 
   const fetcher = useFetcher<typeof action>();
@@ -131,7 +147,12 @@ function ReviewersList({ reviewers }: { reviewers: NonConformanceReviewer[] }) {
       <CardContent>
         <VStack spacing={3}>
           {reviewers.map((reviewer) => (
-            <TaskItem key={reviewer.id} task={reviewer} type="review" />
+            <TaskItem
+              key={reviewer.id}
+              task={reviewer}
+              type="review"
+              isDisabled={isDisabled}
+            />
           ))}
           {disclosure.isOpen && (
             <Modal

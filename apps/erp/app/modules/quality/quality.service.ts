@@ -691,7 +691,8 @@ export async function updateNonConformanceStatus(
   update: {
     id: string;
     status: (typeof nonConformanceStatus)[number];
-    assignee: null | undefined;
+    assignee: string | null | undefined;
+    closeDate: string | null | undefined;
     updatedBy: string;
   }
 ) {

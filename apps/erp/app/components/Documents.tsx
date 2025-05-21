@@ -80,9 +80,9 @@ const Documents = ({
   const getReadPath = useCallback(
     (file: StorageItem) => {
       const id = sourceDocumentLineId || sourceDocumentId;
-      return `${company.id}/${file.bucket}/${id}/${file.name}`;
+      return `${company.id}/${file.bucket ?? writeBucket}/${id}/${file.name}`;
     },
-    [company.id, sourceDocumentId, sourceDocumentLineId]
+    [company.id, sourceDocumentId, sourceDocumentLineId, writeBucket]
   );
 
   const getWritePath = useCallback(

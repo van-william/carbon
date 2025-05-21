@@ -8,16 +8,19 @@ import {
   VStack,
 } from "@carbon/react";
 import { json, type LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useParams } from "@remix-run/react";
+import { useRouteData } from "~/hooks";
 
-import {
-  getNonConformanceActionTasks,
-  type NonConformanceActionTask,
+import type {
+  NonConformance,
+  NonConformanceActionTask,
 } from "~/modules/quality";
+import { getNonConformanceActionTasks } from "~/modules/quality";
 import {
   TaskItem,
   TaskProgress,
 } from "~/modules/quality/ui/NonConformance/NonConformanceTask";
+import { path } from "~/utils/path";
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
   const { client, companyId } = await requirePermissions(request, {
@@ -36,15 +39,29 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 
 export default function NonConformanceActions() {
   const { actionTasks } = useLoaderData<typeof loader>();
+  const { id } = useParams();
+  if (!id) throw new Error("Non-conformance ID is required");
+  const routeData = useRouteData<{
+    nonConformance: NonConformance;
+  }>(path.to.nonConformance(id));
 
   return (
     <VStack spacing={2} className="w-full">
-      <ActionTasksList tasks={actionTasks} />
+      <ActionTasksList
+        tasks={actionTasks}
+        isDisabled={routeData?.nonConformance.status === "Closed"}
+      />
     </VStack>
   );
 }
 
-function ActionTasksList({ tasks }: { tasks: NonConformanceActionTask[] }) {
+function ActionTasksList({
+  tasks,
+  isDisabled,
+}: {
+  tasks: NonConformanceActionTask[];
+  isDisabled: boolean;
+}) {
   if (tasks.length === 0) return null;
 
   return (
@@ -58,7 +75,12 @@ function ActionTasksList({ tasks }: { tasks: NonConformanceActionTask[] }) {
       <CardContent>
         <VStack spacing={3}>
           {tasks.map((task) => (
-            <TaskItem key={task.id} task={task} type="action" />
+            <TaskItem
+              key={task.id}
+              task={task}
+              type="action"
+              isDisabled={isDisabled}
+            />
           ))}
         </VStack>
       </CardContent>

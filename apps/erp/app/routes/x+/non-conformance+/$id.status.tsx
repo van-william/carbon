@@ -35,6 +35,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
       id,
       status,
       assignee: ["Closed"].includes(status) ? null : undefined,
+      closeDate: ["Closed"].includes(status) ? new Date().toISOString() : null,
       updatedBy: userId,
     }),
   ]);

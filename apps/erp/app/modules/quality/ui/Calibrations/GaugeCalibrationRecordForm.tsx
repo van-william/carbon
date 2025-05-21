@@ -116,7 +116,7 @@ const GaugeCalibrationRecordForm = ({
 
   const onUploadImage = async (file: File) => {
     const fileType = file.name.split(".").pop();
-    const fileName = `${companyId}/quality/${nanoid()}.${fileType}`;
+    const fileName = `${companyId}/parts/${nanoid()}.${fileType}`;
 
     const result = await carbon?.storage.from("private").upload(fileName, file);
 

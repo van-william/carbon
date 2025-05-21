@@ -1,7 +1,12 @@
 import { Button, Copy, HStack, Heading, VStack } from "@carbon/react";
 
 import { Link, useFetcher, useParams } from "@remix-run/react";
-import { LuCircleCheck, LuCirclePlay, LuLoaderCircle } from "react-icons/lu";
+import {
+  LuCircleCheck,
+  LuCirclePlay,
+  LuFile,
+  LuLoaderCircle,
+} from "react-icons/lu";
 import { DetailsTopbar } from "~/components/Layout";
 import { usePermissions, useRouteData } from "~/hooks";
 import { path } from "~/utils/path";
@@ -39,6 +44,20 @@ const NonConformanceHeader = () => {
 
       <HStack>
         <DetailsTopbar links={links} />
+        <Button
+          variant="secondary"
+          leftIcon={<LuFile />}
+          isDisabled={status !== "Closed"}
+          asChild
+        >
+          <a
+            href={path.to.file.nonConformance(id)}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Report
+          </a>
+        </Button>
         <statusFetcher.Form
           method="post"
           action={path.to.nonConformanceStatus(id)}
