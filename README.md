@@ -78,6 +78,10 @@ The monorepo follows the Turborepo convention of grouping packages into one of t
 
 ## API
 
+The API documentation is located in the ERP app at `/x/api/js/intro`. It is auto-generated based on changes to the database.
+
+### From another Codebase
+
 Navigate to settings in the ERP to generate an API key. If you're self-hosting you can also use the supabase service key instead of the public key for root access. In that case you don't needto include the `carbon-key` header.
 
 ```ts
@@ -95,9 +99,24 @@ const carbon = createClient<Database>(apiUrl, publicKey, {
     },
   },
 });
+
+// returns items from the company associated with the api key
+const { data, error } = await carbon.from("item").select("*");
 ```
 
-The API documentation is located in the ERP app at `/x/api/js/intro`
+### From the Monorepo
+
+```tsx
+import { getCarbonServiceRole } from "@carbon/auth"
+const carbon = getCarbonServiceRole();
+
+// returns all items across companies
+const { data, error } = await carbon.from("item").select("*");
+
+// returns items from a specific company
+const companyId = 'xyz';
+const { data, error } = await carbon.from("item").select("*").eq("companyId", companyId);
+```
 
 ## Local Development
 
