@@ -76,6 +76,29 @@ The monorepo follows the Turborepo convention of grouping packages into one of t
 | `@carbon/tsconfig`     | Shared, extendable tsconfig configuration used across apps and packages |
 | `@carbon/utils`        | Shared utility functions used across apps and packages                  |
 
+## API
+
+Navigate to settings in the ERP to generate an API key. If you're self-hosting you can also use the supabase service key instead of the public key for root access. In that case you don't needto include the `carbon-key` header.
+
+```ts
+import { Database } from '@carbon/database'
+import { createClient } from '@supabase/supabase-js'
+
+const apiKey = process.env.CARBON_API_KEY
+const apiUrl = process.env.CARBON_API_URL
+const publicKey = process.env.CARBON_PUBLIC_KEY
+
+const carbon = createClient<Database>(apiUrl, publicKey, {
+  global: {
+    headers: {
+      "carbon-key": apiKey,
+    },
+  },
+});
+```
+
+The API documentation is located in the ERP app at `/x/api/js/intro`
+
 ## Local Development
 
 Make sure that you have [Docker installed](https://docs.docker.com/desktop/install/mac-install/) on your system since this monorepo uses the Docker for local development.
@@ -179,26 +202,7 @@ For example, to run test command in the `@carbon/react` package you can run:
 $ npm run test -w @carbon/react
 ```
 
-### Using the API
 
-Navigate to settings in the ERP to generate an API key. If you're self-hosting you can also use the supabase service key as the API key for root access.
-
-```ts
-import { Database } from '@carbon/database'
-import { createClient } from '@supabase/supabase-js'
-
-const apiKey = process.env.CARBON_API_KEY
-const apiUrl = process.env.CARBON_API_URL
-const publicKey = process.env.CARBON_PUBLIC_KEY
-
-const carbon = createClient<Database>(apiUrl, publicKey, {
-  global: {
-    headers: {
-      "carbon-key": apiKey,
-    },
-  },
-});
-```
 
 ### Restoring a Production Database Locally
 
