@@ -179,7 +179,28 @@ For example, to run test command in the `@carbon/react` package you can run:
 $ npm run test -w @carbon/react
 ```
 
-## Restoring a Production Database Locally
+### Using the API
+
+Navigate to settings in the ERP to generate an API key. If you're self-hosting you can also use the supabase service key as the API key for root access.
+
+```ts
+import { Database } from '@carbon/database'
+import { createClient } from '@supabase/supabase-js'
+
+const apiKey = process.env.CARBON_API_KEY
+const apiUrl = process.env.CARBON_API_URL
+const publicKey = process.env.CARBON_PUBLIC_KEY
+
+const carbon = createClient<Database>(apiUrl, publicKey, {
+  global: {
+    headers: {
+      "carbon-key": apiKey,
+    },
+  },
+});
+```
+
+### Restoring a Production Database Locally
 
 1. Download the production database backup from Supabase
 2. Rename the migrations folder to `_migrations`
