@@ -28,7 +28,7 @@ import {
   traverseJobMethod,
   traverseQuoteMethod,
 } from "../lib/methods.ts";
-import { importTypeScript } from "../lib/sandbox.ts";
+import { importTypeScript } from "../lib/sandbox.ee.ts";
 import {
   getNextRevisionSequence,
   getNextSequence,
