@@ -8,7 +8,7 @@ import { z } from "zod";
 import { localCompanies, productionCompanies } from "./data/stripe-customers";
 config();
 
-const PROD = false;
+const PROD = true;
 
 const companies = PROD ? productionCompanies : localCompanies;
 
