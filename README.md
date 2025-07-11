@@ -2,6 +2,12 @@
 
 Carbon is the open-source operating system for manufacturing.
 
+![ERP Screenshot](https://github.com/user-attachments/assets/2e09b891-d5e2-4f68-b924-a1c8ea42d24d)
+
+![MES Screenshot](https://github.com/user-attachments/assets/b04f3644-91aa-4f74-af8d-6f3e12116a6b)
+
+
+
 ## Architecture
 
 Carbon is designed to make it easy for you to extend the platform by building your own apps through our API.
