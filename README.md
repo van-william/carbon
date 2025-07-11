@@ -1,6 +1,12 @@
-![Carbon](https://github.com/user-attachments/assets/e7a06b25-c82e-496d-b4c0-d97f10438ce5)
+<p align="center">
+   <a href="https://carbon.ms">
+      <img width="auto" height="100" alt="Carbon Logo" src="https://github.com/user-attachments/assets/86a5e583-adac-4bf9-8192-508a0adf2308" />
+   </a>
+</p>
 
-Carbon is the open-source operating system for manufacturing.
+<p align="center">Carbon is the open-source operating system for manufacturing.</p>
+
+
 
 ![ERP Screenshot](https://github.com/user-attachments/assets/2e09b891-d5e2-4f68-b924-a1c8ea42d24d)
 
