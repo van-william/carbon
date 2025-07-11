@@ -124,9 +124,9 @@ $ npm run db:start  # pull and run the containers
 
 Create an `.env` file and copy the contents of `.env.example` file into it
 
-````bash
+```bash
 $ cp ./.env.example ./.env
-
+```
 
 1. Use the output of `npm run db:start` to set the supabase entries:
 
@@ -158,7 +158,7 @@ Then you can run the following:
 ```bash
 $ npm run db:build     # run db migrations and seed script
 $ npm run build        # build the packages
-````
+```
 
 Finally, start the apps and packages:
 
